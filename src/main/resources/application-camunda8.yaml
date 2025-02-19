@@ -1,0 +1,31 @@
+camunda:
+    client:
+        mode: oidc
+        auth:
+            oidc-type: keycloak
+            issuer: http://localhost:18080/auth/realms/camunda-platform
+            client-id: zeebe
+            client-secret: zecret
+        zeebe:
+            enabled: true
+            gateway-url: http://localhost:26500
+            defaults:
+                enabled: false
+        operate:
+            enabled: false
+        tasklist:
+            enabled: false
+        optimize:
+            enabled: false
+        identity:
+            enabled: false
+
+vanillabp:
+    workflow-modules:
+        standalone:
+            adapters:
+                camunda7:
+                    resources-location: classpath*:/processes/camunda7
+                camunda8:
+                    resources-location: classpath*:/processes/camunda8
+                    use-tenants: false

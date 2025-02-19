@@ -1,0 +1,14 @@
+vanillabp:
+    workflow-modules:
+        aggregate:
+            adapters:
+                camunda7:
+                    resources-location: classpath*:/processes/camunda7
+            cockpit:
+                workflow-module-uri: http://localhost:4711/
+                ui-uri-path: /remoteEntry.js
+                ui-uri-type: WEBPACK_MF_REACT
+                i18n-languages:
+                    - de
+                    - en
+                bpmn-description-language: de
