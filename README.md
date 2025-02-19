@@ -37,10 +37,10 @@ To start the project with the `camunda8` profile see this [specific README](http
 
 ## Business cockpit
 
-For the VanillaBP Business Cockpit to work follow the [As-Is Guide](https://github.com/vanillabp/business-cockpit/tree/feature/documentation).
+For the VanillaBP Business Cockpit to work follow the [As-Is Guide](https://github.com/vanillabp/business-cockpit/blob/feature/documentation/container/README.md#as-is).
 
-Here a simplified guide:
-1. In the development package in the business-cockpit project:
+Here a simplified version:
+1. In the development package of the business-cockpit project:
     ```shell
     docker compose up -d
     ```
