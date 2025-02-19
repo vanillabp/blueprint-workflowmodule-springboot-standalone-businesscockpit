@@ -20,6 +20,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * UseCaseService is a simple demonstration of how to integrate a BPMN
+ * process with the VanillaBP SPI and the Business-Cockpit SPI. It manages the lifecycle of a standalone
+ * workflow, starting and updating the process and also executing service and user tasks.
+ *
+ * <p>
+ * An instance of this class is created as a Spring Service and is annotated
+ * with {@code @WorkflowService}, linking it to a BPMN process with the ID
+ * <em>demo</em>.
+ * </p>
+ *
+ * @version 1.0
+ */
+
 @Service
 @WorkflowService(
     workflowAggregateClass = Aggregate.class,
@@ -40,6 +54,10 @@ public class UseCaseService {
     @Autowired
     private ProcessService<Aggregate> service;
 
+    /**
+     * A reference to the {@link BusinessCockpitService} that provides methods to
+     * automatically trigger updates when needed.
+     */
     @Autowired
     private BusinessCockpitService<Aggregate> businessCockpitService;
 
@@ -95,11 +113,16 @@ public class UseCaseService {
      * Typically, you would include business logic here.
      */
     @WorkflowTask
-    public void doService() {
+    public void doService(
+        final Aggregate aggregate,
+        @TaskId final String taskId) {
 
         log.info("Service-Task started");
 
         // TODO: Implement service-task-specific business logic
+
+        // Triggers update once business logic is finished
+        businessCockpitService.aggregateChanged(aggregate, taskId);
     }
 
     /**
@@ -112,11 +135,15 @@ public class UseCaseService {
      */
     @WorkflowTask
     public void doUserTask(
+        final Aggregate aggregate,
         @TaskId final String taskId) {
 
         log.info("UserTask {} started", taskId);
 
         // TODO: Implement user-task-specific business logic or user interaction
+
+        // Triggers update once business logic is finished
+        businessCockpitService.aggregateChanged(aggregate, taskId);
     }
 
 
