@@ -53,6 +53,10 @@ Here a simplified version:
 5. Authenticate with `test` as username and password under [http://localhost:8080/](http://localhost:8080/)
 6. Start the standalone-businesscockpit application, and you should be able to see your workflow and your task in the respective Lists.
 
+## Web app
+
+To know more about the webapp [click here](./WEBAPP.md)
+
 ## Noteworthy & Contributors
 
 VanillaBP was developed by [Phactum](https://www.phactum.at) with the intention of giving back to the community as it
