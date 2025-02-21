@@ -114,15 +114,11 @@ public class UseCaseService {
      */
     @WorkflowTask
     public void doService(
-        final Aggregate aggregate,
-        @TaskId final String taskId) {
+        final Aggregate aggregate) {
 
         log.info("Service-Task started");
 
         // TODO: Implement service-task-specific business logic
-
-        // Triggers update once business logic is finished
-        businessCockpitService.aggregateChanged(aggregate, taskId);
     }
 
     /**

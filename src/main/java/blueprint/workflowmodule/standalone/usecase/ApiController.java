@@ -1,11 +1,10 @@
 package blueprint.workflowmodule.standalone.usecase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 
@@ -22,6 +21,11 @@ import java.util.NoSuchElementException;
  */
 @RestController
 public class ApiController {
+
+    /**
+     * Logger for this class, used to log workflow events and status messages.
+     */
+    private static final Logger log = LoggerFactory.getLogger(ApiController.class);
 
     /**
      * Service that orchestrates the BPMN process for standalone workflows.
@@ -49,8 +53,8 @@ public class ApiController {
      * @throws Exception If there is any error encountered while starting
      *                   the workflow process.
      */
-    @GetMapping("/{id}/start")
-    public ResponseEntity<String> startWorkflow(
+    @GetMapping("/usecase/{id}/initiate")
+    public ResponseEntity<String> initiateUseCase(
         @PathVariable final String id,
         @RequestParam(
             value = "wantUserTask",
@@ -75,16 +79,58 @@ public class ApiController {
      * @return A ResponseEntity containing a success message upon task completion.
      * @throws NoSuchElementException if no aggregate with the given ID is found.
      */
-    @GetMapping("/{id}/{taskId}/complete")
-    public ResponseEntity<String> completeWorkflow(
+
+    // start-usertask refactoren
+    @PostMapping("/usecase/{id}/start-usertask/{taskId}")
+    public ResponseEntity<String> completeTask(
         @PathVariable final String id,
-        @PathVariable final String taskId) {
+        @PathVariable final String taskId,
+        @RequestBody final String userTask) throws Exception {
 
         final var aggregate = aggregateRepo.findById(id).orElseThrow();
 
         service.completeUserTask(aggregate, taskId);
 
         return ResponseEntity.ok("Completed Workflow: " + id);
+    }
+
+    /**
+     * Saves the user task temporarily (mock implementation storing in local storage).
+     * @param id The unique identifier of the aggregate associated with the workflow.
+     * @param taskId The unique identifier of the user task.
+     * @return A ResponseEntity confirming the save operation.
+     */
+    @PutMapping("/usecase/{id}/save-task/{taskId}")
+    public ResponseEntity<String> saveTask(
+        @PathVariable final String id,
+        @PathVariable final String taskId,
+        @RequestBody final String userTask) {
+
+        final var aggregate = aggregateRepo.findById(id).orElseThrow();
+
+        aggregateRepo.save(aggregate);
+
+        log.info("RequestBody: {}", userTask);
+
+        return ResponseEntity.ok("Task saved temporarily: " + taskId);
+    }
+
+    /**
+     * Cancels the user task.
+     * @param id The unique identifier of the aggregate associated with the workflow.
+     * @param taskId The unique identifier of the user task.
+     * @return A ResponseEntity confirming the cancellation.
+     */
+    @DeleteMapping("/usecase/{id}/cancel-task/{taskId}")
+    public ResponseEntity<String> cancelTask(
+        @PathVariable final String id,
+        @PathVariable final String taskId) {
+
+        final var aggregate = aggregateRepo.findById(id).orElseThrow();
+
+        aggregateRepo.delete(aggregate);
+
+        return ResponseEntity.ok("Task cancelled and deleted: " + taskId);
     }
 
     /**
