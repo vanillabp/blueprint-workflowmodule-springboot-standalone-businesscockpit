@@ -22,4 +22,7 @@ public class Aggregate {
 
     @Column
     private boolean wantUserTask;
+
+    @Column
+    private String inputValue;
 }

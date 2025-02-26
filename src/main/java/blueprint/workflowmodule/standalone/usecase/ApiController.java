@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -97,6 +98,7 @@ public class ApiController {
 
     /**
      * Saves the user task temporarily (mock implementation storing in local storage).
+     *
      * @param id The unique identifier of the aggregate associated with the workflow.
      * @param taskId The unique identifier of the user task.
      * @return A ResponseEntity confirming the save operation.
@@ -105,13 +107,20 @@ public class ApiController {
     public ResponseEntity<String> saveTask(
         @PathVariable final String id,
         @PathVariable final String taskId,
-        @RequestBody final String userTask) {
+        @RequestBody  final Map<String, String> requestBody) {
 
         final var aggregate = aggregateRepo.findById(id).orElseThrow();
 
+        // Extract userInput from request body and update aggregate
+        final String userInput = requestBody.get("userInput");
+
+        if (userInput != null) {
+            aggregate.setInputValue(userInput);
+        }
+
         aggregateRepo.save(aggregate);
 
-        log.info("RequestBody: {}", userTask);
+        log.info("Saved task: {}", taskId);
 
         return ResponseEntity.ok("Task saved temporarily: " + taskId);
     }
