@@ -1,6 +1,6 @@
 ![VanillaBP](readme/vanillabp-headline.png)
 
-# Web App README
+# Web App
 
 ## Overview:
 This web application serves as a front-end for managing user tasks within a workflow system.

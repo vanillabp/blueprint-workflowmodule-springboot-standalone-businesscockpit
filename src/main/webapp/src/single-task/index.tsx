@@ -1,3 +1,3 @@
-const BpmnProcessId = 'SingleTask';
+const BpmnProcessId = 'demo';
 
 export { BpmnProcessId };

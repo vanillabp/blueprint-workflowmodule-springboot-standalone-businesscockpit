@@ -3,50 +3,65 @@ import { useState } from "react";
 
 const UserTaskForm: UserTaskFormComponent = ({ userTask }) => {
     const [inputValue, setInputValue] = useState("");
+    const baseUrl = "http://localhost:9080";
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     };
 
     const handleCompleteTask = async () => {
-        const id = userTask.businessId;
+        const usecaseId = userTask.businessId;
         const taskId = userTask.id;
 
-        if (!id || !taskId) {
+        if (!usecaseId || !taskId) {
             console.error("Missing workflow ID or task ID");
             return;
         }
 
-        await fetch(`/usecase/${id}/start-usertask/${taskId}`, {
+        await fetch(`${baseUrl}/usecase/${usecaseId}/start-usertask/${taskId}`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + window.btoa("abc:123")
+            },
             body: JSON.stringify({ userInput: inputValue })
         });
     };
 
     const handleSaveTask = async () => {
-        const id = userTask.businessId;
-        if (!id) {
+        const usecaseId = userTask.businessId;
+        const taskId = userTask.id;
+        if (!usecaseId) {
             console.error("Missing workflow ID");
             return;
         }
 
-        await fetch(`/usecase/${id}/save-task`, {
+        await fetch(`${baseUrl}/usecase/${usecaseId}/save-task/${taskId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + window.btoa("abc:123")
+            },
             body: JSON.stringify({ userInput: inputValue })
         });
     };
 
     const handleCancelTask = async () => {
         const id = userTask.businessId || userTask.workflowId;
+        const taskId = userTask.id;
+
         if (!id) {
             console.error("Missing workflow ID");
             return;
         }
 
-        await fetch(`/usecase/${id}/cancel-task`, {
-            method: "DELETE" });
+        await fetch(`${baseUrl}/usecase/${id}/cancel-task/${taskId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + window.btoa("abc:123")
+            }
+        });
     };
 
     return (

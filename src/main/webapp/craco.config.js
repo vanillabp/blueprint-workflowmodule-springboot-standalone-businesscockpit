@@ -25,10 +25,16 @@ module.exports = {
         logLevel: "debug",
       },
       '/official-api': {
-        target: 'http://0.0.0.0:9080',
+        target: 'http://localhost:8080',
         secure: false,
         changeOrigin: true,
-        logLevel: "debug",
+        logLevel: "debug"
+          /*
+          ,
+          "pathRewrite": {
+              "^/official-api/": "/bpms/api/v1/"
+          },
+           */
       },
       '/gui/api': {
         target: 'http://0.0.0.0:9080',

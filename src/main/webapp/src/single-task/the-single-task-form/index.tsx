@@ -1,3 +1,3 @@
-const TaskDefinition = 'theSingleTask';
+const TaskDefinition = 'doUserTask';
 
 export { TaskDefinition };
