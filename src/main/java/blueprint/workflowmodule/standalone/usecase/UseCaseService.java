@@ -183,4 +183,18 @@ public class UseCaseService {
         log.info("UserTask {} completed", taskId);
     }
 
+    /**
+     * Cancels a specific User task.
+     *
+     * @param aggregate The aggregate instance that contains the workflow where the task is located.
+     * @param taskId    The unique identifier of the user task to be completed.
+     */
+    public void cancelUserTask(
+        final Aggregate aggregate,
+        final String taskId) {
+
+        service.cancelUserTask(aggregate,taskId,"Task was Cancelled by Frontend");
+
+        log.info("UserTask {} cancelled", taskId);
+    }
 }

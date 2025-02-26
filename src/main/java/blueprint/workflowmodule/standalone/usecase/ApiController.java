@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
  * @version 1.0
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ApiController {
 
     /**
@@ -128,7 +129,9 @@ public class ApiController {
 
         final var aggregate = aggregateRepo.findById(id).orElseThrow();
 
-        aggregateRepo.delete(aggregate);
+        aggregateRepo.deleteById(id);
+
+        service.cancelUserTask(aggregate, taskId);
 
         return ResponseEntity.ok("Task cancelled and deleted: " + taskId);
     }
