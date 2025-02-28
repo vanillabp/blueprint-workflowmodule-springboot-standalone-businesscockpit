@@ -1,13 +1,8 @@
-server:
-    port: 9080
-
 spring:
     application:
         name: standalone-businesscockpit
     datasource:
         url: jdbc:h2:mem:testdb
-        username: topal
-        password: sa
     jpa:
         database-platform: org.hibernate.dialect.H2Dialect
         hibernate:
@@ -18,7 +13,7 @@ spring:
         show-sql: false
     h2:
         console:
-            enabled: true
+            enabled: true #pfad + username pw
     data:
         mongodb:
             uri: mongodb:business-cockpit-mongo:27017
@@ -27,7 +22,7 @@ vanillabp:
     cockpit:
         rest:
             log: true
-            base-url: http://localhost:8080/bpms/api/v1
+            base-url: http://localhost:9080/bpms/api/v1
             authentication:
                 basic: true
                 username: abc
@@ -36,4 +31,4 @@ vanillabp:
         jwt:
             hmacSHA256-base64: oNr5wqOE2LBh5uKKVfTwubPfyF237OrffQj5bcMKtpw=
 
-workerId: test
+workerId: blueprint

@@ -15,26 +15,20 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     proxy: {
-      '/wm': {
-        target: 'http://0.0.0.0:9080',
+      '/wm/standalone-businesscockpit': {
+        target: 'http://0.0.0.0:8080',
         "pathRewrite": {
-          "^/wm": ""
+          "^/wm/standalone-businesscockpit": ""
         },
         secure: false,
         changeOrigin: true,
         logLevel: "debug",
       },
       '/official-api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:9080',
         secure: false,
         changeOrigin: true,
         logLevel: "debug"
-          /*
-          ,
-          "pathRewrite": {
-              "^/official-api/": "/bpms/api/v1/"
-          },
-           */
       },
       '/gui/api': {
         target: 'http://0.0.0.0:9080',

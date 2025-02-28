@@ -4,7 +4,7 @@ import { BcUserTask, CopyClipboard, theme, WorkflowPage } from '@vanillabp/bc-sh
 import { Box, Grommet, Heading, Text, Tip } from 'grommet';
 import { Share } from 'grommet-icons';
 
-const TestWorkflowPage: WorkflowPage = ({ workflow }) => {
+const LoanApprovalWorkflowPage: WorkflowPage = ({ workflow }) => {
   const [ loaded, setLoaded ] = useState(false);
   const [ userTasks, setUserTasks ] = useState<Array<BcUserTask> | undefined>(undefined);
 
@@ -66,4 +66,4 @@ const TestWorkflowPage: WorkflowPage = ({ workflow }) => {
         </Grommet>);
 }
 
-export default TestWorkflowPage;
+export default LoanApprovalWorkflowPage;

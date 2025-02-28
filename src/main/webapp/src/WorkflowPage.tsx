@@ -1,9 +1,9 @@
 import { Text } from 'grommet';
 import { WorkflowPage } from '@vanillabp/bc-shared';
 import {lazy} from "react";
-import {BpmnProcessId as SingleTask_BpmnProcessId} from "./single-task";
+import {BpmnProcessId as SingleTask_BpmnProcessId} from "./loan-approval";
 
-const Test_WorkflowPage = lazy(() => import('./single-task/WorkflowPage'));
+const Test_WorkflowPage = lazy(() => import('./loan-approval/WorkflowPage'));
 
 const buildVersion = process.env.BUILD_VERSION;
 const buildTimestamp = new Date(process.env.BUILD_TIMESTAMP);

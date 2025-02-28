@@ -27,7 +27,7 @@ the processes and tasks itself. To see all those details
    *Hint:* If you want a specific verison add `-DarchetypeVersion={e.g 0.0.1}`
 2. **Build the Project**
    ```shell
-   mvn clean install
+   mvn clean package -Pcamunda7
     ```
 3. **Start the Project**
    ```shell

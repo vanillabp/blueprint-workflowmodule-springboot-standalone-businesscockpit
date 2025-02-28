@@ -1,6 +1,6 @@
 import { Text } from 'grommet';
 import { lazy } from 'react';
-import { BpmnProcessId as SingleTask_BpmnProcessId } from './single-task';
+import { BpmnProcessId as LoanApproval } from './loan-approval';
 import { UserTaskForm } from '@vanillabp/bc-shared';
 
 /**
@@ -8,7 +8,7 @@ import { UserTaskForm } from '@vanillabp/bc-shared';
  * This reduces initial load time and loads components only when needed.
  *
  */
-const SingleTaskUserTaskForm = lazy(() => import('./single-task/UserTaskForm'));
+const SingleTaskUserTaskForm = lazy(() => import('./loan-approval/UserTaskForm'));
 
 const buildVersion = process.env.BUILD_VERSION;
 const buildTimestamp = new Date(process.env.BUILD_TIMESTAMP);
@@ -34,7 +34,7 @@ const buildTimestamp = new Date(process.env.BUILD_TIMESTAMP);
  * @returns {JSX.Element} The corresponding user task form or an error message if not found.
  */
 const UserTaskFormComponent: UserTaskForm = ({ userTask }) =>
-    userTask.bpmnProcessId === SingleTask_BpmnProcessId
+    userTask.bpmnProcessId === LoanApproval
         ? <SingleTaskUserTaskForm userTask={ userTask } />
         : <Text>{ `unknown BPMN process ID '${userTask.bpmnProcessId}'` }</Text>;
 

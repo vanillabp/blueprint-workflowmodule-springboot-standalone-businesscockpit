@@ -1,6 +1,6 @@
 vanillabp:
     workflow-modules:
-        aggregate:
+        loanapproval:
             adapters:
                 camunda7:
                     resources-location: classpath*:/processes/camunda7

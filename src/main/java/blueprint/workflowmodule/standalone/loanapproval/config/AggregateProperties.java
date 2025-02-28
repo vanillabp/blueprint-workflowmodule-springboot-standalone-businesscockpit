@@ -1,4 +1,4 @@
-package blueprint.workflowmodule.standalone.usecase.config;
+package blueprint.workflowmodule.standalone.loanapproval.config;
 
 import io.vanillabp.springboot.modules.WorkflowModuleIdAwareProperties;
 import io.vanillabp.springboot.modules.WorkflowModuleProperties;
@@ -17,7 +17,7 @@ public class AggregateProperties implements WorkflowModuleIdAwareProperties {
     /**
      * The identifier for the aggregate workflow module.
      */
-    public static final String WORKFLOW_MODULE_ID = "aggregate";
+    public static final String WORKFLOW_MODULE_ID = "loanapproval";
 
     /**
      * Retrieves the workflow module ID.

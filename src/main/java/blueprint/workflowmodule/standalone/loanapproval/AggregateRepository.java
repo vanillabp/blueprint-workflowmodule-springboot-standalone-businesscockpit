@@ -1,4 +1,4 @@
-package blueprint.workflowmodule.standalone.usecase;
+package blueprint.workflowmodule.standalone.loanapproval;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

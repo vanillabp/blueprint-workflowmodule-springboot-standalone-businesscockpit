@@ -22,7 +22,7 @@ camunda:
 
 vanillabp:
     workflow-modules:
-        standalone:
+        loan-approval:
             adapters:
                 camunda7:
                     resources-location: classpath*:/processes/camunda7
