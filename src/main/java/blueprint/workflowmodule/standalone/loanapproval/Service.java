@@ -117,15 +117,14 @@ public class Service {
         @TaskId final String taskId) {
 
         // TODO: TASK EVENTS + loanApproval.getTasks().put
-        // bei completed aktuelles datum
 
-        /*
+
+
+
         LoanApprovalTaskEntity task = new LoanApprovalTaskEntity();
         task.setTaskId(taskId);
-        task.setTaskName("Assess Risk");
         task.setCreatedAt(LocalDateTime.now());
-        loanApproval.setAssessRiskTaskId(taskId);
-        */
+        loanApproval.getTasks().put(taskId, task);
 
         log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(), taskId);
 
