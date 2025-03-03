@@ -10,6 +10,10 @@ It interacts with a backend via a REST API to fetch, display, and update user ta
 The application includes a development package called `development` (also called *dev-shell*) that enables hot module replacement (HMR).
 This allows developers to see changes in real-time without needing to restart the application.
 
+## Project structure and thoughts
+
+For a detailed structure and the reason why we structured the webapp this way see `/src/UserTaskForm.tsx`.
+
 ## Setup and Running the Web App:
 1. Install dependencies:
     ```shell

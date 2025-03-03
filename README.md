@@ -2,8 +2,11 @@
 
 # blueprint-workflowmodule-springboot-standalone-businesscockpit
 
-A **blueprint** of a standalone Spring Boot application including the **[Vanillabp Business Cockpit](https://github.com/vanillabp/business-cockpit/tree/feature/documentation)**
-demonstrating how to use [VanillaBP SPI](https://github.com/vanillabp/spi-for-java) and the [Business Cockpit SPI](https://github.com/vanillabp/business-cockpit/tree/feature/documentation/spi-for-java) for BPMN-based workflows. This
+A **blueprint** of a standalone Spring Boot application including the *
+*[Vanillabp Business Cockpit](https://github.com/vanillabp/business-cockpit/tree/feature/documentation)**
+demonstrating how to use [VanillaBP SPI](https://github.com/vanillabp/spi-for-java) and
+the [Business Cockpit SPI](https://github.com/vanillabp/business-cockpit/tree/feature/documentation/spi-for-java) for
+BPMN-based workflows. This
 example covers a very minimal set of scenarios for developing business process applications and serves as a starting
 point for more complex use cases.
 
@@ -33,13 +36,17 @@ the processes and tasks itself. To see all those details
    ```shell
    java -jar /target/demo.jar --spring.profiles.active=camunda7
    ```
-To start the project with the `camunda8` profile see this [specific README](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone/blob/wip/CAMUNDA8.md)
+
+To start the project with the `camunda8` profile see
+this [specific README](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone/blob/wip/CAMUNDA8.md)
 
 ## Business cockpit
 
-For the VanillaBP Business Cockpit to work follow the [As-Is Guide](https://github.com/vanillabp/business-cockpit/blob/feature/documentation/container/README.md#as-is).
+For the VanillaBP Business Cockpit to work follow
+the [As-Is Guide](https://github.com/vanillabp/business-cockpit/blob/feature/documentation/container/README.md#as-is).
 
 Here a simplified version:
+
 1. In the development package of the business-cockpit project:
     ```shell
     docker compose up -d
@@ -51,11 +58,52 @@ Here a simplified version:
     java -jar bc.jar
     ```
 5. Authenticate with `test` as username and password under [http://localhost:8080/](http://localhost:8080/)
-6. Start the standalone-businesscockpit application, and you should be able to see your workflow and your task in the respective Lists.
+6. Start the standalone-businesscockpit application, and you should be able to see your workflow and your task in the
+   respective Lists.
 
 ## Web app
 
 To know more about the webapp [click here](./WEBAPP.md)
+
+## Dev-shell-simulator
+
+For developing, we recommend using
+the [dev-shell-simulator](https://github.com/vanillabp/business-cockpit/tree/feature/development-simulator/development/dev-shell-simulator)
+
+## TaskEntity and TaskFormData Patterns
+
+### Why This Pattern?
+
+When a user interacts with a task, they may save intermediate progress before completing it. Instead of persisting this
+data directly within the aggregate, we use a `LoanApprovalTaskEntity` that acts as a mapping for user task data. This
+approach provides several advantages:
+
+1. **Separation of Concerns** – The aggregate represents the overall state of the workflow, while individual user task
+   data is handled separately.
+2. **Intermediate Saves** – Users can save task data without committing it to the aggregate, allowing flexibility in the
+   approval process.
+3. **Data Consistency** – The aggregate remains clean and only gets updated with finalized decisions when a task is
+   completed.
+4. **Auditability** – Keeping task data in separate entities allows tracking changes, timestamps, and user inputs before
+   finalizing the workflow.
+
+### How It Works
+
+1. When a user saves a task, we create or update a `TaskEntity` corresponding to the task ID. This entity includes:
+    - Task metadata (e.g., name, creation timestamp)
+    - A `TaskFormData` object that stores the user’s input in JSON format
+2. The aggregate maintains a **mapping** to the `TaskEntity`, rather than storing the data itself.
+3. When the task is **completed**, relevant data from `TaskFormData` is transferred to the aggregate, and the workflow
+   proceeds.
+
+### Example Flow
+
+1. **User saves task** → Data is stored in `LoanApprovalTaskEntity` (not in the aggregate).
+2. **User resumes task** → Data is retrieved from `LoanApprovalTaskEntity`.
+3. **User completes task** → Finalized data is moved to the aggregate, and the process advances.
+
+This approach ensures a structured, maintainable workflow while keeping the aggregate focused on finalized business
+decisions. 🚀
 
 ## Noteworthy & Contributors
 
