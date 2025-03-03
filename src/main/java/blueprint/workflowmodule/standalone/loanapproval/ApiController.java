@@ -12,7 +12,7 @@ import java.util.UUID;
 
 /**
  * A simple REST controller that provides different endpoints.
- * It demonstrates how to accept parameters for creating a new workflow instance and delegate to the {@link LoanApprovalService}.
+ * It demonstrates how to accept parameters for creating a new workflow instance and delegate to the {@link Service}.
  *
  * <p>
  * This controller uses Spring’s {@code @RestController} annotation to
@@ -35,7 +35,7 @@ public class ApiController {
      * be triggered based on incoming REST calls.
      */
     @Autowired
-    private LoanApprovalService service;
+    private Service service;
 
     /**
      * Initiate processing of a new loan approval.
@@ -76,13 +76,13 @@ public class ApiController {
         @PathVariable final String loanRequestId,
         @PathVariable final String taskId,
         @RequestParam(required = false) final boolean riskIsAcceptable,
-        @RequestParam final String userInput) throws Exception {
+        @RequestParam(required = false) final int amount) throws Exception {
 
         final var taskCompleted = service.completeRiskAssessment(
             loanRequestId,
             taskId,
             riskIsAcceptable,
-            userInput
+            amount
         );
 
         log.info("Risk assessment completed");
@@ -113,4 +113,24 @@ public class ApiController {
 
         return ResponseEntity.ok().build();
     }
+
+    /**
+     *
+     *
+     * @param loanRequestId
+     * @return
+     */
+    @GetMapping("/{loanRequestId}")
+    public ResponseEntity<Map<String, Object>> getLoanApproval(
+        @PathVariable final String loanRequestId) {
+
+        final Map<String, Object> loanApprovalData = service.getLoanApproval(loanRequestId);
+
+        if (loanApprovalData == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(loanApprovalData);
+    }
+
 }

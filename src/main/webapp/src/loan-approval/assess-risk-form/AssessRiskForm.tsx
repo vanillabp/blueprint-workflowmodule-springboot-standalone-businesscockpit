@@ -1,25 +1,48 @@
 import { UserTaskForm as UserTaskFormComponent } from "@vanillabp/bc-shared";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
-    const [inputValue, setInputValue] = useState("");
+    const [amount,setAmount] = useState(null);
     const [riskAcceptable, setRiskAcceptable] = useState(null);
     const springBootName = "standalone-businesscockpit";
     const baseUrl = `/wm/${springBootName}/api/loan-approval`;
+    const loanRequestId = userTask.businessId;
 
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
 
     const handleRiskOptionChange = (event) => {
         setRiskAcceptable(event.target.value === 'accept');
     };
 
-    const handleCompleteTask = async () => {
-        const usecaseId = userTask.businessId;
-        const taskId = userTask.id;
+    // Fetch existing data on mount
+    useEffect(() => {
+        const fetchExistingData = async () => {
+            if (!loanRequestId) return;
 
-        if (!usecaseId || !taskId) {
+            try {
+                const response = await fetch(`${baseUrl}/${loanRequestId}`);
+                if (!response.ok) {
+                    console.error("Failed to fetch loan approval data");
+                    return;
+                }
+                const data = await response.json();
+                console.log("Fetched data:", data);
+
+                // Set state with existing values
+                if (data.amount !== undefined) setAmount(data.amount);
+                if (data.riskAcceptable !== undefined) setRiskAcceptable(data.riskAcceptable);
+            } catch (error) {
+                console.error("Error fetching loan approval data:", error);
+            }
+        };
+
+        fetchExistingData();
+    }, []);
+
+    const handleCompleteTask = async () => {
+        const loanRequestId = userTask.businessId;
+        const assessRiskTaskId = userTask.id;
+
+        if (!loanRequestId || !assessRiskTaskId) {
             console.error("Missing workflow ID or task ID");
             return;
         }
@@ -30,7 +53,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
         }
 
         // Create a URL with both request parameters
-        const url = `${baseUrl}/${usecaseId}/assess-risk/${taskId}?riskAcceptable=${riskAcceptable}&userInput=${encodeURIComponent(inputValue)}`;
+        const url = `${baseUrl}/${loanRequestId}/assess-risk/${assessRiskTaskId}?riskAcceptable=${riskAcceptable}&amount=${encodeURIComponent(amount)}`;
 
         try {
             const response = await fetch(url, {
@@ -44,6 +67,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                 console.error("Failed to complete task:", response.status);
             } else {
                 console.log("Task completed successfully");
+                window.location.reload() // TODO add SSE to dev-shell, which causes automatic update of userTask.
             }
         } catch (error) {
             console.error("Error completing task:", error);
@@ -51,41 +75,33 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
     };
 
     const handleSaveTask = async () => {
-        const usecaseId = userTask.businessId;
+        const loanRequestId = userTask.businessId;
         const taskId = userTask.id;
-        if (!usecaseId) {
+        if (!loanRequestId) {
             console.error("Missing workflow ID");
             return;
         }
 
-        await fetch(`${baseUrl}/${usecaseId}/save-task/${taskId}`, {
+        await fetch(`${baseUrl}/${loanRequestId}/save-task/${taskId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                userInput: inputValue,
                 riskIsAcceptable: riskAcceptable
             })
         });
     };
 
     return (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
             <div>
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    placeholder="Enter value"
-                />
+                <label style={{ fontWeight: "bold" }}>Amount: </label>
+                <span>{amount !== null ? amount : "Loading..."}</span>
             </div>
-
-            <div style={{ marginTop: '15px', marginBottom: '15px' }}>
-                <div>
-                    <label>Risk Assessment:</label>
-                </div>
-                <div>
+            <div>
+                <label style={{ fontWeight: "bold" }}>Risk Assessment:</label>
+                <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
                     <label>
                         <input
                             type="radio"
@@ -93,11 +109,8 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                             value="accept"
                             checked={riskAcceptable === true}
                             onChange={handleRiskOptionChange}
-                        />
-                        Accept Risk
+                        /> Accept
                     </label>
-                </div>
-                <div>
                     <label>
                         <input
                             type="radio"
@@ -105,19 +118,23 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                             value="deny"
                             checked={riskAcceptable === false}
                             onChange={handleRiskOptionChange}
-                        />
-                        Deny Risk
+                        /> Deny
                     </label>
                 </div>
             </div>
-
-            <button
-                onClick={handleCompleteTask}
-                disabled={riskAcceptable === null}
-            >
-                Complete Task
-            </button>
-            <button onClick={handleSaveTask}>Save Task</button>
+            {
+                userTask.endedAt != null
+                    ? <p>This Task has already been completed at {userTask.endedAt.toTimeString()}</p>
+                    : undefined
+            }
+            <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                    onClick={handleCompleteTask}
+                    disabled={riskAcceptable === null || userTask.endedAt != null} style={{ padding: "10px", cursor: "pointer" }}>Complete Task</button>
+                <button
+                    onClick={handleSaveTask}
+                    disabled={userTask.endedAt != null} style={{ padding: "10px", cursor: "pointer" }}>Save Task</button>
+            </div>
         </div>
     );
 };

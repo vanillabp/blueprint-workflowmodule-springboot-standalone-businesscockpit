@@ -1,13 +1,14 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -21,7 +22,10 @@ import lombok.NoArgsConstructor;
  *   <li>{@code riskAcceptable}         — An indicator that shows whether the risk of lending is acceptable.</li>
  *   <li>{@code amount}                 — The amount that was requested to loan   </li>
  *   <li>{@code assessRiskTaskId}</li>  — A unique Identifier for each Task ID managed by the business process engine (e.g., camunda)
+ *   <li>{@code tasks}                  — A Hashmap join table that saves maps the loanRequestId to a taskId</li>
  * </ul>
+ *
+ * {@code getTasks} is a simple getter method getting all the tasks from the joined table of {@code tasks}.
  * </p>
  *
  * @version 1.0
@@ -46,13 +50,6 @@ public class Aggregate {
     @Column
     private Boolean riskAcceptable;
 
-
-    /**
-     * Input value of the user from the webapp.
-     */
-    @Column
-    private String inputValue;
-
     /**
      * The task id for risk assessment.
      */
@@ -60,8 +57,27 @@ public class Aggregate {
     private String assessRiskTaskId;
 
     /**
-     * Amount that was requested as a loan.
+     * The loan size
      */
     @Column
     private Integer amount;
+
+
+    /**
+     *
+     */
+    @JsonIgnore
+    @OneToMany(
+        cascade = {CascadeType.ALL, CascadeType.MERGE},
+        fetch = FetchType.LAZY)
+    @MapKey(name = "taskId")
+    @JoinTable(
+        name = "LOANAPPROVAL_TASKS",
+        joinColumns = {@JoinColumn(name = "loanRequest_id", referencedColumnName = "loanRequestId")},
+        inverseJoinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "taskId")})
+    private Map<String, LoanApprovalTaskEntity> tasks = new HashMap<>();
+
+    public LoanApprovalTaskEntity getTask(String taskId) {
+        return getTasks().get(taskId);
+    }
 }
