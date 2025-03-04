@@ -9,9 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoanApprovalTaskFormDataImpl implements LoanApprovalTaskFormData {
 
-    private String applicantName;
-
-    private int creditScore;
-
-    private String loanReason;
+    private Boolean riskAcceptable;
 }

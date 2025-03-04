@@ -116,10 +116,7 @@ public class Service {
         final Aggregate loanApproval,
         @TaskId final String taskId) {
 
-        LoanApprovalTaskFormDataImpl formData = new LoanApprovalTaskFormDataImpl();
-        formData.setApplicantName("John Doe");
-        formData.setCreditScore(750);
-        formData.setLoanReason("Buying a car");
+        final LoanApprovalTaskFormDataImpl formData = new LoanApprovalTaskFormDataImpl();
 
         LoanApprovalTaskEntity task = new LoanApprovalTaskEntity();
         task.setTaskId(taskId);
@@ -141,8 +138,7 @@ public class Service {
     public boolean completeRiskAssessment(
         final String loanRequestId,
         final String taskId,
-        final boolean riskIsAcceptable,
-        final int amount) {
+        final boolean riskIsAcceptable) {
 
         final var loanApprovalFound = loanApprovals.findById(loanRequestId);
 
@@ -158,11 +154,28 @@ public class Service {
 
         log.info("Got risk assessment '{}' for loan approval '{}'", riskIsAcceptable ? "accepted" : "denied", loanRequestId);
 
+        // Fetch the task entity
+        LoanApprovalTaskEntity task = loanApproval.getTasks().get(taskId);
+        if (task == null) {
+            return false;
+        }
+
+        // Ensure we have a valid form data object
+        LoanApprovalTaskFormDataImpl formData = task.getData();
+        if (formData == null) {
+            formData = new LoanApprovalTaskFormDataImpl();
+        }
+
+        // Save the final risk assessment into the task's form data
+        formData.setRiskAcceptable(riskIsAcceptable);
+        task.setData(formData);
+
         // save confirmed data in aggregate
         loanApproval.setRiskAcceptable(riskIsAcceptable);
-        log.info("RISK: {}",loanApproval.getRiskAcceptable().toString());
-        loanApproval.setAmount(amount);
-        loanApproval.getTasks().get(taskId).setCompletedAt(LocalDateTime.now());
+        task.setCompletedAt(LocalDateTime.now());
+
+        // Persist the changes before completing the task
+        loanApprovals.save(loanApproval);
 
         // complete user task
         service.completeUserTask(loanApproval, taskId);
@@ -200,21 +213,28 @@ public class Service {
 
         final var loanApproval = loanApprovalFound.get();
 
-        // Handle risk assessment data if provided
-        if (requestBody.containsKey("riskIsAcceptable") && requestBody.get("riskIsAcceptable") != null) {
-            final var riskIsAcceptable = (Boolean) requestBody.get("riskIsAcceptable");
-            loanApproval.setRiskAcceptable(riskIsAcceptable);
+        // Validate if the task exists
+        if (!loanApproval.getTasks().containsKey(taskId)) {
+            return false;
         }
+
 
         if (loanApproval.getTasks().containsKey(loanRequestId)) {
             return false;
         }
 
-        LoanApprovalTaskEntity task = loanApproval.getTasks().get(taskId);
-        if (task != null) {
-            task.setUpdatedAt(LocalDateTime.now());
+        final var task = loanApproval.getTasks().get(taskId);
+        final var formData = task.getData();
+
+        // Handle risk assessment data if provided
+        if (requestBody.containsKey("riskIsAcceptable") && requestBody.get("riskIsAcceptable") != null) {
+            final var riskIsAcceptable = (Boolean) requestBody.get("riskIsAcceptable");
+            loanApproval.setRiskAcceptable(riskIsAcceptable);
+            formData.setRiskAcceptable(riskIsAcceptable);
         }
 
+        task.setUpdatedAt(LocalDateTime.now());
+        task.setData(formData);
         loanApprovals.save(loanApproval);
 
         log.info("Task saved: {}", taskId);
@@ -233,13 +253,27 @@ public class Service {
 
         final var loanApproval = loanApprovalFound.get();
 
+        // Find the correct taskId dynamically
+        LoanApprovalTaskEntity task = null;
+        for (var entry : loanApproval.getTasks().entrySet()) {
+            task = entry.getValue();
+            if (task != null) break; // Get the first task found
+        }
+
+        if (task == null) {
+            return null; // No associated tasks found
+        }
+
+        LoanApprovalTaskFormDataImpl formData =  task.getData();
+
         // Construct response map
         Map<String, Object> response = new HashMap<>();
         response.put("amount", loanApproval.getAmount());
-        response.put("riskAcceptable", loanApproval.getRiskAcceptable());
+        response.put("riskAcceptable", formData != null ? formData.getRiskAcceptable() : null);
 
         return response;
     }
+
 
 
     /**

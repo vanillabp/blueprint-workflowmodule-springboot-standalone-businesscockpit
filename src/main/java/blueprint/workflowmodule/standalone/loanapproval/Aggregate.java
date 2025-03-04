@@ -57,7 +57,7 @@ public class Aggregate {
     private Integer amount;
 
     /**
-     *
+     * Mapping of loanRequestId and a TaskId with a LoanApprovalTaskEntity.
      */
     @JsonIgnore
     @OneToMany(
@@ -70,7 +70,15 @@ public class Aggregate {
         inverseJoinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "taskId")})
     private Map<String, LoanApprovalTaskEntity> tasks = new HashMap<>();
 
-    public LoanApprovalTaskEntity getTask(String taskId) {
+    /**
+     * gets a specific TaskEntity based on taskId.
+     *
+     * @param taskId unique identifier for each task started by VanillaBP
+     * @return returns a LoanApprovalTaskEntity object.
+     */
+    public LoanApprovalTaskEntity getTask(
+        final String taskId) {
+
         return getTasks().get(taskId);
     }
 }

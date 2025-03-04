@@ -53,7 +53,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
         }
 
         // Create a URL with both request parameters
-        const url = `${baseUrl}/${loanRequestId}/assess-risk/${assessRiskTaskId}?riskAcceptable=${riskAcceptable}&amount=${encodeURIComponent(amount)}`;
+        const url = `${baseUrl}/${loanRequestId}/assess-risk/${assessRiskTaskId}?riskAcceptable=${riskAcceptable}`;
 
         try {
             const response = await fetch(url, {
@@ -104,6 +104,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                 <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
                     <label>
                         <input
+                            disabled={userTask.endedAt != null}
                             type="radio"
                             name="riskAssessment"
                             value="accept"
@@ -113,6 +114,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                     </label>
                     <label>
                         <input
+                            disabled={userTask.endedAt != null}
                             type="radio"
                             name="riskAssessment"
                             value="deny"

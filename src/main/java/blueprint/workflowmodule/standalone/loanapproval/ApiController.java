@@ -75,14 +75,12 @@ public class ApiController {
     public ResponseEntity<String> assessRisk(
         @PathVariable final String loanRequestId,
         @PathVariable final String taskId,
-        @RequestParam final boolean riskAcceptable,
-        @RequestParam final int amount) {
+        @RequestParam final boolean riskAcceptable) {
 
         final var taskCompleted = service.completeRiskAssessment(
             loanRequestId,
             taskId,
-            riskAcceptable,
-            amount
+            riskAcceptable
         );
 
         log.info("Risk assessment completed");

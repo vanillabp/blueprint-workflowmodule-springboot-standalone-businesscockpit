@@ -37,8 +37,8 @@ For a detailed structure and the reason why we structured the webapp this way se
 
 ### Actions:
 - `handleCompleteTask` will send a *POST* request to backend completing the task and continuing the process.
-- `handleSaveTask` will send a *PUT* request, saving data of the task.
-- `handleCancelTask` will send a *DELETE* request, canceling the task.
+- `handleSaveTask` will send a *PUT* request, saving data of the task in the `FORM_DATA` Json Object.
+- `fetchExistingData` will send a *GET* request, retrieving the current data from the Aggregate and the `FORM_DATA` Json Object.
 
 ### Development Mode:
 - Running the app with the *dev-shell* allows hot module replacement.
