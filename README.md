@@ -89,21 +89,25 @@ approach provides several advantages:
 
 ### How It Works
 
-1. When a user saves a task, we create or update a `TaskEntity` corresponding to the task ID. This entity includes:
-    - Task metadata (e.g., name, creation timestamp)
-    - A `TaskFormData` object that stores the user’s input in JSON format
-2. The aggregate maintains a **mapping** to the `TaskEntity`, rather than storing the data itself.
-3. When the task is **completed**, relevant data from `TaskFormData` is transferred to the aggregate, and the workflow
-   proceeds.
+1. When a user task is started, we create `LoanApprovalTaskEntity` corresponding to the task ID. This entity includes:
+    - Task metadata (e.g., creation timestamp)
+    - A `LoanApprovalTaskFormDataImpl` object that stores the user’s input in JSON format. (In this case it is only the `riskAcceptable` Boolean)
+2. The aggregate maintains a **mapping** to the `LoanApprovalTaskEntity`, rather than storing the data itself.
+3. When the task is **completed**, relevant data from `LoanApprovalTaskFormDataImpl` is transferred to the aggregate,
+   the task completion timestamp is set, and the workflow proceeds.
 
 ### Example Flow
 
-1. **User saves task** → Data is stored in `LoanApprovalTaskEntity` (not in the aggregate).
-2. **User resumes task** → Data is retrieved from `LoanApprovalTaskEntity`.
-3. **User completes task** → Finalized data is moved to the aggregate, and the process advances.
+1. **User saves task** → Data is stored in `FORM_DATA` of the `LoanApprovalTaskEntity` table. (not in the aggregate).
+2. **User resumes task** → Data is retrieved from `FORM_DATA` of the `LoanApprovalTaskEntity` table.
+3. **User completes task** →
+    - `riskAcceptable` from `LoanApprovalTaskFormDataImpl` is saved into the aggregate.
+    - The task’s `completedAt` timestamp is updated.
+    - The user task is marked as completed in the workflow.
 
 This approach ensures a structured, maintainable workflow while keeping the aggregate focused on finalized business
 decisions. 🚀
+
 
 ## Noteworthy & Contributors
 
