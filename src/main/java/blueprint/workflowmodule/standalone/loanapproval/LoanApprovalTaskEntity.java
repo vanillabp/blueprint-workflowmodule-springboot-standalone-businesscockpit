@@ -19,17 +19,20 @@ public class LoanApprovalTaskEntity {
 
     @Type(JsonType.class)
     @Column(name = "FORM_DATA", columnDefinition = "CLOB")
-    private LoanApprovalTaskFormData data;
+    private LoanApprovalTaskFormDataImpl data;
 
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
 
     @Column(name = "COMPLETED_AT")
     private LocalDateTime completedAt;
 
     @JsonIgnore
     @SuppressWarnings("unchecked")
-    public <T extends LoanApprovalTaskFormData> T getData() {
+    public <T extends LoanApprovalTaskFormDataImpl> T getData() {
         return (T) data;
     }
 }

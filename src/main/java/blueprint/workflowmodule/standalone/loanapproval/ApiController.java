@@ -75,13 +75,13 @@ public class ApiController {
     public ResponseEntity<String> assessRisk(
         @PathVariable final String loanRequestId,
         @PathVariable final String taskId,
-        @RequestParam(required = false) final boolean riskIsAcceptable,
-        @RequestParam(required = false) final int amount) throws Exception {
+        @RequestParam final boolean riskAcceptable,
+        @RequestParam final int amount) {
 
         final var taskCompleted = service.completeRiskAssessment(
             loanRequestId,
             taskId,
-            riskIsAcceptable,
+            riskAcceptable,
             amount
         );
 
@@ -115,10 +115,10 @@ public class ApiController {
     }
 
     /**
+     * Returns Data to the frontend.
      *
-     *
-     * @param loanRequestId
-     * @return
+     * @param loanRequestId Unique Identifier for each LoanRequest(workflow).
+     * @return Map of LoanApprovalData
      */
     @GetMapping("/{loanRequestId}")
     public ResponseEntity<Map<String, Object>> getLoanApproval(

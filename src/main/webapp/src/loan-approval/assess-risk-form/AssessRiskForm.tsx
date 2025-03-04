@@ -67,7 +67,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                 console.error("Failed to complete task:", response.status);
             } else {
                 console.log("Task completed successfully");
-                window.location.reload() // TODO add SSE to dev-shell, which causes automatic update of userTask.
+                // window.location.reload() // TODO add SSE to dev-shell, which causes automatic update of userTask.
             }
         } catch (error) {
             console.error("Error completing task:", error);

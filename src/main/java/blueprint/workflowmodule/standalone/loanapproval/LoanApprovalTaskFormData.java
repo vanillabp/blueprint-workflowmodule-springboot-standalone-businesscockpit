@@ -8,4 +8,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = Aggregate.class)
 })
 public interface LoanApprovalTaskFormData {
+
 }

@@ -116,14 +116,15 @@ public class Service {
         final Aggregate loanApproval,
         @TaskId final String taskId) {
 
-        // TODO: TASK EVENTS + loanApproval.getTasks().put
-
-
-
+        LoanApprovalTaskFormDataImpl formData = new LoanApprovalTaskFormDataImpl();
+        formData.setApplicantName("John Doe");
+        formData.setCreditScore(750);
+        formData.setLoanReason("Buying a car");
 
         LoanApprovalTaskEntity task = new LoanApprovalTaskEntity();
         task.setTaskId(taskId);
         task.setCreatedAt(LocalDateTime.now());
+        task.setData(formData);
         loanApproval.getTasks().put(taskId, task);
 
         log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(), taskId);
@@ -143,8 +144,6 @@ public class Service {
         final boolean riskIsAcceptable,
         final int amount) {
 
-        // TODO Falls
-
         final var loanApprovalFound = loanApprovals.findById(loanRequestId);
 
         // validation
@@ -153,14 +152,17 @@ public class Service {
         }
 
         final var loanApproval = loanApprovalFound.get();
-        if ((loanApproval.getAssessRiskTaskId() == null) || !taskId.equals(loanApproval.getAssessRiskTaskId())) {
+        if ((loanApproval.getTasks().containsKey(loanRequestId))) {
             return false;
         }
+
         log.info("Got risk assessment '{}' for loan approval '{}'", riskIsAcceptable ? "accepted" : "denied", loanRequestId);
 
         // save confirmed data in aggregate
         loanApproval.setRiskAcceptable(riskIsAcceptable);
+        log.info("RISK: {}",loanApproval.getRiskAcceptable().toString());
         loanApproval.setAmount(amount);
+        loanApproval.getTasks().get(taskId).setCompletedAt(LocalDateTime.now());
 
         // complete user task
         service.completeUserTask(loanApproval, taskId);
@@ -204,21 +206,14 @@ public class Service {
             loanApproval.setRiskAcceptable(riskIsAcceptable);
         }
 
-        if ((loanApproval.getAssessRiskTaskId() == null) || !taskId.equals(loanApproval.getAssessRiskTaskId())) {
+        if (loanApproval.getTasks().containsKey(loanRequestId)) {
             return false;
         }
 
         LoanApprovalTaskEntity task = loanApproval.getTasks().get(taskId);
-        if (task == null) {
-            task = new LoanApprovalTaskEntity();
-            task.setTaskId(taskId);
-            task.setCreatedAt(LocalDateTime.now());
-            loanApproval.getTasks().put(taskId, task);
+        if (task != null) {
+            task.setUpdatedAt(LocalDateTime.now());
         }
-
-
-
-        // TODO ZWISCHENSPEICHERN NEUE TABLES
 
         loanApprovals.save(loanApproval);
 

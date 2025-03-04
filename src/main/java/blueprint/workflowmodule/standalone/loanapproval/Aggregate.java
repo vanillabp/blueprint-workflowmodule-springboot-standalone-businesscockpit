@@ -51,17 +51,10 @@ public class Aggregate {
     private Boolean riskAcceptable;
 
     /**
-     * The task id for risk assessment.
-     */
-    @Column
-    private String assessRiskTaskId;
-
-    /**
      * The loan size
      */
     @Column
     private Integer amount;
-
 
     /**
      *
