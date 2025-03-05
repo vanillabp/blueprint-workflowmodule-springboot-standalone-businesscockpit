@@ -19,7 +19,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
             if (!loanRequestId) return;
 
             try {
-                const response = await fetch(`${baseUrl}/${loanRequestId}`);
+                const response = await fetch(`${baseUrl}/${loanRequestId}/forms/${userTask.id}/assess-risk`);
                 if (!response.ok) {
                     console.error("Failed to fetch loan approval data");
                     return;
@@ -40,9 +40,9 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
 
     const handleCompleteTask = async () => {
         const loanRequestId = userTask.businessId;
-        const assessRiskTaskId = userTask.id;
+        const taskId = userTask.id;
 
-        if (!loanRequestId || !assessRiskTaskId) {
+        if (!loanRequestId || !taskId) {
             console.error("Missing workflow ID or task ID");
             return;
         }
@@ -52,8 +52,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
             return;
         }
 
-        // Create a URL with both request parameters
-        const url = `${baseUrl}/${loanRequestId}/assess-risk/${assessRiskTaskId}?riskAcceptable=${riskAcceptable}`;
+        const url = `${baseUrl}/${loanRequestId}/forms/${taskId}/assess-risk?riskAcceptable=${riskAcceptable}`;
 
         try {
             const response = await fetch(url, {
@@ -82,7 +81,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
             return;
         }
 
-        await fetch(`${baseUrl}/${loanRequestId}/save-task/${taskId}`, {
+        await fetch(`${baseUrl}/${loanRequestId}/forms/${taskId}/assess-risk`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

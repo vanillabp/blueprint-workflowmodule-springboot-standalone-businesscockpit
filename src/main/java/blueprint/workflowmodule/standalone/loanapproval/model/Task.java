@@ -1,4 +1,4 @@
-package blueprint.workflowmodule.standalone.loanapproval;
+package blueprint.workflowmodule.standalone.loanapproval.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @Entity(name = "LOAN_APPROVAL_TASK_ENTITY")
 @Getter
 @Setter
-public class LoanApprovalTaskEntity {
+public class Task {
 
     @Id
     private String taskId;
 
     @Type(JsonType.class)
-    @Column(name = "FORM_DATA", columnDefinition = "CLOB")
-    private LoanApprovalTaskFormDataImpl data;
+    @Column(name = "DATA", columnDefinition = "CLOB")
+    private TaskData data;
 
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
@@ -32,7 +32,8 @@ public class LoanApprovalTaskEntity {
 
     @JsonIgnore
     @SuppressWarnings("unchecked")
-    public <T extends LoanApprovalTaskFormDataImpl> T getData() {
+    public <T extends TaskData> T getData() {
         return (T) data;
     }
+
 }

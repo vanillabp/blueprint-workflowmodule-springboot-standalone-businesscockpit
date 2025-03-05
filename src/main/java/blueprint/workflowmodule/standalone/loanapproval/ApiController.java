@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -71,13 +72,13 @@ public class ApiController {
      * @throws NoSuchElementException   if no aggregate with the given ID is found.
      */
 
-    @PostMapping("/{loanRequestId}/assess-risk/{taskId}")
-    public ResponseEntity<String> assessRisk(
+    @PostMapping("/{loanRequestId}/forms/{taskId}/assess-risk")
+    public ResponseEntity<String> completeAssessRiskForm(
         @PathVariable final String loanRequestId,
         @PathVariable final String taskId,
         @RequestParam final boolean riskAcceptable) {
 
-        final var taskCompleted = service.completeRiskAssessment(
+        final var taskCompleted = service.completeAssessRiskForm(
             loanRequestId,
             taskId,
             riskAcceptable
@@ -96,16 +97,22 @@ public class ApiController {
      * @param requestBody       The request body containing task data including user input and risk assessment.
      * @return                  A ResponseEntity confirming the save operation.
      */
-    @PutMapping("{loanRequestId}/save-task/{taskId}")
-    public ResponseEntity<String> saveTask(
+    @PutMapping("{loanRequestId}/forms/{taskId}/assess-risk")
+    public ResponseEntity<String> saveAssessRiskForm(
         @PathVariable final String loanRequestId,
         @PathVariable final String taskId,
         @RequestBody final Map<String, Object> requestBody) {
 
-        final var taskSaved = service.saveTask(
+        boolean riskAcceptable = false;
+
+        if (requestBody.containsKey("riskIsAcceptable") && requestBody.get("riskIsAcceptable") != null) {
+            riskAcceptable = (Boolean) requestBody.get("riskIsAcceptable");
+        }
+
+        final var taskSaved = service.saveAssessRiskForm(
             loanRequestId,
             taskId,
-            requestBody);
+            riskAcceptable);
 
         log.info("Saved task: {} ", taskId);
 
@@ -113,22 +120,32 @@ public class ApiController {
     }
 
     /**
-     * Returns Data to the frontend.
+     * Returns data for risk assessment.
      *
-     * @param loanRequestId Unique Identifier for each LoanRequest(workflow).
-     * @return Map of LoanApprovalData
+     * @param loanRequestId Unique Identifier for each LoanRequest (workflow).
+     * @param taskId        Unique Identifier for the user task.
+     * @return Map containing the amount and risk assessment data.
      */
-    @GetMapping("/{loanRequestId}")
-    public ResponseEntity<Map<String, Object>> getLoanApproval(
-        @PathVariable final String loanRequestId) {
+    @GetMapping("/{loanRequestId}/forms/{taskId}/assess-risk")
+    public ResponseEntity<Map<String, Object>> getAssessRisk(
+        @PathVariable final String loanRequestId,
+        @PathVariable final String taskId) {
 
-        final Map<String, Object> loanApprovalData = service.getLoanApproval(loanRequestId);
+        final Service.AssessRiskForm assessRiskForm = service.getAssessRisk(
+            loanRequestId,
+            taskId);
 
-        if (loanApprovalData == null) {
+        if (assessRiskForm == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(loanApprovalData);
+        // Convert AssessRiskForm to Map
+        Map<String, Object> response = new HashMap<>();
+        response.put("amount", assessRiskForm.getAmount());
+        response.put("riskAcceptable", assessRiskForm.getRiskAcceptable());
+
+        log.info("Fetched task: {} with data: {}", taskId, response);
+        return ResponseEntity.ok(response);
     }
 
 }

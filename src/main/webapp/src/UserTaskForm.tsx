@@ -8,7 +8,7 @@ import { UserTaskForm } from '@vanillabp/bc-shared';
  * This reduces initial load time and loads components only when needed.
  *
  */
-const SingleTaskUserTaskForm = lazy(() => import('./loan-approval/UserTaskForm'));
+const AnyLoanApprovalTaskForm = lazy(() => import('./loan-approval/UserTaskForm'));
 
 const buildVersion = process.env.BUILD_VERSION;
 const buildTimestamp = new Date(process.env.BUILD_TIMESTAMP);
@@ -35,7 +35,7 @@ const buildTimestamp = new Date(process.env.BUILD_TIMESTAMP);
  */
 const UserTaskFormComponent: UserTaskForm = ({ userTask }) =>
     userTask.bpmnProcessId === LoanApproval
-        ? <SingleTaskUserTaskForm userTask={ userTask } />
+        ? <AnyLoanApprovalTaskForm userTask={ userTask } />
         : <Text>{ `unknown BPMN process ID '${userTask.bpmnProcessId}'` }</Text>;
 
 export {
