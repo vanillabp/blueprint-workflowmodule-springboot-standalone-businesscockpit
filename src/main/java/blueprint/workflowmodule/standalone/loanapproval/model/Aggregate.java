@@ -1,27 +1,26 @@
 package blueprint.workflowmodule.standalone.loanapproval.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.MapKey;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
+import java.util.HashMap;
+import java.util.Map;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.MapKey;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.FetchType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 /**
- * Represents the data model for a standalone workflow aggregate. This
- * entity is mapped to the {@code LOANAPPROVAL} table in the database.
+ * Represents the data model for a standalone businesscockpit
+ * <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#process-specific-workflow-aggregate">workflow aggregate</a>.
+ * This entity is mapped to the {@code LOANAPPROVAL} table in the database.
  *
  * <p>
  * The fields include:
@@ -50,7 +49,13 @@ public class Aggregate {
      * The primary key for the {@code LOANAPPROVAL} table.
      */
     @Id
-    public String loanRequestId;
+    private String loanRequestId;
+
+    /**
+     * The loan size.
+     */
+    @Column
+    private Integer amount;
 
     /**
      * Indicates whether this loan request should be accepted or denied.
@@ -58,11 +63,7 @@ public class Aggregate {
     @Column
     private Boolean riskAcceptable;
 
-    /**
-     * The loan size
-     */
-    @Column
-    private Integer amount;
+
 
     /**
      * Mapping of loanRequestId and a TaskId with a Task.

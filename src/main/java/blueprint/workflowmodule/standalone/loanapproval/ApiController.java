@@ -1,41 +1,37 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 /**
- * A simple REST controller that provides different endpoints.
- * It demonstrates how to accept parameters for creating a new workflow instance and delegate to the {@link Service}.
- *
+ * <p>
+ * A simple REST controller which demonstrates how to accept parameters
+ * for initiating and processing a loan approval.
+ * </p>
  * <p>
  * This controller uses Spring’s {@code @RestController} annotation to
- * expose a REST API, and {@code @GetMapping} to handle GET requests.
+ * expose a REST API, and to handle various requests.
  * </p>
  *
  * @version 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/loan-approval")
 public class ApiController {
-
-    /**
-     * Logger for this class, used to log workflow events and status messages.
-     */
-    private static final Logger log = LoggerFactory.getLogger(ApiController.class);
 
     /**
      * The loan approval service providing business functionality to
@@ -48,12 +44,12 @@ public class ApiController {
      * Initiate processing of a new loan approval.
      *
      * @param loanAmount The loan size.
-     * @return The ID of loan request. Typically, the ID is given by the calling system, but for demo
+     * @return The ID of loan request. Typically, the ID is given by the calling system but for demo
      * purposes it is generated and returned by this endpoint.
      */
     @GetMapping("/request-loan-approval")
     public ResponseEntity<String> requestLoanApproval(
-        @RequestParam final int loanAmount) throws Exception {
+            @RequestParam final int loanAmount) throws Exception{
 
         final var loanRequestId = UUID.randomUUID().toString();
 
@@ -62,6 +58,7 @@ public class ApiController {
             loanAmount);
 
         return ResponseEntity.ok(loanRequestId);
+
     }
 
     /**
@@ -72,10 +69,11 @@ public class ApiController {
      * aggregate and marks the specified task as completed.
      * </p>
      *
-     * @param loanRequestId             The unique identifier of the aggregate associated with the workflow.
-     * @param taskId                    The unique identifier of the user task to be completed.
-     * @return                          A ResponseEntity containing a success message upon task completion.
-     * @throws NoSuchElementException   if no aggregate with the given ID is found.
+     * @param loanRequestId  The unique identifier of the aggregate associated with the workflow.
+     * @param taskId         The unique identifier of the user task to be completed.
+     * @param riskAcceptable Boolean indicating whether the risk is accepted.
+     * @return A ResponseEntity containing a success message upon task completion.
+     * @throws NoSuchElementException if no aggregate with the given ID is found.
      */
 
     @PostMapping("/{loanRequestId}/forms/{taskId}/assess-risk")
@@ -98,10 +96,10 @@ public class ApiController {
     /**
      * Saves the user task temporarily.
      *
-     * @param loanRequestId     The unique identifier of the aggregate associated with the workflow.
-     * @param taskId            The unique identifier of the user task.
-     * @param requestBody       The request body containing task data including user input and risk assessment.
-     * @return                  A ResponseEntity confirming the save operation.
+     * @param loanRequestId The unique identifier of the aggregate associated with the workflow.
+     * @param taskId        The unique identifier of the user task.
+     * @param requestBody   The request body containing task data including user input and risk assessment.
+     * @return A ResponseEntity confirming the save operation.
      */
     @PutMapping("{loanRequestId}/forms/{taskId}/assess-risk")
     public ResponseEntity<String> saveAssessRiskForm(

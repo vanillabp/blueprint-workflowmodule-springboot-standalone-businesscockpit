@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
  * Implements {@link WorkflowModuleIdAwareProperties} to provide the workflow module ID.
  */
 @Configuration
-@ConfigurationProperties(prefix = AggregateProperties.WORKFLOW_MODULE_ID)
-public class AggregateProperties implements WorkflowModuleIdAwareProperties {
+@ConfigurationProperties(prefix = LoanApprovalProperties.WORKFLOW_MODULE_ID)
+public class LoanApprovalProperties implements WorkflowModuleIdAwareProperties {
 
     /**
      * The identifier for the aggregate workflow module.
      */
-    public static final String WORKFLOW_MODULE_ID = "loanapproval";
+    public static final String WORKFLOW_MODULE_ID = "loan-approval";
 
     /**
      * Retrieves the workflow module ID.
@@ -35,8 +35,8 @@ public class AggregateProperties implements WorkflowModuleIdAwareProperties {
      * @return A {@link WorkflowModuleProperties} instance configured for the aggregate module.
      */
     @Bean
-    public static WorkflowModuleProperties AggregateModuleProperties() {
+    public static WorkflowModuleProperties ModuleProperties() {
 
-        return new WorkflowModuleProperties(AggregateProperties.class, WORKFLOW_MODULE_ID);
+        return new WorkflowModuleProperties(LoanApprovalProperties.class, WORKFLOW_MODULE_ID);
     }
 }
