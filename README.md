@@ -46,11 +46,14 @@ point for more complex use cases:
 
 ## Using the demo
 
-This demo includes UI components used to complete the loan approval
-workflow, like user tasks. Those UI components are meant to be shown as part of the
-VanillaBP Business Cockpit. Therefore, the
+This demo provides UI components for completing the loan approval
+workflow, including user tasks.
+Those UI components are meant to be shown as part of the
+VanillaBP Business Cockpit.
+Therefore, the
 [Business Cockpit needs to be available](#running-the-business-cockpit)
-while using the demo.  As a simpler alternative you may [run the
+while using the demo.
+As a simpler alternative you may [run the
 Business Cockpit DevShell](#running-the-business-cockpit-devshell)
 instead, which is a replacement of the Business Cockpit typically used for
 simple local development of those UI components.
@@ -61,12 +64,12 @@ To go through the entire loan approval follow these steps:
    [http://localhost:8080/api/loan-approval/request-loan-approval?loanAmount=1000](http://localhost:8080/api/loan-approval/request-loan-approval?loanAmount=1000)<br>
    As a result you will get the loan approval's request ID needed in subsequent URLs.
 1. Open Business Cockpit or DevShell: http://localhost:9080
-1. In Business Cockpit: Change to list of user tasks and select the task "Assess risk".
+1. *In the Business Cockpit: Change to list of user tasks and select the task "Assess risk".
 1. In DevShell:
-   1. Checkout logs for retrieving the ID of the user task "Assess risk".
+   1. Checkout logs or the h2 database for retrieving the ID of the user task `Assess risk`.
    1. Enter the user task ID in the web application to load the task
-1. Complete the user task by using the UI loaded.
-1. The service task "Transfer money" is executed depending on the value chosen for "riskIsAcceptable".
+1. Complete or save the user task by using the UI loaded.
+1. The service task "Transfer money" is executed depending on the value chosen for `riskAcceptable`.
 
 *Hints:*
 - To see currently running processes or user tasks use [your local Camunda 7 Cockpit](http://localhost:8080/camunda).
@@ -84,7 +87,7 @@ integrating into a Business Cockpit:
 
 1. How to store data entered into user task forms.<br>Find this pattern
    [explained in detail here](./FORMDATA.md).
-1. How integrate user tasks hosted by a (micro-)service
+1. How to integrate user tasks hosted by a (micro-)service
    into a Business Cockpit UI instead of providing a UI per
    (micro-)service.<br>This pattern is
    [explained in detail here](./WEBAPP.md).
@@ -103,14 +106,14 @@ as a base for your use case, then
    use case.
 1. search case-insensitive in all files for all occurrences of
    `assessrisk` or `assess-risk` and copy and replace it by the identifier of your
-   use case' user tasks.
+   `use case` user tasks.
 1. place your BPMN file in the directory
    `src/main/resources/processes/camunda7` and change the annotation `@BpmnProcess`
    found in Java class `service` pointing to your BPMN file's name.
 
 ## Running the Business Cockpit
 
-Instructions in a glance:
+Instructions at a glance:
 
 1. Clone the [business cockpit repository](https://github.com/vanillabp/business-cockpit).
 1. Follow the
@@ -127,20 +130,20 @@ Instructions in a glance:
 ## Running the Business Cockpit DevShell
 
 The DevShell is a tiny web application used for local development of user tasks
-and other workflow specific UIs. It mimics the situation of integration of those UI
+and other workflow specific UIs. It mimics the situation integrating those UI
 components and handing over data about the user task.
 
 This data was previously automatically reported to the Business Cockpit by the
 business application and is fetched by the DevShell on loading the user task.
-To not being required to run the Business Cockpit one can run the
+To avoid running the Business Cockpit one can run the
 [DevShell Simulator](https://github.com/vanillabp/business-cockpit/tree/main/development/dev-shell-simulator)
 instead. It provides all internal APIs required during data reporting but
 stores data only in-memory which is typically sufficient for local development
 and testing.
 
-Instructions in a glance:
+Instructions at a glance:
 
-1. Download JAR from Maven-Central or the latest [snapshot](https://github.com/orgs/vanillabp/packages).
+1. Download JAR from Maven-Central or the latest [snapshot](https://github.com/orgs/vanillabp/packages?q=dev&tab=packages&q=dev-shell-simulators).
 1. Run the JAR
    ```shell
    java -jar dev-shell-simulator.jar
