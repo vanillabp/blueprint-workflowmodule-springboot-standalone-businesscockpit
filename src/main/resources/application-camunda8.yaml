@@ -1,3 +1,7 @@
+logging:
+    level:
+        io.camunda.zeebe.client.impl.ZeebeCallCredentials: ERROR
+
 camunda:
     client:
         mode: oidc
@@ -24,8 +28,6 @@ vanillabp:
     workflow-modules:
         loan-approval:
             adapters:
-                camunda7:
-                    resources-location: classpath*:/processes/camunda7
                 camunda8:
                     resources-location: classpath*:/processes/camunda8
                     use-tenants: false

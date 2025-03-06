@@ -1,22 +1,25 @@
 spring:
     application:
-        name: standalone-businesscockpit
+        name: loan-approval
     datasource:
-        url: jdbc:h2:mem:testdb
-    jpa:
-        database-platform: org.hibernate.dialect.H2Dialect
-        hibernate:
-            ddl-auto: update
-        properties:
+        url: jdbc:h2:mem:blueprintdb
+        jpa:
+            database-platform: org.hibernate.dialect.H2Dialect
             hibernate:
-                format_sql: true
-        show-sql: false
+                ddl-auto: update
+            properties:
+                hibernate:
+                    format_sql: true
+            show-sql: false
     h2:
         console:
-            enabled: true #pfad + username pw
-    data:
-        mongodb:
-            uri: mongodb:business-cockpit-mongo:27017
+            # Find H2 console at http://localhost:8080/h2-console/
+            # JDBC URL: Copy from property spring.datasource.url
+            # Username: sa
+            # Password: keep blank
+            enabled: true
+
+workerId: blueprint
 
 vanillabp:
     cockpit:
@@ -30,5 +33,3 @@ vanillabp:
         template-loader-path: classpath*:cockpit-templates/
         jwt:
             hmacSHA256-base64: oNr5wqOE2LBh5uKKVfTwubPfyF237OrffQj5bcMKtpw=
-
-workerId: blueprint

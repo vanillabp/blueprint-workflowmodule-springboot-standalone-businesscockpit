@@ -2,8 +2,8 @@ package blueprint.workflowmodule.standalone.loanapproval;
 
 import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
-import blueprint.workflowmodule.standalone.loanapproval.model.Task;
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
+import blueprint.workflowmodule.standalone.loanapproval.model.Task;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetailsProvider;
@@ -16,13 +16,15 @@ import io.vanillabp.spi.service.TaskId;
 import io.vanillabp.spi.service.WorkflowService;
 import io.vanillabp.spi.service.WorkflowTask;
 import jakarta.transaction.Transactional;
-import lombok.*;
+import java.time.LocalDateTime;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * Service is a simple demonstration of how to integrate a BPMN
@@ -235,18 +237,7 @@ public class Service {
         final String loanRequestId,
         final String taskId) {
 
-        final var loanApprovalFound = loanApprovals.findById(loanRequestId);
-
-        if (loanApprovalFound.isEmpty()) {
-            return null;
-        }
-
-        final var loanApproval = loanApprovalFound.get();
-        final var task = loanApproval.getTask(taskId);
-
-        if (task == null || task.getData() == null) {
-            return null;
-        }
+        final var task = determineTask();
 
         final AssessRiskFormData formData = task.getData();
 
@@ -258,6 +249,10 @@ public class Service {
         return assessRiskForm;
     }
 
+    private static class AggregateAndTask {
+        Aggregate loanApproval;
+        Task task;
+    }
 
     /**
      * Method that reports business data (details) for a user task to be shown in the list of user tasks in

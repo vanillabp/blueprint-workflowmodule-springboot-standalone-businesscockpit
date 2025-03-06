@@ -19,3 +19,10 @@ camunda:
             schema-update: true
             jdbc-batch-processing: false
         auto-deployment-enabled: false
+
+vanillabp:
+    workflow-modules:
+        loan-approval:
+            adapters:
+                camunda7:
+                    resources-location: classpath*:/processes/camunda7

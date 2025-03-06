@@ -1,46 +1,97 @@
 ![VanillaBP](readme/vanillabp-headline.png)
 
-# blueprint-workflowmodule-springboot-standalone-businesscockpit
+# Blueprint "Standalone leveraging Business Cockpit"
 
-A **blueprint** of a standalone Spring Boot application including the *
-*[Vanillabp Business Cockpit](https://github.com/vanillabp/business-cockpit/tree/feature/documentation)**
-demonstrating how to use [VanillaBP SPI](https://github.com/vanillabp/spi-for-java) and
-the [Business Cockpit SPI](https://github.com/vanillabp/business-cockpit/tree/feature/documentation/spi-for-java) for
+A **blueprint** of a standalone Spring Boot application including the
+**[VanillaBP Business Cockpit](https://github.com/vanillabp/business-cockpit/)**
+demonstrating how to use the [VanillaBP SPI](https://github.com/vanillabp/spi-for-java) and
+the [VanillaBP Business Cockpit SPI](https://github.com/vanillabp/business-cockpit/tree/feature/documentation/spi-for-java) for
 BPMN-based workflows. This
 example covers a very minimal set of scenarios for developing business process applications and serves as a starting
 point for more complex use cases.
 
-This blueprint is an extension from the standalone project and therefore doesn't have all the details when it comes to
-the processes and tasks itself. To see all those details
-[click here](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone/tree/wip).
+This blueprint is an extension of the
+[standalone blueprint](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone)
+and therefore descriptions do not cover details already explained there.
 
-![demo.bpmn](readme/Standalone_BPMN_Process.png)
+In order to develop a better understanding of the use of vanillabp,
+a concrete technical process “loan approval” is used instead of an abstract
+demo process:
+
+![loan_approval.bpmn](readme/loan-approval-process.png)
 
 ## Getting Started
 
-1. **Create an empty project and run:**
+1. **Create an empty project directory and run:**
    ```shell
-    mvn archetype:generate
-    -DarchetypeGroupId=io.vanillabp.blueprint
-    -DarchetypeArtifactId=workflowmodule-springboot-standalone-businesscockpit-archetype
-    -DgroupId={your.groupId}
-    -DartifactId={your.artifactId}
+    mvn archetype:generate \
+    -DarchetypeGroupId=io.vanillabp.blueprint \
+    -DarchetypeArtifactId=workflowmodule-springboot-standalone-businesscockpit-archetype \
+    -DgroupId={your.groupId} \
+    -DartifactId={your.artifactId} \
     -Dversion={your.version}
     ```
-   *Hint:* If you want a specific verison add `-DarchetypeVersion={e.g 0.0.1}`
-2. **Build the Project**
+   *Hint:* If you want a specific archetype version add `-DarchetypeVersion={e.g 0.0.1}`
+   <br>&nbsp;
+1. **Build the application:**
    ```shell
    mvn clean package -Pcamunda7
     ```
-3. **Start the Project**
+1. **Start the application:**
    ```shell
-   java -jar /target/demo.jar --spring.profiles.active=camunda7
+   java -jar target/loan-approval.jar --spring.profiles.active=camunda7
    ```
 
-To start the project with the `camunda8` profile see
-this [specific README](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone/blob/wip/CAMUNDA8.md)
+## Using the demo
 
-## Business cockpit
+This demo includes UI components used to complete the loan approval
+workflow. These UI components are meant to be shown by the
+VanillaBP Business Cockpit. Therefore, the
+[Business Cockpit needs to be available](#running-the-business-cockpit)
+one using the demo.  As a simpler alternative you may [run the
+Business Cockpit DevShell](#running-the-business-cockpit-devshell)
+instead, which is replacement of the Business Cockpit used for easier
+development of those UI components.
+
+To go through the entire loan approval follow these steps:
+
+1. Start processing of loan approval using this URL:<br>
+   [http://localhost:8080/api/loan-approval/request-loan-approval?loanAmount=1000](http://localhost:8080/api/loan-approval/request-loan-approval?loanAmount=1000)<br>
+   As a result you will get the loan approval's request ID needed in subsequent URLs.
+1. Checkout logs for retrieving the ID of the user task "Assess risk".
+1. Complete the user task by either accepting or denying the risk by this URL:<br>
+   [http://localhost:8080/api/loan-approval/{loanRequestId}/assess-risk/{taskId}?riskIsAcceptable=true](http://localhost:8080/api/loan-approval/{loanRequestId}/assess-risk/{taskId}?riskIsAcceptable=true)<br>
+   (replace placeholders by the values collected in previous steps)
+1. The service task "Transfer money" is executed depending on the value chosen for "riskIsAcceptable".
+
+*Hints:*
+- To see currently running processes use [your local Camunda 7 Cockpit](http://localhost:8080/camunda).
+- For running this demo using Camunda 8 checkout [Camunda 8 README](./CAMUNDA8.md#setup-instructions).
+
+## Interesting to know
+
+The default Maven profile is `camunda7`, which includes the [Camunda 7 adapter](https://github.com/camunda-community-hub/vanillabp-camunda7-adapter) dependency.
+Additionally, a Spring profile `camunda7` needs to be used at runtime providing proper configuration.
+For **Camunda 8** the respective profile `camunda8` has to be used.
+Refer to the [specific README](./CAMUNDA8.md) since additional setup is required.
+
+
+## Building an application for your own use case
+
+If you want to use the project generated based on the archetype
+as a base for your use case, then
+
+1. choose a proper identifier for your business use case.
+1. rename the Java package `blueprint.workflowmodule.standalone.loanapproval` according to your
+   projects package and use case identifier (e.g. `com.mycompany.myusecase`).
+1. search case-insensitive in all files for all occurrences of
+   `loanapproval` or `loan-approval` and replace it by the identifier of your
+   use case.
+1. place your BPMN file in the directory
+   `src/main/resources/processes/camunda7` and change the annotation `@BpmnProcess`
+   found in Java class `service` pointing to your BPMN file's name.
+
+## Running the Business Cockpit
 
 For the VanillaBP Business Cockpit to work follow
 the [As-Is Guide](https://github.com/vanillabp/business-cockpit/blob/feature/documentation/container/README.md#as-is).
@@ -60,6 +111,9 @@ Here a simplified version:
 5. Authenticate with `test` as username and password under [http://localhost:8080/](http://localhost:8080/)
 6. Start the standalone-businesscockpit application, and you should be able to see your workflow and your task in the
    respective Lists.
+
+## Running the Business Cockpit DevShell
+
 
 ## Web app
 
