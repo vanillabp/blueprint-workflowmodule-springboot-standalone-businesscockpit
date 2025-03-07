@@ -1,22 +1,23 @@
 package blueprint.workflowmodule.standalone.loanapproval.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.util.HashMap;
-import java.util.Map;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.MapKey;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.FetchType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Represents the data model for a standalone businesscockpit
  * <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#process-specific-workflow-aggregate">workflow aggregate</a>.
@@ -73,8 +74,8 @@ public class Aggregate {
     @MapKey(name = "taskId")
     @JoinTable(
             name = "LOANAPPROVAL_TASKS",
-            joinColumns = {@JoinColumn(name = "aggregate_id", referencedColumnName = "loanRequestId")},
-            inverseJoinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "taskId")})
+            joinColumns = {@JoinColumn(name = "AGGREGATE_ID", referencedColumnName = "loanRequestId")},
+            inverseJoinColumns = {@JoinColumn(name = "TASK_ID", referencedColumnName = "taskId")})
     private Map<String, Task> tasks = new HashMap<>();
 
     /**
@@ -87,6 +88,7 @@ public class Aggregate {
             final String taskId) {
 
         return getTasks().get(taskId);
+
     }
 
 }

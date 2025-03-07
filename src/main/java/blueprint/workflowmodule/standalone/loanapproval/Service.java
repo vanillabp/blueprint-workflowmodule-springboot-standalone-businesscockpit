@@ -2,15 +2,6 @@ package blueprint.workflowmodule.standalone.loanapproval;
 
 import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
-import io.vanillabp.spi.process.ProcessService;
-import io.vanillabp.spi.service.BpmnProcess;
-import io.vanillabp.spi.service.TaskId;
-import io.vanillabp.spi.service.WorkflowService;
-import io.vanillabp.spi.service.WorkflowTask;
-import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
 import blueprint.workflowmodule.standalone.loanapproval.model.Task;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
@@ -19,15 +10,26 @@ import io.vanillabp.spi.cockpit.usertask.UserTaskDetailsProvider;
 import io.vanillabp.spi.cockpit.workflow.PrefilledWorkflowDetails;
 import io.vanillabp.spi.cockpit.workflow.WorkflowDetails;
 import io.vanillabp.spi.cockpit.workflow.WorkflowDetailsProvider;
-
+import io.vanillabp.spi.process.ProcessService;
+import io.vanillabp.spi.service.BpmnProcess;
+import io.vanillabp.spi.service.TaskEvent;
+import io.vanillabp.spi.service.TaskId;
+import io.vanillabp.spi.service.WorkflowService;
+import io.vanillabp.spi.service.WorkflowTask;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This service manages the lifecycle of a loan approval workflow.
- * It integrates with the BPMN process using the VanillaBP & Businesscockpit SPI,
+ * It integrates with the BPMN process using the VanillaBP & Business Cockpit SPI,
  * handling both service and user tasks.
  *
  * <p>
@@ -41,8 +43,8 @@ import lombok.*;
 @Slf4j
 @org.springframework.stereotype.Service
 @WorkflowService(
-    workflowAggregateClass = Aggregate.class,
-    bpmnProcess = @BpmnProcess(bpmnProcessId = "loan_approval"))
+        workflowAggregateClass = Aggregate.class,
+        bpmnProcess = @BpmnProcess(bpmnProcessId = "loan_approval"))
 @Transactional
 public class Service {
 
@@ -71,14 +73,16 @@ public class Service {
 
         // build the aggregate
         // (https://github.com/vanillabp/spi-for-java/blob/main/README.md#process-specific-workflow-aggregate)
-
-        final var loanApproval = new Aggregate();
-        loanApproval.setLoanRequestId(loanRequestId);
-        loanApproval.setAmount(loanAmount);
+        final var loanApproval = Aggregate
+                .builder()
+                .loanRequestId(loanRequestId)
+                .amount(loanAmount)
+                .build();
 
         service.startWorkflow(loanApproval);
 
         log.info("Loan approval workflow '{}' started", loanApproval.getLoanRequestId());
+
     }
 
     /**
@@ -101,6 +105,7 @@ public class Service {
          * The specific task within the loan approval workflow.
          */
         private Task task;
+
     }
 
     /**
@@ -121,19 +126,19 @@ public class Service {
             final String taskId) {
 
         final var loanApprovalFound = loanApprovals.findById(loanRequestId);
-
         if (loanApprovalFound.isEmpty()) {
             return null;
         }
 
         final var loanApproval = loanApprovalFound.get();
-        final var task = loanApproval.getTask(taskId);
 
+        final var task = loanApproval.getTask(taskId);
         if (task == null) {
             return null;
         }
 
         return new AggregateAndTask(loanApproval, task);
+
     }
 
 
@@ -148,17 +153,31 @@ public class Service {
     @WorkflowTask
     public void assessRisk(
             final Aggregate loanApproval,
-            @TaskId final String taskId) {
+            @TaskId final String taskId,
+            @TaskEvent final TaskEvent.Event taskEvent) {
 
-        final AssessRiskFormData formData = new AssessRiskFormData();
+        // task is created
+        if (taskEvent == TaskEvent.Event.CREATED) {
 
-        Task task = new Task();
-        task.setTaskId(taskId);
-        task.setCreatedAt(LocalDateTime.now());
-        task.setData(formData);
-        loanApproval.getTasks().put(taskId, task);
+            final AssessRiskFormData formData = new AssessRiskFormData();
 
-        log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(), taskId);
+            Task task = new Task();
+            task.setTaskId(taskId);
+            task.setCreatedAt(LocalDateTime.now());
+            task.setData(formData);
+            loanApproval.getTasks().put(taskId, task);
+
+            log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(), taskId);
+
+        }
+        // task is canceled e.g. due to an interrupting boundary event
+        else if (taskEvent == TaskEvent.Event.CANCELED) {
+
+            loanApproval
+                    .getTask(taskId)
+                    .setCompletedAt(LocalDateTime.now());
+
+        }
 
     }
 
@@ -171,11 +190,12 @@ public class Service {
      */
     @WorkflowTask
     public void transferMoney(
-        final Aggregate loanApproval) {
+            final Aggregate loanApproval) {
 
         log.info("Transferring money for loan request '{}'", loanApproval.getLoanRequestId());
 
-        // not part of this demo
+        // Not part of this demo
+
     }
 
 
@@ -196,22 +216,21 @@ public class Service {
             return false;
         }
 
-        final AssessRiskFormData formData = aggregateAndTask.task.getData();
+        updateAssessRiskForm(
+                aggregateAndTask,
+                riskIsAcceptable);
 
-        // Save the final risk assessment into the task's form data for showing the completed task
-        formData.setRiskAcceptable(riskIsAcceptable);
-
-        // Set the current local time as completed
+        // Mark task as completed by setting the current timestamp
         aggregateAndTask.task.setCompletedAt(LocalDateTime.now());
 
         // Save confirmed data in aggregate
         aggregateAndTask.loanApproval.setRiskAcceptable(riskIsAcceptable);
 
-        // complete user task
-
+        // Complete user task
         service.completeUserTask(aggregateAndTask.loanApproval, taskId);
 
         return true;
+
     }
 
     /**
@@ -224,7 +243,7 @@ public class Service {
      *
      * @param loanRequestId  The unique identifier of the loan request
      * @param taskId         The unique identifier of the task being saved
-     * @param riskAcceptable boolean indicating risk assessment decision
+     * @param riskIsAcceptable boolean indicating risk assessment decision
      * @return {@code true} if the task was successfully saved;
      * {@code false} if the loan request was not found, required data was missing,
      * or if the task ID doesn't match the current risk assessment task
@@ -232,25 +251,35 @@ public class Service {
     public boolean saveAssessRiskForm(
             final String loanRequestId,
             final String taskId,
-            final Boolean riskAcceptable) {
+            final Boolean riskIsAcceptable) {
 
         final var aggregateAndTask = determineTask(loanRequestId, taskId);
         if (aggregateAndTask == null) {
             return false;
         }
 
-        final AssessRiskFormData formData = aggregateAndTask.task.getData();
-
-        // Save the final risk assessment into the task's form data for showing the completed task
-        formData.setRiskAcceptable(riskAcceptable);
-
-        // Update task data
-        aggregateAndTask.task.setUpdatedAt(LocalDateTime.now());
-        aggregateAndTask.task.setData(formData);
+        updateAssessRiskForm(
+                aggregateAndTask,
+                riskIsAcceptable);
 
         log.info("Task saved: {}", taskId);
 
         return true;
+
+    }
+
+    private void updateAssessRiskForm(
+            final AggregateAndTask aggregateAndTask,
+            final Boolean riskAcceptable) {
+
+        final AssessRiskFormData formData = aggregateAndTask.task.getData();
+
+        // Save the risk assessment into the task's form data for showing the completed task
+        formData.setRiskAcceptable(riskAcceptable);
+
+        // Update task meta-data
+        aggregateAndTask.task.setUpdatedAt(LocalDateTime.now());
+
     }
 
     /**
@@ -272,6 +301,7 @@ public class Service {
          * The loan amount associated with this risk assessment.
          */
         private int amount;
+
     }
 
     /**
@@ -302,47 +332,54 @@ public class Service {
         assessRiskForm.setRiskAcceptable(formData.getRiskAcceptable());
 
         return assessRiskForm;
+
     }
 
     /**
      * Method that reports business data (details) for a user task to be shown in the list of user tasks in
-     * e.g. the Vanillabp Business Cockpit
+     * e.g. the VanillaBP Business Cockpit
      *
-     * @param details   prefilled details object
+     * @param userTaskDetails The details object prefilled with defaults
      * @param aggregate The aggregate instance that contains the workflow where the task is located.
      * @return returns the details provided through {@code PrefilledUserTaskDetails}
      */
     @UserTaskDetailsProvider(taskDefinition = "assessRisk")
     public UserTaskDetails assessRiskDetails(
-            final PrefilledUserTaskDetails details,
+            final PrefilledUserTaskDetails userTaskDetails,
             final Aggregate aggregate) {
 
         log.info("assessRiskDetails for '{}' started", aggregate.getLoanRequestId());
 
-        details.setTitle(Map.of("Title", aggregate.getLoanRequestId()));
-        details.setAssignee("Max Mustermann");
+        // see https://github.com/vanillabp/business-cockpit/tree/main/spi-for-java
+        userTaskDetails.setDetails(
+                Map.of("loanRequestId", aggregate.getLoanRequestId()));
+        userTaskDetails.setCandidateGroups(List.of("RISK_ASSESSMENT"));
 
-        return details;
+        return userTaskDetails;
+
     }
 
     /**
      * Method that reports business data (details) for the current running workflow to be shown in the list of running workflows
-     * e.g., the Vanillabp Business Cockpit.
+     * e.g., the VanillaBP Business Cockpit.
      *
-     * @param details   prefilled details object
+     * @param worfklowDetails The details object prefilled with defaults
      * @param aggregate The aggregate instance that contains the workflow where the task is located.
      * @return returns the details provided through {@code PrefilledWorkflowDetails}
      */
     @WorkflowDetailsProvider
     public WorkflowDetails workflowDetails(
-        final PrefilledWorkflowDetails details,
-        final Aggregate aggregate) {
+            final PrefilledWorkflowDetails worfklowDetails,
+            final Aggregate aggregate) {
 
         log.info("WorkflowDetails '{}' started", aggregate.getLoanRequestId());
 
-        details.setTitle(Map.of("Title", aggregate.getLoanRequestId()));
+        // see https://github.com/vanillabp/business-cockpit/tree/main/spi-for-java
+        worfklowDetails.setDetails(
+                Map.of("loanRequestId", aggregate.getLoanRequestId()));
 
-        return details;
+        return worfklowDetails;
+
     }
 
 }
