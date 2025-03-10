@@ -84,6 +84,31 @@
                     <npmVersion>10.2.4</npmVersion>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>2.44.0</version>
+				<configuration>
+					<java>
+						<eclipse>
+							<file>${maven.multiModuleProjectDirectory}/Default.xml</file>
+							<version>4.26</version>
+						</eclipse>
+						<removeUnusedImports />
+						<importOrder>
+							<order>java,javax,org,com,at.phactum</order>
+						</importOrder>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
 	</build>
 
