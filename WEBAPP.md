@@ -7,7 +7,7 @@ This web application serves as a front-end for managing user tasks within a work
 It interacts with a backend via a REST API to fetch, display, and update user tasks.
 
 ### Development Package "dev-shell"
-The application includes a development package called `development` (also called *dev-shell*) that enables hot module replacement (HMR).
+The web application includes a development package called `development`(also called *dev-shell*) that enables hot module replacement(HMR).
 This allows developers to see changes in real-time without needing to restart the application.
 
 ## Project structure and thoughts
@@ -36,7 +36,7 @@ For a detailed structure and the reason why we structured the webapp this way se
 - Upon submitting a task, the app will send a request to the REST API.
 
 ### Actions:
-- `handleCompleteTask` will send a *POST* request to backend completing the task and continuing the process.
+- `handleCompleteTask` will send a *POST* request to the backend completing the task and continuing the process.
 - `handleSaveTask` will send a *PUT* request, saving data of the task in the `FORM_DATA` Json Object.
 - `fetchExistingData` will send a *GET* request, retrieving the current data from the Aggregate and the `FORM_DATA` Json Object.
 

@@ -7,20 +7,20 @@
 
 When involving business people into a workflow leveraging user tasks,
 particular attributes of data entered by users (as part of fulfilling a
-user task) will effect the flow of the process. In this demo an
+user task) will affect the flow of the process. In this demo an
 attribute `risk is acceptable` is entered as part of the user task
 `AssessRisk`. As you can see in the [BPMN](./readme/loan-approval-process.png)
-it effects the flow of the process.
+it affects the flow of the process.
 
 In VanillaBP based business processing applications, an aggregate is
 used as the single source of truth of data needed to run a workflow.
-It therefore makes sense to store form data of user tasks in the
-aggregate as well. But there are two scenarios in which this is not
-good:
+Therefore, it makes sense to store the form data of user tasks in 
+the aggregate as well.
+However, there are two scenarios in which this is problematic:
 
 1. In the Business Cockpit, users can reopen user tasks that have already
    been completed. The use case for this feature is to see what data
-   was entered on completing the task. In this case the form is shown read-only.
+   was entered on completing the task. In this case, the form is shown read-only.
 1. A process model might have multiple flows in parallel accessing
    attributes entered in a user task which are currently active.
    If a user task allows to save data without completing the form
@@ -39,15 +39,15 @@ Advantages of this approach:
    aggregate. It is also save to store unvalidated user input, e.g.
    in situations where validation can only succeed when completing the
    user task.
-1. **Data consistency**: The aggregate remains clean and only gets updated
-   with finalized decisions and data when a task is completed.
+1. **Data consistency**: The aggregate remains clean and is updated only with 
+finalized decisions and data once a task is completed.
 1. **Auditability**: Keeping task data in separate entities allows tracking
    changes, timestamps, and user inputs before continuing to process
    the workflow.
 
 ## How it works
 
-1. In the aggregate a map storing all user tasks is introduced:
+1. In the aggregate, a map storing all user tasks is introduced:
    ```java
    private Map<String, Task> tasks;
    ```
@@ -82,7 +82,7 @@ Advantages of this approach:
    ```
    The type of form data depends on the user task. For moving
    casts out of business code, a convenience method `getData` is provided.
-1. Since form data is never been referred by other parts of the
+1. Since form data is never referred by other parts of the
    aggregate (due to its nature "unconfirmed data"), all form data
    classes extend `TaskData` (e.g. `AssessRiskFormData` ), are
    POJOs and serialized as JSON to a single CLOB column, instead of doing
