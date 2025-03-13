@@ -31,7 +31,6 @@ import lombok.NoArgsConstructor;
  *   <li>{@code loanRequestId}          — A unique identifier for each loan request.</li>
  *   <li>{@code riskAcceptable}         — An indicator that shows whether the risk of lending is acceptable.</li>
  *   <li>{@code amount}                 — The amount that was requested to loan   </li>
- *   <li>{@code assessRiskTaskId}</li>  — A unique Identifier for each Task ID managed by the business process engine (e.g., camunda)
  *   <li>{@code tasks}                  — A Hashmap join table that saves maps the loanRequestId to a taskId</li>
  * </ul>
  *

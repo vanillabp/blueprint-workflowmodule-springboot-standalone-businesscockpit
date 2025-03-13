@@ -80,7 +80,7 @@ public class ApiController {
      *
      * @param loanRequestId  The unique identifier of the aggregate associated with the workflow.
      * @param taskId         The unique identifier of the user task to be completed.
-     * @param riskAcceptable Boolean indicating whether the risk is accepted.
+     * @param riskIsAcceptable Boolean indicating whether the risk is accepted.
      * @return A ResponseEntity containing a success message upon task completion.
      * @throws NoSuchElementException if no aggregate with the given ID is found.
      */
@@ -89,13 +89,17 @@ public class ApiController {
     public ResponseEntity<String> completeAssessRiskForm(
             @PathVariable final String loanRequestId,
             @PathVariable final String taskId,
-            @RequestParam final boolean riskAcceptable) {
+            @RequestParam final boolean riskIsAcceptable) {
 
         final var taskCompleted = service.completeAssessRiskForm(
                 loanRequestId,
                 taskId,
-                riskAcceptable
+                riskIsAcceptable
         );
+
+        if (!taskCompleted) {
+            return ResponseEntity.notFound().build();
+        }
 
         log.info("Risk assessment completed");
 
