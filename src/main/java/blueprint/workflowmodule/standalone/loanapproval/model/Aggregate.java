@@ -1,6 +1,10 @@
 package blueprint.workflowmodule.standalone.loanapproval.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,8 +15,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.MapKey;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,13 +71,19 @@ public class Aggregate {
      */
     @JsonIgnore
     @OneToMany(
-            cascade = {CascadeType.ALL, CascadeType.MERGE},
+            cascade = {
+                    CascadeType.ALL, CascadeType.MERGE
+            },
             fetch = FetchType.LAZY)
     @MapKey(name = "taskId")
     @JoinTable(
             name = "LOANAPPROVAL_TASKS",
-            joinColumns = {@JoinColumn(name = "AGGREGATE_ID", referencedColumnName = "loanRequestId")},
-            inverseJoinColumns = {@JoinColumn(name = "TASK_ID", referencedColumnName = "taskId")})
+            joinColumns = {
+                    @JoinColumn(name = "AGGREGATE_ID", referencedColumnName = "loanRequestId")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "TASK_ID", referencedColumnName = "taskId")
+            })
     private Map<String, Task> tasks = new HashMap<>();
 
     /**
@@ -88,6 +96,15 @@ public class Aggregate {
             final String taskId) {
 
         return getTasks().get(taskId);
+
+    }
+
+    public Boolean isLoanRequestAccepted() {
+
+        if (riskAcceptable == null) {
+            return null;
+        }
+        return true;
 
     }
 

@@ -5,7 +5,7 @@
       <bpmn:outgoing>Flow_1r06jh3</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1r06jh3" sourceRef="StartEvent_1" targetRef="Activity_doService" />
-    <bpmn:exclusiveGateway id="Gateway_10bfok5" name="Risk acceptable?" default="Flow_147bmcv">
+    <bpmn:exclusiveGateway id="Gateway_10bfok5" name="Loan request accepted?" default="Flow_147bmcv">
       <bpmn:incoming>Flow_1b73n0w</bpmn:incoming>
       <bpmn:outgoing>Flow_147bmcv</bpmn:outgoing>
       <bpmn:outgoing>Flow_1y3nfgn</bpmn:outgoing>
@@ -22,7 +22,7 @@
       <bpmn:incoming>Flow_1y3nfgn</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1y3nfgn" name="no" sourceRef="Gateway_10bfok5" targetRef="Event_1lj56fs">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(riskAcceptable)</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(loanRequestAccepted)</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="Activity_doService" name="Assess Risk">
       <bpmn:extensionElements>
@@ -50,7 +50,7 @@
       <bpmndi:BPMNShape id="Gateway_10bfok5_di" bpmnElement="Gateway_10bfok5" isMarkerVisible="true">
         <dc:Bounds x="425" y="75" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="408" y="53" width="84" height="14" />
+          <dc:Bounds x="417" y="36" width="66" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_17fdhdh_di" bpmnElement="Event_17fdhdh">

@@ -1,21 +1,24 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * A simple REST controller which demonstrates how to accept parameters
@@ -40,6 +43,8 @@ public class ApiController {
     @Autowired
     private Service service;
 
+    private LoanApprovalProperties properties;
+
     /**
      * Initiate processing of a new loan approval.
      *
@@ -49,13 +54,17 @@ public class ApiController {
      */
     @GetMapping("/request-loan-approval")
     public ResponseEntity<String> requestLoanApproval(
-            @RequestParam final int loanAmount) throws Exception{
+            @RequestParam final int loanAmount) throws Exception {
 
         final var loanRequestId = UUID.randomUUID().toString();
 
+        if (loanAmount > properties.getMaxAmount()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         service.initiateLoanApproval(
-            loanRequestId,
-            loanAmount);
+                loanRequestId,
+                loanAmount);
 
         return ResponseEntity.ok(loanRequestId);
 
@@ -78,14 +87,14 @@ public class ApiController {
 
     @PostMapping("/{loanRequestId}/forms/{taskId}/assess-risk")
     public ResponseEntity<String> completeAssessRiskForm(
-        @PathVariable final String loanRequestId,
-        @PathVariable final String taskId,
-        @RequestParam final boolean riskAcceptable) {
+            @PathVariable final String loanRequestId,
+            @PathVariable final String taskId,
+            @RequestParam final boolean riskAcceptable) {
 
         final var taskCompleted = service.completeAssessRiskForm(
-            loanRequestId,
-            taskId,
-            riskAcceptable
+                loanRequestId,
+                taskId,
+                riskAcceptable
         );
 
         log.info("Risk assessment completed");
@@ -103,9 +112,9 @@ public class ApiController {
      */
     @PutMapping("{loanRequestId}/forms/{taskId}/assess-risk")
     public ResponseEntity<String> saveAssessRiskForm(
-        @PathVariable final String loanRequestId,
-        @PathVariable final String taskId,
-        @RequestBody final Map<String, Object> requestBody) {
+            @PathVariable final String loanRequestId,
+            @PathVariable final String taskId,
+            @RequestBody final Map<String, Object> requestBody) {
 
         boolean riskAcceptable = false;
 
@@ -114,9 +123,9 @@ public class ApiController {
         }
 
         final var taskSaved = service.saveAssessRiskForm(
-            loanRequestId,
-            taskId,
-            riskAcceptable);
+                loanRequestId,
+                taskId,
+                riskAcceptable);
         if (!taskSaved) {
             return ResponseEntity.notFound().build();
         }
@@ -135,12 +144,12 @@ public class ApiController {
      */
     @GetMapping("/{loanRequestId}/forms/{taskId}/assess-risk")
     public ResponseEntity<Map<String, Object>> getAssessRisk(
-        @PathVariable final String loanRequestId,
-        @PathVariable final String taskId) {
+            @PathVariable final String loanRequestId,
+            @PathVariable final String taskId) {
 
         final Service.AssessRiskForm assessRiskForm = service.getAssessRisk(
-            loanRequestId,
-            taskId);
+                loanRequestId,
+                taskId);
 
         if (assessRiskForm == null) {
             return ResponseEntity.notFound().build();

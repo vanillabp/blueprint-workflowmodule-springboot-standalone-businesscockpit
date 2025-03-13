@@ -1,10 +1,13 @@
 package blueprint.workflowmodule.standalone.loanapproval.config;
 
-import io.vanillabp.springboot.modules.WorkflowModuleIdAwareProperties;
-import io.vanillabp.springboot.modules.WorkflowModuleProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.vanillabp.springboot.modules.WorkflowModuleIdAwareProperties;
+import io.vanillabp.springboot.modules.WorkflowModuleProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Configuration class for defining properties specific to the aggregate workflow module.
@@ -12,12 +15,16 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties(prefix = LoanApprovalProperties.WORKFLOW_MODULE_ID)
+@Getter
+@Setter
 public class LoanApprovalProperties implements WorkflowModuleIdAwareProperties {
 
     /**
      * The identifier for the aggregate workflow module.
      */
     public static final String WORKFLOW_MODULE_ID = "loan-approval";
+
+    private int maxAmount = 10000;
 
     /**
      * Retrieves the workflow module ID.

@@ -1,5 +1,11 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
@@ -17,15 +23,11 @@ import io.vanillabp.spi.service.TaskId;
 import io.vanillabp.spi.service.WorkflowService;
 import io.vanillabp.spi.service.WorkflowTask;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This service manages the lifecycle of a loan approval workflow.
@@ -167,7 +169,8 @@ public class Service {
             task.setData(formData);
             loanApproval.getTasks().put(taskId, task);
 
-            log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(), taskId);
+            log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(),
+                    taskId);
 
         }
         // task is canceled e.g. due to an interrupting boundary event

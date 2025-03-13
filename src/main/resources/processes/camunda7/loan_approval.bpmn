@@ -4,7 +4,7 @@
     <bpmn:startEvent id="StartEvent_1" name="Loan requested">
       <bpmn:outgoing>Flow_1exc2b0</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:exclusiveGateway id="Gateway_0ic4jpp" name="Risk acceptable?" default="Flow_0s5ahhm">
+    <bpmn:exclusiveGateway id="Gateway_0ic4jpp" name="Loan request accepted?" default="Flow_0s5ahhm">
       <bpmn:incoming>Flow_09ghmk8</bpmn:incoming>
       <bpmn:outgoing>Flow_0s5ahhm</bpmn:outgoing>
       <bpmn:outgoing>Flow_0ow3tvt</bpmn:outgoing>
@@ -16,7 +16,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0czvet1" sourceRef="Activity_startUserTask" targetRef="Event_workflowUserTaskEnded" />
     <bpmn:sequenceFlow id="Flow_0ow3tvt" name="no" sourceRef="Gateway_0ic4jpp" targetRef="Event_workflowEnded">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${not riskAcceptable}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${not loanRequestAccepted}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="Event_workflowEnded" name="Loan rejected">
       <bpmn:incoming>Flow_0ow3tvt</bpmn:incoming>
@@ -42,7 +42,7 @@
       <bpmndi:BPMNShape id="Gateway_0ic4jpp_di" bpmnElement="Gateway_0ic4jpp" isMarkerVisible="true">
         <dc:Bounds x="415" y="95" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="398" y="73" width="84" height="14" />
+          <dc:Bounds x="407" y="56" width="66" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1qi4x4y_di" bpmnElement="Event_workflowUserTaskEnded">

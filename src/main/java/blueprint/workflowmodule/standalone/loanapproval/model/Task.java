@@ -1,13 +1,15 @@
 package blueprint.workflowmodule.standalone.loanapproval.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.Type;
+
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 /**
  * Represents a user task within the loan approval process.

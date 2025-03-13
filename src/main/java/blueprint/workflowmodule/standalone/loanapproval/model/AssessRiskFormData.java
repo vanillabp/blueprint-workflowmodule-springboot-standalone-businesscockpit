@@ -1,10 +1,11 @@
 package blueprint.workflowmodule.standalone.loanapproval.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the form data for assessing risk in the loan approval process.
@@ -40,7 +41,8 @@ public class AssessRiskFormData implements TaskData {
      * @return Whether the objects are equal or not
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(
+            Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 

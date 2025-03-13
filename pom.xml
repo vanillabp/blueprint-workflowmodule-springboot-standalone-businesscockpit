@@ -91,7 +91,7 @@
 				<configuration>
 					<java>
 						<eclipse>
-							<file>${maven.multiModuleProjectDirectory}/Default.xml</file>
+							<file>${maven.multiModuleProjectDirectory}/formatting_conventions.xml</file>
 							<version>4.26</version>
 						</eclipse>
 						<removeUnusedImports />
@@ -119,12 +119,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
@@ -132,11 +126,6 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
