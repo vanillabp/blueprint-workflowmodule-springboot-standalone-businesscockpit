@@ -12,3 +12,6 @@ vanillabp:
                     - de
                     - en
                 bpmn-description-language: de
+
+loan-approval:
+    max-amount: 10000

@@ -366,22 +366,22 @@ public class Service {
      * Method that reports business data (details) for the current running workflow to be shown in the list of running workflows
      * e.g., the VanillaBP Business Cockpit.
      *
-     * @param worfklowDetails The details object prefilled with defaults
+     * @param workflowDetails The details object prefilled with defaults
      * @param aggregate The aggregate instance that contains the workflow where the task is located.
      * @return returns the details provided through {@code PrefilledWorkflowDetails}
      */
     @WorkflowDetailsProvider
     public WorkflowDetails workflowDetails(
-            final PrefilledWorkflowDetails worfklowDetails,
+            final PrefilledWorkflowDetails workflowDetails,
             final Aggregate aggregate) {
 
         log.info("WorkflowDetails '{}' started", aggregate.getLoanRequestId());
 
         // see https://github.com/vanillabp/business-cockpit/tree/main/spi-for-java
-        worfklowDetails.setDetails(
+        workflowDetails.setDetails(
                 Map.of("loanRequestId", aggregate.getLoanRequestId()));
 
-        return worfklowDetails;
+        return workflowDetails;
 
     }
 

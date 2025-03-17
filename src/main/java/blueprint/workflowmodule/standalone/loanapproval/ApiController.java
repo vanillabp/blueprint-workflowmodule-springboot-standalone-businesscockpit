@@ -43,6 +43,7 @@ public class ApiController {
     @Autowired
     private Service service;
 
+    @Autowired
     private LoanApprovalProperties properties;
 
     /**
