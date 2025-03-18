@@ -18,6 +18,36 @@
 		<lombok.version>1.18.34</lombok.version>
 	</properties>
 
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>VanillaBP</id>
+			<organization>Phactum Softwareentwicklung GmbH</organization>
+			<organizationUrl>https://www.phactum.at</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit.git</connection>
+		<developerConnection>scm:git:https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit.git</developerConnection>
+		<url>http://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/tree/main</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>github</id>
+			<name>Github Packages</name>
+			<url>https://maven.pkg.github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<packaging>jar</packaging>
 	<build>
 		<finalName>demo</finalName>

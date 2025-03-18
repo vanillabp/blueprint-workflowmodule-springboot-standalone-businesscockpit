@@ -32,4 +32,4 @@ vanillabp:
                 password: 123
         template-loader-path: classpath*:cockpit-templates/
         jwt:
-            hmacSHA256-base64: oNr5wqOE2LBh5uKKVfTwubPfyF237OrffQj5bcMKtpw=
+            hmacSHA256-base64: 4FTHgU8uHPy/ahy8IhXHj/K/BVlh7snSUtf3m1XWLkg=
