@@ -50,7 +50,7 @@
 
 	<packaging>jar</packaging>
 	<build>
-		<finalName>demo</finalName>
+		<finalName>loan-approval</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -94,7 +94,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --legacy-peer-deps</arguments>
+                            <arguments>install --force</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -165,7 +165,7 @@
 		<dependency>
 			<groupId>io.vanillabp.businesscockpit</groupId>
 			<artifactId>spi-for-java</artifactId>
-			<version>0.0.5</version>
+			<version>0.0.7-SNAPSHOT</version>
 		</dependency>
         <dependency>
             <groupId>io.hypersistence</groupId>
@@ -184,12 +184,12 @@
 				<dependency>
 					<groupId>org.camunda.community.vanillabp</groupId>
 					<artifactId>camunda7-spring-boot-adapter</artifactId>
-					<version>1.2.2</version>
+					<version>1.2.3-SNAPSHOT</version>
 				</dependency>
 				<dependency>
 					<groupId>io.vanillabp.businesscockpit</groupId>
 					<artifactId>camunda7-spring-boot-adapter</artifactId>
-					<version>0.0.5</version>
+					<version>0.0.7-SNAPSHOT</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -199,16 +199,59 @@
 				<dependency>
 					<groupId>org.camunda.community.vanillabp</groupId>
 					<artifactId>camunda8-spring-boot-adapter</artifactId>
-					<version>1.5.0</version>
+					<version>1.5.1-SNAPSHOT</version>
 				</dependency>
-				<!--
 				<dependency>
 					<groupId>io.vanillabp.businesscockpit</groupId>
 					<artifactId>camunda8-spring-boot-adapter</artifactId>
+					<version>0.0.7-SNAPSHOT</version>
 				</dependency>
-				-->
+				<dependency>
+					<groupId>io.vanillabp.businesscockpit</groupId>
+					<artifactId>bpms-protobuf-api</artifactId>
+					<version>0.0.7-SNAPSHOT</version>
+				</dependency>
+				<dependency>
+					<groupId>org.springframework.kafka</groupId>
+					<artifactId>spring-kafka</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>at.phactum.zeebe</groupId>
+					<artifactId>zeebe-kafka-exporter-serde</artifactId>
+					<version>8.5.0</version>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
 
+	<repositories>
+		<repository>
+			<id>vanillabp-bc</id>
+			<url>https://maven.pkg.github.com/vanillabp/business-cockpit</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>vanillabp-spring-boot-support</id>
+			<url>https://maven.pkg.github.com/vanillabp/spring-boot-support</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>camunda-community-hub-vanillabp-camunda7-adapter</id>
+			<url>https://maven.pkg.github.com/camunda-community-hub/vanillabp-camunda7-adapter</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>camunda-community-hub-vanillabp-camunda8-adapter</id>
+			<url>https://maven.pkg.github.com/camunda-community-hub/vanillabp-camunda8-adapter</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>

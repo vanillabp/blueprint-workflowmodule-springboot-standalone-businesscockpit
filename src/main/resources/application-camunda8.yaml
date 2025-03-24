@@ -4,15 +4,14 @@ logging:
 
 camunda:
     client:
-        mode: oidc
+        mode: selfManaged
         auth:
-            oidc-type: keycloak
-            issuer: http://localhost:18080/auth/realms/camunda-platform
+            issuer: http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token
             client-id: zeebe
             client-secret: zecret
         zeebe:
             enabled: true
-            gateway-url: http://localhost:26500
+            grpc-address: http://localhost:26500
             defaults:
                 enabled: false
         operate:
@@ -23,11 +22,16 @@ camunda:
             enabled: false
         identity:
             enabled: false
+    zeebe:
+        kafka-exporter:
+            topic-name: zeebe
 
 vanillabp:
+    cockpit:
+        kafka:
+            group-id-suffix: demo
     workflow-modules:
         loan-approval:
             adapters:
                 camunda8:
                     resources-location: classpath*:/processes/camunda8
-                    use-tenants: false

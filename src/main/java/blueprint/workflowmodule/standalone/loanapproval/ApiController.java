@@ -90,14 +90,18 @@ public class ApiController {
     public ResponseEntity<String> completeAssessRiskForm(
             @PathVariable final String loanRequestId,
             @PathVariable final String taskId,
-            @RequestParam final boolean riskIsAcceptable) {
+            @RequestBody final Map<String, Object> requestBody) {
+
+        boolean riskAcceptable = false;
+        if (requestBody.containsKey("riskIsAcceptable") && requestBody.get("riskIsAcceptable") != null) {
+            riskAcceptable = (Boolean) requestBody.get("riskIsAcceptable");
+        }
 
         final var taskCompleted = service.completeAssessRiskForm(
                 loanRequestId,
                 taskId,
-                riskIsAcceptable
+                riskAcceptable
         );
-
         if (!taskCompleted) {
             return ResponseEntity.notFound().build();
         }
@@ -122,7 +126,6 @@ public class ApiController {
             @RequestBody final Map<String, Object> requestBody) {
 
         boolean riskAcceptable = false;
-
         if (requestBody.containsKey("riskIsAcceptable") && requestBody.get("riskIsAcceptable") != null) {
             riskAcceptable = (Boolean) requestBody.get("riskIsAcceptable");
         }
@@ -160,7 +163,7 @@ public class ApiController {
             return ResponseEntity.notFound().build();
         }
 
-        // Convert AssessRiskForm to Map
+        // Convert UserTaskForm to Map
         Map<String, Object> response = new HashMap<>();
         response.put("amount", assessRiskForm.getAmount());
         response.put("riskAcceptable", assessRiskForm.getRiskAcceptable());

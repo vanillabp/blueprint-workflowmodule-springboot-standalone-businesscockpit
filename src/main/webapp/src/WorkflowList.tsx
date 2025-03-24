@@ -3,9 +3,7 @@ import { ColumnsOfWorkflowFunction, WorkflowListCell } from '@vanillabp/bc-share
 const buildVersion = process.env.BUILD_VERSION;
 const buildTimestamp = new Date(process.env.BUILD_TIMESTAMP);
 
-const workflowListColumns: ColumnsOfWorkflowFunction = workflow => {
-  return undefined;
-};
+const workflowListColumns: ColumnsOfWorkflowFunction = workflow => undefined;
 
 const WorkflowListCellComponent: WorkflowListCell = ({
   defaultCell,

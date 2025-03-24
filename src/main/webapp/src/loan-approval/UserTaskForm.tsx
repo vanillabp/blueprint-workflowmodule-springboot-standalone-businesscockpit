@@ -3,7 +3,7 @@ import { Text } from 'grommet';
 import { UserTaskForm as UserTaskFormComponent } from '@vanillabp/bc-shared';
 import { TaskDefinition as AssessRisk } from "./assess-risk-form";
 
-const AssessRiskForm = lazy(() => import('./assess-risk-form/AssessRiskForm'));
+const AssessRiskForm = lazy(() => import('./assess-risk-form/UserTaskForm'));
 
 const UserTaskForm: UserTaskFormComponent = ({ userTask }) =>
     userTask.taskDefinition === AssessRisk

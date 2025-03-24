@@ -9,10 +9,10 @@ import { theme } from "../src/shared/theme";
 bootstrapDevShell(
     'root',
     {
-      workflowModuleId: 'general-tasks',
-      workflowModuleUri: '/wm/general-tasks',
+      workflowModuleId: 'loan-approval',
+      workflowModuleUri: '/wm/loan-approval',
       uiUriType: UiUriType.WebpackMfReact,
-      uiUri: '/wm/general-tasks/remoteEntry.js'
+      uiUri: '/wm/loan-approval/remoteEntry.js'
     },
     theme,
     '/official-api/v1',

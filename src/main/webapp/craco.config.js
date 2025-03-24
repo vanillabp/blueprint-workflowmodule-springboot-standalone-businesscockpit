@@ -15,10 +15,10 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     proxy: {
-      '/wm/standalone-businesscockpit': {
+      '/wm/loan-approval': {
         target: 'http://0.0.0.0:8080',
         "pathRewrite": {
-          "^/wm/standalone-businesscockpit": ""
+          "^/wm/loan-approval": ""
         },
         secure: false,
         changeOrigin: true,
@@ -47,7 +47,7 @@ module.exports = {
            }
          : {
              output: {
-               publicPath: '/wm/general-tasks/',
+               publicPath: '/wm/loan-approval/',
              }
            }),
       // this conf come from https://github.com/relative-ci/bundle-stats/tree/master/packages/cli#webpack-configuration

@@ -10,6 +10,7 @@ import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
 import blueprint.workflowmodule.standalone.loanapproval.model.Task;
+import io.vanillabp.spi.cockpit.BusinessCockpitService;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetailsProvider;
@@ -62,6 +63,13 @@ public class Service {
      */
     @Autowired
     private ProcessService<Aggregate> service;
+
+    /**
+     * A reference to the {@link BusinessCockpitService} providing
+     * functionality regarding business cockpit.
+     */
+    @Autowired
+    private BusinessCockpitService<Aggregate> businessCockpitService;
 
     /**
      * Starts the loan approval workflow.
@@ -218,6 +226,9 @@ public class Service {
         if (aggregateAndTask == null) {
             return false;
         }
+        if (aggregateAndTask.task.getCompletedAt() != null) {
+            return false;
+        }
 
         updateAssessRiskForm(
                 aggregateAndTask,
@@ -258,6 +269,9 @@ public class Service {
 
         final var aggregateAndTask = determineTask(loanRequestId, taskId);
         if (aggregateAndTask == null) {
+            return false;
+        }
+        if (aggregateAndTask.task.getCompletedAt() != null) {
             return false;
         }
 

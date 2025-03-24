@@ -52,7 +52,7 @@ finalized decisions and data once a task is completed.
    private Map<String, Task> tasks;
    ```
    Its keys are the user task ids and the value class `Task` is used to store
-   data specific to this particular task.
+   data specific to tasks.
 1. The class `Task` stores meta-data common to all user tasks and needed
    for auditability.
    ```java
@@ -68,17 +68,17 @@ finalized decisions and data once a task is completed.
    ```
 1. Additionally, the class `Task` stores form data in the attribute `data`.
    ```java
-       public interface TaskData { }
+    public interface TaskData { }
 
-       @Entity
-       public class Task {
-           ...
-           private TaskData data;
+    @Entity
+    public class Task {
+        ...
+        private TaskData data;
 
-           public <T extends TaskData> T getData() {
-               return (T) data;
-           }
-       }
+        public <T extends TaskData> T getData() {
+            return (T) data;
+        }
+    }
    ```
    The type of form data depends on the user task. For moving
    casts out of business code, a convenience method `getData` is provided.
@@ -88,9 +88,9 @@ finalized decisions and data once a task is completed.
    POJOs and serialized as JSON to a single CLOB column, instead of doing
    excessive JPA mapping.
    ```java
-       @Type(JsonType.class)
-       @Column(name = "DATA", columnDefinition = "CLOB")
-       private TaskData data;
+    @Type(JsonType.class)
+    @Column(name = "DATA", columnDefinition = "CLOB")
+    private TaskData data;
    ```
    ```java
    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "taskType")
@@ -113,31 +113,31 @@ method wired to the user task. This is the right place to initialize
 task and form data:
 
 ```java
-    @WorkflowTask
-    public void assessRisk(
-        final Aggregate loanApproval,
-        @TaskId final String taskId) {
+ @WorkflowTask
+ public void assessRisk(
+         final Aggregate loanApproval,
+         @TaskId final String taskId) {
 
-        // An empty object for user task form
-        final AssessRiskFormData formData = new AssessRiskFormData();
+     // An empty object for user task form
+     final AssessRiskFormData formData = new AssessRiskFormData();
 
-        // Maybe formData is prefilled here with data from
-        // the aggregate or data loaded using other services.
+     // Maybe formData is prefilled here with data from
+     // the aggregate or data loaded using other services.
 
-        // The task object storing common meta-data and the
-        // form data specific to this user task:
-        Task task = new Task();
-        task.setTaskId(taskId);
-        task.setCreatedAt(LocalDateTime.now());
-        task.setData(formData);
+     // The task object storing common meta-data and the
+     // form data specific to this user task:
+     Task task = new Task();
+     task.setTaskId(taskId);
+     task.setCreatedAt(LocalDateTime.now());
+     task.setData(formData);
 
-        // save task in the aggregate
-        loanApproval.getTasks().put(taskId, task);
-    }
+     // save task in the aggregate
+     loanApproval.getTasks().put(taskId, task);
+ }
 ```
 
 On every rendering of the user task form by the UI, the form data
-needs to be loaded to fill the form's input fields. at the first
+needs to be loaded to fill the form's input fields. At the first
 time it will be the data the `formData` was initialized with.
 
 ### Intermediate save
@@ -146,43 +146,51 @@ Saving form data means to get the right task and update its data object's
 attributes:
 
 ```java
-    // load aggregate by its ID
-    final Aggregate loanApproval = ...;
+ // load aggregate by its ID
+ final Aggregate loanApproval = ...;
 
-    // get task by its ID
-    final var task = aggregate.getTask(taskId);
+ // get task by its ID
+ final var task = aggregate.getTask(taskId);
 
-    // get form data
-    final AssessRiskFormData formData = task.getData();
+ // get form data
+ final AssessRiskFormData formData = task.getData();
 
-    // update attributes
-    formData.setRiskAcceptable(riskAcceptableProvidedByUI);
+ // update attributes
+ formData.setRiskAcceptable(riskAcceptableProvidedByUI);
 ```
 
 ### Completing the user task
 
 On completing the user task these steps need to be done:
+1. Validate form data.
+1. Update form data for viewing the user task after completion.
+1. Update form meta data to identify tasks already completed.
+1. Update aggregate with validated form data.
+2. Complete user task.
 
 ```java
-    // load aggregate, task and form data
-    final Aggregate loanApproval = ...;
-    final var task = aggregate.getTask(taskId);
-    final AssessRiskFormData formData = task.getData();
+ // load aggregate, task and form data
+ final Aggregate loanApproval = ...;
+ final var task = aggregate.getTask(taskId);
+ final AssessRiskFormData formData = task.getData();
 
-    // update attributes for showing the form later read-only
-    // with values as they were on completion
-    formData.setRiskAcceptable(riskAcceptableProvidedByUI);
+ // update attributes for showing the form later read-only
+ // with values as they were on completion
+ formData.setRiskAcceptable(riskAcceptableProvidedByUI);
 
-    // validate input data if necessary
+ // validate input data if necessary
 
-    // mark task as completed e.g. by setting the current timestamp
-    // e.g. as an identifier to show the form read-only
-    task.setCompletedAt(LocalDateTime.now());
+ // mark task as completed e.g. by setting the current timestamp
+ // e.g. as an identifier to show the form read-only
+ task.setCompletedAt(LocalDateTime.now());
 
-    // save confirmed data in aggregate
-    loanApproval.setRiskAcceptable(riskIsAcceptable);
+ // save confirmed data in aggregate
+ loanApproval.setRiskAcceptable(riskIsAcceptable);
 
-    // complete user task
-    processService.completeUserTask(loanApproval, taskId);
-
+ // complete user task
+ processService.completeUserTask(loanApproval, taskId);
 ```
+
+On every rendering of the user task form by the UI after completing the task,
+the form data needs to be loaded to fill the form's input fields which should
+be shown read-only and action buttons deactivated.
