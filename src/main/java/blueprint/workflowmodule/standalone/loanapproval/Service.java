@@ -1,10 +1,11 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
@@ -23,7 +24,6 @@ import io.vanillabp.spi.service.TaskEvent;
 import io.vanillabp.spi.service.TaskId;
 import io.vanillabp.spi.service.WorkflowService;
 import io.vanillabp.spi.service.WorkflowTask;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -173,7 +173,7 @@ public class Service {
 
             Task task = new Task();
             task.setTaskId(taskId);
-            task.setCreatedAt(LocalDateTime.now());
+            task.setCreatedAt(OffsetDateTime.now());
             task.setData(formData);
             loanApproval.getTasks().put(taskId, task);
 
@@ -186,7 +186,7 @@ public class Service {
 
             loanApproval
                     .getTask(taskId)
-                    .setCompletedAt(LocalDateTime.now());
+                    .setCompletedAt(OffsetDateTime.now());
 
         }
 
@@ -235,7 +235,7 @@ public class Service {
                 riskIsAcceptable);
 
         // Mark task as completed by setting the current timestamp
-        aggregateAndTask.task.setCompletedAt(LocalDateTime.now());
+        aggregateAndTask.task.setCompletedAt(OffsetDateTime.now());
 
         // Save confirmed data in aggregate
         aggregateAndTask.loanApproval.setRiskAcceptable(riskIsAcceptable);
@@ -279,6 +279,8 @@ public class Service {
                 aggregateAndTask,
                 riskIsAcceptable);
 
+        loanApprovals.save(aggregateAndTask.loanApproval);
+
         log.info("Task saved: {}", taskId);
 
         return true;
@@ -295,7 +297,7 @@ public class Service {
         formData.setRiskAcceptable(riskAcceptable);
 
         // Update task meta-data
-        aggregateAndTask.task.setUpdatedAt(LocalDateTime.now());
+        aggregateAndTask.task.setUpdatedAt(OffsetDateTime.now());
 
     }
 

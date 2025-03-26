@@ -81,7 +81,7 @@ public class ApiController {
      *
      * @param loanRequestId  The unique identifier of the aggregate associated with the workflow.
      * @param taskId         The unique identifier of the user task to be completed.
-     * @param riskIsAcceptable Boolean indicating whether the risk is accepted.
+     * @param requestBody    Contains a boolean indicating whether the risk is accepted.
      * @return A ResponseEntity containing a success message upon task completion.
      * @throws NoSuchElementException if no aggregate with the given ID is found.
      */

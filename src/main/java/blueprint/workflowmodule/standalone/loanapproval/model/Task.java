@@ -1,6 +1,6 @@
 package blueprint.workflowmodule.standalone.loanapproval.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import org.hibernate.annotations.Type;
 
@@ -20,7 +20,7 @@ import lombok.Setter;
  * to the aggregate.
  * </p>
  */
-@Entity(name = "LOAN_APPROVAL_TASK_ENTITY")
+@Entity(name = "LOAN_APPROVAL_TASK")
 @Getter
 @Setter
 public class Task {
@@ -42,15 +42,15 @@ public class Task {
 
     /** Timestamp when the task was created. */
     @Column
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     /** Timestamp when the task was last updated. */
     @Column
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     /** Timestamp when the task was completed. */
     @Column
-    private LocalDateTime completedAt;
+    private OffsetDateTime completedAt;
 
     /**
      * Retrieves the task's stored data.
