@@ -1,0 +1,14 @@
+vanillabp:
+    workflow-modules:
+        loan-approval:
+            cockpit:
+                workflow-module-uri: http://localhost:8080
+                ui-uri-path: /remoteEntry.js
+                ui-uri-type: WEBPACK_MF_REACT
+                i18n-languages:
+                    - de
+                    - en
+                bpmn-description-language: en
+
+loan-approval:
+    max-amount: 10000

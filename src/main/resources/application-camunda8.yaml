@@ -1,0 +1,37 @@
+logging:
+    level:
+        io.camunda.zeebe.client.impl.ZeebeCallCredentials: ERROR
+
+camunda:
+    client:
+        mode: selfManaged
+        auth:
+            issuer: http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token
+            client-id: zeebe
+            client-secret: zecret
+        zeebe:
+            enabled: true
+            grpc-address: http://localhost:26500
+            defaults:
+                enabled: false
+        operate:
+            enabled: false
+        tasklist:
+            enabled: false
+        optimize:
+            enabled: false
+        identity:
+            enabled: false
+    zeebe:
+        kafka-exporter:
+            topic-name: zeebe
+
+vanillabp:
+    cockpit:
+        kafka:
+            group-id-suffix: loan-approval
+    workflow-modules:
+        loan-approval:
+            adapters:
+                camunda8:
+                    resources-location: classpath*:/processes/camunda8
