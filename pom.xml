@@ -242,7 +242,7 @@
 				<dependency>
 					<groupId>at.phactum.zeebe</groupId>
 					<artifactId>zeebe-kafka-exporter-serde</artifactId>
-					<version>8.5.0</version>
+					<version>8.6.0</version>
 				</dependency>
 			</dependencies>
 		</profile>

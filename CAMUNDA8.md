@@ -2,17 +2,30 @@
 
 # Running blueprint "Standalone" using Camunda 8
 
-This is a set of minimal instructions. Read more in the  [Camunda 8 Docs](https://docs.camunda.io/)
+This is a set of minimal instructions. Read more in the [Camunda 8 Docs](https://docs.camunda.io/).
+
+As of version 8.6, Camunda does not support custom tasklist applications
+(like the VanillaBP Business Cockpit) out of the box. The features necessary will
+be introduced in version 8.8. As a temporary workaround, Zeebe (the BPMN engine
+of Camunda 8) supports to export events. For VanillaBP Business Cockpit
+those events are exported to Kafka. The VanillaBP Business Cockpit Camunda 8
+adapter consumes those events as a substitute for the missing custom tasklist
+application support of Camunda 8.6. Therefore, a copy of the original
+[Camunda 8 Platform Docker compose setup](https://github.com/camunda/camunda-platform),
+extended by adding Kafka support, is part of this repository and is required
+to run applications based on this blueprint.
 
 ## Setup Instructions
 
-1. **Download** the [Camunda 8 Docker Compose ZIP](https://docs.camunda.io/docs/self-managed/setup/deploy/local/docker-compose/).
-2. **Extract** the files and navigate into the directory.
-3. **Start Camunda 8** by using:
+1. **Download Docker compose** for Camunda 8 with Kafka exporter pre-installed
+   [ZIP file](https://github.com/Phactum/zeebe-kafka-exporter#docker).
+1. **Start Camunda 8 with Kafka** by using:
    ```bash
+   unzip camunda-8.6-kafka.zip
+   cd camunda-8.6-kafka
    docker compose up -d
    ```
-4. Wait a few minutes for the system to initialize.
+1. Wait a few minutes for the system to initialize.
 
 ## Run Configuration
 
@@ -30,27 +43,23 @@ and watch the process in your local [Camunda 8 Operate](http://localhost:8081).
 
 ## Tenant Configuration
 
-You **DON'T** have to configure a new tenant as they are deactivated by default.
-However, we recommend using tenants, especially in more complex projects, as they provide a structured way to separate processes across different business units, customers, or environments.
-Read more on tenants and multi-tenancy in the [Camunda docs](https://docs.camunda.org/manual/latest/user-guide/process-engine/multi-tenancy/) and the [VanillaBP Camunda 8 Adapter](https://github.com/camunda-community-hub/vanillabp-camunda8-adapter/blob/main/spring-boot/README.md#using-camunda-multi-tenancy).
+Business Cockpit application needs to use tenants. Follow these steps for proper setup:
 
-### Run blueprint using tenants
-
-1. In the `application-camunda8.yaml` change `use-tenants: false` -> `true`
-2. Make sure the Camunda 8 docker compose is up.
-3. Open Identity: [http://localhost:8084](http://localhost:8084)
-4. Login:
+1. Make sure the Camunda 8 docker compose is up.
+1. Open Identity: [http://localhost:8084](http://localhost:8084)
+1. Login:
     - **Username:** `demo`
     - **Password:** `demo`
-5. Create a new tenant:
+1. Create a new tenant:
     - Go to **Tenants** → **Create Tenant**
-    - Set the Tenants **Name** and **ID** as `standalone` (Name of the Spring-boot application).
-6. Assign user to tenant:
+    - Set the Tenants **Name** and **ID** as `loan-approval` (Name of the Spring-boot application).
+    - Afterwards select the tenant created
+1. Assign user to tenant:
     - Go to **Assigned users** → **Assign users** → type/select the demo user
-7. Assign applications to tenant:
+1. Assign applications to tenant:
     - Go to the **Assigned applications** tab
     - Click **Assign application** and add:
-        - `identity`
+        - `tasklist`
         - `operate`
         - `zeebe`
 
