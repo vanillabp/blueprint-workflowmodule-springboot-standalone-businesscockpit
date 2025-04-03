@@ -155,6 +155,15 @@ retrieval.
 
 Instructions at a glance:
 
+*Hint:* In this version of the standalone-businesscockpit we implemented the user and security feature. 
+When looking at the `Service` class, you can see that the entire class is `@Secured` for certain roles (e.g.: *ADMIN*).
+
+To create your own users,
+you have to create a user inside the main or a specific spring configuration
+(e.g.: application-users.yaml) and when running the `.jar` assign that spring profile
+(or non if you are using no profile).
+To see the structure of a user lookup the [application.yaml](https://github.com/vanillabp/business-cockpit/blob/feature/security/development/dev-shell-simulator/src/main/resources/application.yaml) in this project
+
 1. Download runnable JAR from Maven-Central or the latest [snapshot](https://github.com/orgs/vanillabp/packages?q=dev&tab=packages&q=dev-shell-simulator).
 1. Run the JAR
    ```shell
