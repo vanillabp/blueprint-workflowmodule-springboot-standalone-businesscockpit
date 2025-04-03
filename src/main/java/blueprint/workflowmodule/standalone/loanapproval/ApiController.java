@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/loan-approval")
+@Secured({"RISK_ASSESSMENT", "ADMIN"})
 public class ApiController {
 
     /**
@@ -167,6 +169,7 @@ public class ApiController {
         Map<String, Object> response = new HashMap<>();
         response.put("amount", assessRiskForm.getAmount());
         response.put("riskAcceptable", assessRiskForm.getRiskAcceptable());
+        //TODO completed und by zurücklieferen
 
         log.info("Fetched task: {} with data: {}", taskId, response);
         return ResponseEntity.ok(response);
