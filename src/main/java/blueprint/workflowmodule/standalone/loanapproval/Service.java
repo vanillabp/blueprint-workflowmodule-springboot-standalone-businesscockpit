@@ -4,7 +4,10 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+import io.vanillabp.cockpit.commons.exceptions.BcUnauthorizedException;
+import io.vanillabp.cockpit.commons.security.usercontext.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 
 import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
@@ -30,6 +33,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.security.RolesAllowed;
+
 /**
  * This service manages the lifecycle of a loan approval workflow.
  * It integrates with the BPMN process using the VanillaBP & Business Cockpit SPI,
@@ -49,6 +54,7 @@ import lombok.extern.slf4j.Slf4j;
         workflowAggregateClass = Aggregate.class,
         bpmnProcess = @BpmnProcess(bpmnProcessId = "loan_approval"))
 @Transactional
+@Secured({"RISK_ASSESSMENT", "ADMIN"})
 public class Service {
 
     /**
@@ -63,6 +69,9 @@ public class Service {
      */
     @Autowired
     private ProcessService<Aggregate> service;
+
+    @Autowired
+    private UserContext userContext;
 
     /**
      * A reference to the {@link BusinessCockpitService} providing
@@ -80,6 +89,8 @@ public class Service {
     public void initiateLoanApproval(
             final String loanRequestId,
             final int loanAmount) throws Exception {
+
+        log.info("UserContext authorities: {}", userContext.getUserLoggedInDetails().getAuthorities());
 
         // build the aggregate
         // (https://github.com/vanillabp/spi-for-java/blob/main/README.md#process-specific-workflow-aggregate)
@@ -131,6 +142,7 @@ public class Service {
      * @return An {@link AggregateAndTask} containing the loan approval and task if found,
      * otherwise {@code null}.
      */
+
     private AggregateAndTask determineTask(
             final String loanRequestId,
             final String taskId) {
@@ -158,9 +170,10 @@ public class Service {
      * @param loanApproval The workflow's aggregate.
      * @param taskId       Unique identifier for the user task.
      * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#wire-up-a-task">VanillaBP docs &quot;Wire up a task&quot;</a>
-     * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;User tasks and asynchronous tasks&quot;</a>
+     * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;UserRepresentation tasks and asynchronous tasks&quot;</a>
      */
     @WorkflowTask
+
     public void assessRisk(
             final Aggregate loanApproval,
             @TaskId final String taskId,
@@ -184,9 +197,14 @@ public class Service {
         // task is canceled e.g. due to an interrupting boundary event
         else if (taskEvent == TaskEvent.Event.CANCELED) {
 
-            loanApproval
-                    .getTask(taskId)
-                    .setCompletedAt(OffsetDateTime.now());
+            final var task = loanApproval.getTask(taskId);
+
+            task.setCompletedAt(OffsetDateTime.now());
+            try {
+                task.setCompletedBy(userContext.getUserLoggedIn());
+            } catch (BcUnauthorizedException bc){
+                log.error("BcUnauthorizedException", bc);
+            }
 
         }
 
@@ -200,6 +218,7 @@ public class Service {
      * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#wire-up-a-task">VanillaBP docs &quot;Wire up a task&quot;</a>
      */
     @WorkflowTask
+
     public void transferMoney(
             final Aggregate loanApproval) {
 
@@ -217,6 +236,7 @@ public class Service {
      * @param taskId           The unique identifier of the user task.
      * @param riskIsAcceptable Whether the risk acceptable.
      */
+
     public boolean completeAssessRiskForm(
             final String loanRequestId,
             final String taskId,
@@ -262,6 +282,7 @@ public class Service {
      * {@code false} if the loan request was not found, required data was missing,
      * or if the task ID doesn't match the current risk assessment task
      */
+
     public boolean saveAssessRiskForm(
             final String loanRequestId,
             final String taskId,
@@ -286,6 +307,7 @@ public class Service {
         return true;
 
     }
+
 
     private void updateAssessRiskForm(
             final AggregateAndTask aggregateAndTask,
@@ -335,6 +357,7 @@ public class Service {
      * @param taskId        The unique identifier of the task being assessed.
      * @return An {@link AssessRiskForm} containing task-related data, or {@code null} if not found.
      */
+
     public AssessRiskForm getAssessRisk(
             final String loanRequestId,
             final String taskId) {

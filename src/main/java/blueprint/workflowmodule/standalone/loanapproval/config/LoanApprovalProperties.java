@@ -33,15 +33,4 @@ public class LoanApprovalProperties implements WorkflowModuleIdAwareProperties {
     public String getWorkflowModuleId() {
         return WORKFLOW_MODULE_ID;
     }
-
-    /**
-     * Defines a bean for workflow module properties.
-     *
-     * @return A {@link WorkflowModuleProperties} instance configured for the aggregate module.
-     */
-    @Bean
-    public static WorkflowModuleProperties ModuleProperties() {
-
-        return new WorkflowModuleProperties(LoanApprovalProperties.class, WORKFLOW_MODULE_ID);
-    }
 }
