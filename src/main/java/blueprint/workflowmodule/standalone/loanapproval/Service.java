@@ -89,8 +89,6 @@ public class Service {
             final String loanRequestId,
             final int loanAmount) throws Exception {
 
-        log.info("UserContext authorities: {}", userContext.getUserLoggedInDetails().getAuthorities());
-
         // build the aggregate
         // (https://github.com/vanillabp/spi-for-java/blob/main/README.md#process-specific-workflow-aggregate)
         final var loanApproval = Aggregate

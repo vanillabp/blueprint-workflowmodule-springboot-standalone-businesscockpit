@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import io.vanillabp.cockpit.commons.security.usercontext.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -47,6 +48,9 @@ public class ApiController {
 
     @Autowired
     private LoanApprovalProperties properties;
+
+    @Autowired
+    private UserContext userContext;
 
     /**
      * Initiate processing of a new loan approval.
@@ -169,7 +173,7 @@ public class ApiController {
         Map<String, Object> response = new HashMap<>();
         response.put("amount", assessRiskForm.getAmount());
         response.put("riskAcceptable", assessRiskForm.getRiskAcceptable());
-        //TODO completed und by zurücklieferen
+        response.put("completedBy", userContext.getUserLoggedIn());
 
         log.info("Fetched task: {} with data: {}", taskId, response);
         return ResponseEntity.ok(response);
