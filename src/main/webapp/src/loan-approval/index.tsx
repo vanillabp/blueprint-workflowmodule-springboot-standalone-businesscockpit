@@ -1,3 +1,3 @@
-const BpmnProcessId = 'loan_approval';
+const BpmnProcessId = "loan_approval";
 
 export { BpmnProcessId };

@@ -20,6 +20,9 @@ public class LoanApprovalProperties implements WorkflowModuleIdAwareProperties {
      */
     public static final String WORKFLOW_MODULE_ID = "loan-approval";
 
+    /**
+     * The maximum loan amount.
+     */
     private int maxAmount;
 
     /**

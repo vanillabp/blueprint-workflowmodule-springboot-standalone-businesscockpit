@@ -14,7 +14,7 @@ This blueprint is an extension of the
 ["Standalone" blueprint](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone)
 and therefore descriptions do not cover details already explained there.
 
-In order to develop a better understanding of the use of VanillaBP,
+In order to develop a better understanding of how to use VanillaBP,
 a concrete technical process “loan approval” is used instead of an abstract
 demo process. This
 example covers a very minimal set of scenarios for developing business process
@@ -26,24 +26,29 @@ point for more complex use cases:
 ## Getting Started
 
 1. **Create an empty project directory and run:**
+
    ```shell
-    mvn archetype:generate \
-    -DarchetypeGroupId=io.vanillabp.blueprint \
-    -DarchetypeArtifactId=workflowmodule-springboot-standalone-businesscockpit-archetype \
-    -DgroupId={your.groupId} \
-    -DartifactId={your.artifactId} \
-    -Dversion={your.version}
-    ```
+   mvn archetype:generate \
+   -DarchetypeGroupId=io.vanillabp.blueprint \
+   -DarchetypeArtifactId=workflowmodule-springboot-standalone-businesscockpit-archetype \
+   -DgroupId={your.groupId} \
+   -DartifactId={your.artifactId} \
+   -Dversion={your.version}
+   ```
+
    *Hint:* If you want a specific archetype version add `-DarchetypeVersion={e.g 0.0.1}`
    <br>&nbsp;
-1. **Build the application:**
+
+2. **Build the application:**
+
    ```shell
    mvn clean package -Pcamunda7
-    ```
-1. **Start the VanillaBP Business Cockpit:**   
+   ```
+3. **Start the VanillaBP Business Cockpit:**   
    Details in chapter [Using the demo](#using-the-demo)
    <br>&nbsp;
-1. **Start the application:**
+4. **Start the application:**
+
    ```shell
    java -jar target/loan-approval.jar --spring.profiles.active=camunda7
    ```
@@ -53,7 +58,7 @@ point for more complex use cases:
 This demo provides UI components for completing the loan approval
 workflow, including user tasks.
 Those UI components are meant to be shown as part of the
-VanillaBP Business Cockpit. 
+VanillaBP Business Cockpit.
 Therefore, the
 [Business Cockpit needs to be available](#running-the-business-cockpit)
 while using the demo.
@@ -67,13 +72,13 @@ To go through the entire loan approval follow these steps:
 1. Start processing of loan approval using this URL:<br>
    [http://localhost:8080/api/loan-approval/request-loan-approval?loanAmount=1000](http://localhost:8080/api/loan-approval/request-loan-approval?loanAmount=1000)<br>
    As a result you will get the loan approval's request ID needed in subsequent URLs.
-1. Open Business Cockpit or DevShell:
+2. Open Business Cockpit or DevShell:
    1. In the Business Cockpit: Change to list of user tasks and select the task "Assess risk".
-   1. In DevShell:
+   2. In DevShell:
       1. Checkout logs or the h2 database for retrieving the ID of the user task `Assess risk`.
-      1. Enter the user task ID in the web application to load the task
-1. Complete or save the user task by using the UI loaded.
-1. The service task "Transfer money" is executed depending on the value chosen for `riskAcceptable`.
+      2. Enter the user task ID in the web application to load the task
+3. Complete or save the user task by using the UI loaded.
+4. The service task "Transfer money" is executed depending on the value chosen for `riskAcceptable`.
 
 *Hints:*
 - To see currently running processes or user tasks use [your local Camunda 7 Cockpit](http://localhost:8080/camunda).
@@ -93,9 +98,9 @@ integrating into a Business Cockpit:
 
 1. How to store data entered into user task forms.<br>Find this pattern
    [explained in detail here](./FORMDATA.md).
-1. How to integrate UI (like user tasks) hosted by a (micro-)service
-   into a Business Cockpit UI instead of providing a separate UI per
-   (micro-)service.<br>This pattern is
+2. How to integrate UI (like user tasks) hosted by a (micro-)service
+   into a Business Cockpit UI instead of providing a separate UI per (micro-)service.
+   <br>This pattern is
    [explained in detail here](./WEBAPP.md).
 
 This blueprint is about a single [workflow module](https://github.com/vanillabp/spring-boot-support#workflow-modules).
@@ -110,15 +115,15 @@ If you want to use the project generated based on this archetype
 as a base for your use case, then
 
 1. choose a proper identifier for your business use case.
-1. rename the Java package `blueprint.workflowmodule.standalone.loanapproval` according to your
+2. rename the Java package `blueprint.workflowmodule.standalone.loanapproval` according to your
    projects package and use case identifier (e.g. `com.mycompany.myusecase`).
-1. search case-insensitive in all files for all occurrences of
+3. search case-insensitive in all files for all occurrences of
    `loanapproval` or `loan-approval` and replace it by the identifier of your
    use case.
-1. search case-insensitive in all files for all occurrences of
+4. search case-insensitive in all files for all occurrences of
    `assessrisk` or `assess-risk` and copy and replace it by the identifier of your
    `use case` user tasks.
-1. place your BPMN file in the directory
+5. place your BPMN file in the directory
    `src/main/resources/processes/camunda7` and change the annotation `@BpmnProcess`
    found in Java class `service` pointing to your BPMN file's name.
 
@@ -127,16 +132,24 @@ as a base for your use case, then
 Instructions at a glance:
 
 1. Clone the [business cockpit repository](https://github.com/vanillabp/business-cockpit).
-1. Follow the
-   [detailed instructions](https://github.com/vanillabp/business-cockpit/blob/feature/documentation/container/README.md#as-is)
+2. Follow the
+   [detailed instructions](https://github.com/vanillabp/business-cockpit/tree/main/container#as-is)
    which are:
    1. Run a local MongoDB database.
-   1. Download the prebuilt JAR.
-   1. Run the JAR using port `9080` to avoid conflicts with the blueprint demo application:
+   2. Download the prebuilt JARs.
+   3. Run the Simulator JAR.
+   4. Run the Business Cockpit JAR using port `9080` to avoid conflicts with the blueprint demo application:
+
       ```shell
       java -Dserver.port=9080 -Dspring.profiles.active=local -jar bc.jar
       ```
-   1. Open [local Business Cockpit](http://localhost:9080) in Browser.
+   5. Open [local Business Cockpit](http://localhost:9080) in Browser and login with user `test` (pwd: `test`).
+3. The blueprint needs to be started with additional parameter pointing the REST
+   endpoint to the Business Cockpit instead of the DevShell Simulator:
+
+   ```shell
+   java -Dvanillabp.cockpit.rest.base-url=http://localhost:9080 -jar target/loan-approval.jar --spring.profiles.active=camunda7
+   ```
 
 ## Running the Business Cockpit DevShell
 
@@ -147,7 +160,7 @@ components into the VanillaBP Business Cockpit and handing over data about the u
 Data shown by the Business Cockpit is automatically reported by the VanillaBP
 Business Cockpit adapter when a workflow is started or a user task is created.
 On loading a workflow's or a user task's UI in the DevShell, this data previously
-reported needs to be fetched for UI initialization. Since the VanillaBP 
+reported needs to be fetched for UI initialization. Since the VanillaBP
 Business Cockpit is typically not running for local development, one can run the
 [DevShell Simulator](https://github.com/vanillabp/business-cockpit/tree/main/development/dev-shell-simulator)
 instead. It provides all Business Cockpit APIs required for data reporting and
@@ -155,30 +168,34 @@ retrieval.
 
 Instructions at a glance:
 
-1. Download runnable JAR from Maven-Central or the latest [snapshot](https://github.com/orgs/vanillabp/packages?q=dev&tab=packages&q=dev-shell-simulator).
-1. Run the JAR
+1. Download runnable JAR from
+   [Maven-Central](https://central.sonatype.com/artifact/io.vanillabp.businesscockpit/dev-shell-simulator)
+   or the latest [snapshot](https://github.com/orgs/vanillabp/packages?q=dev&tab=packages&q=dev-shell-simulator).
+2. Run the JAR passing the [predefined user configuration](./dev-shell-users.yaml) file:
+
    ```shell
-   java -jar dev-shell-simulator-*-runnable.jar
+   java -jar dev-shell-simulator-*-runnable.jar --spring.config.additional-location=./dev-shell-dev-shell-users.yaml
    ```
-1. In this demo project open directory `src/main/webapp` in terminal.
-1. Install NPM packages required:
+3. In this demo project open directory `src/main/webapp` in terminal.
+4. Install NPM packages required:
+
    ```shell
    npm install
    ```
-1. Start DevShell:
+5. Start DevShell:
+
    ```shell
    npm start
    ```
-1. In DevShell one can load workflows and usertasks by entering the respective ID of the
-   business processing engine used.
+6. In the DevShell, available at [http://localhost:3000](http://localhost:3000),
+   one can load workflow pages and user tasks by entering the respective ID of the
+   business processing engine used. Additionally, the UI can be tested with different
+   users by selecting the user from the drop-down list provided.
 
 *Hint:* Since the
 [DevShell Simulator](https://github.com/vanillabp/business-cockpit/tree/main/development/dev-shell-simulator)
-stores data only in-memory, the
-[DevShell Simulator](https://github.com/vanillabp/business-cockpit/tree/main/development/dev-shell-simulator)
-has to be started before starting local testing (e.g. starting a workflow) and must
-not be restarted during tests. Otherwise workflows or user tasks reported before
-(re-)starting are not available any more. 
+stores data only in-memory, it has to be started before starting local testing (e.g. starting a workflow) and must
+not be restarted during tests. Otherwise, workflows or user tasks reported before are not available anymore.
 
 ## Noteworthy & Contributors
 

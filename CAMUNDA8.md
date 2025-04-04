@@ -19,24 +19,27 @@ to run applications based on this blueprint.
 
 1. **Download Docker compose** for Camunda 8 with Kafka exporter pre-installed
    [ZIP file](https://github.com/Phactum/zeebe-kafka-exporter#docker).
-1. **Start Camunda 8 with Kafka** by using:
+2. **Start Camunda 8 with Kafka** by using:
+
    ```bash
    unzip camunda-8.6-kafka.zip
    cd camunda-8.6-kafka
    docker compose up -d
    ```
-1. Wait a few minutes for the system to initialize.
+3. Wait a few minutes for the system to initialize.
 
 ## Run Configuration
 
 1. Build the project using Maven profile `camunda8`:
-    ```shell
-    mvn clean package -Pcamunda8
-    ```
+
+   ```shell
+   mvn clean package -Pcamunda8
+   ```
 2. Run the application using the `camunda8` Spring profile:
-    ```shell
-    java -jar target/loan-approval.jar --spring.profiles.active=camunda8
-    ```
+
+   ```shell
+   java -jar target/loan-approval.jar --spring.profiles.active=camunda8
+   ```
 
 Now you can go through the instructions ["Using the demo"](./README.md#using-the-demo)
 and watch the process in your local [Camunda 8 Operate](http://localhost:8081).
@@ -46,22 +49,22 @@ and watch the process in your local [Camunda 8 Operate](http://localhost:8081).
 Business Cockpit application needs to use tenants. Follow these steps for proper setup:
 
 1. Make sure the Camunda 8 docker compose is up.
-1. Open Identity: [http://localhost:8084](http://localhost:8084)
-1. Login:
-    - **Username:** `demo`
-    - **Password:** `demo`
-1. Create a new tenant:
-    - Go to **Tenants** → **Create Tenant**
-    - Set the Tenants **Name** and **ID** as `loan-approval` (Name of the Spring-boot application).
-    - Afterwards select the tenant created
-1. Assign user to tenant:
-    - Go to **Assigned users** → **Assign users** → type/select the demo user
-1. Assign applications to tenant:
-    - Go to the **Assigned applications** tab
-    - Click **Assign application** and add:
-        - `tasklist`
-        - `operate`
-        - `zeebe`
+2. Open Identity: [http://localhost:8084](http://localhost:8084)
+3. Login:
+   - **Username:** `demo`
+   - **Password:** `demo`
+4. Create a new tenant:
+   - Go to **Tenants** → **Create Tenant**
+   - Set the Tenants **Name** and **ID** as `loan-approval` (Name of the Spring-boot application).
+   - Afterwards select the tenant created
+5. Assign user to tenant:
+   - Go to **Assigned users** → **Assign users** → type/select the demo user
+6. Assign applications to tenant:
+   - Go to the **Assigned applications** tab
+   - Click **Assign application** and add:
+     - `tasklist`
+     - `operate`
+     - `zeebe`
 
 ## Noteworthy & Contributors
 

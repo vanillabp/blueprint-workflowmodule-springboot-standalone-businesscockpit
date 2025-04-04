@@ -1,4 +1,3 @@
-
 ![VanillaBP](readme/vanillabp-headline.png)
 
 # Blueprint "Standalone leveraging Business Cockpit"
@@ -14,14 +13,14 @@ it affects the flow of the process.
 
 In VanillaBP based business processing applications, an aggregate is
 used as the single source of truth of data needed to run a workflow.
-Therefore, it makes sense to store the form data of user tasks in 
+Therefore, it makes sense to store the form data of user tasks in
 the aggregate as well.
 However, there are two scenarios in which this is problematic:
 
 1. In the Business Cockpit, users can reopen user tasks that have already
    been completed. The use case for this feature is to see what data
    was entered on completing the task. In this situation, the form is shown read-only.
-1. A process model might have multiple flows in parallel accessing
+2. A process model might have multiple flows in parallel accessing
    attributes entered in a user task which are currently active.
    If a user task allows to save data without completing the form
    (for later continuation) and this data is stored in the aggregate's
@@ -35,26 +34,30 @@ Advantages of this approach:
 
 1. **Separation of concerns**: The aggregate represents the overall state
    of the workflow, while individual user task data is handled separately.
-1. **Intermediate saves**: Saving form data does not change the
+2. **Intermediate saves**: Saving form data does not change the
    aggregate. It is also save to store unvalidated user input, e.g.
    in situations where validation can only succeed when completing the
    user task.
-1. **Data consistency**: The aggregate remains clean and is updated only with 
-finalized decisions and data once a task is completed.
-1. **Auditability**: Keeping task data in separate entities allows tracking
+3. **Data consistency**: The aggregate remains clean and is updated only with
+   finalized decisions and data once a task is completed.
+4. **Auditability**: Keeping task data in separate entities allows tracking
    changes, timestamps, and user inputs before continuing to process
    the workflow.
 
 ## How it works
 
 1. In the aggregate, a map storing all user tasks is introduced:
+
    ```java
    private Map<String, Task> tasks;
    ```
+
    Its keys are the user task ids and the value class `Task` is used to store
    data specific to tasks.
-1. The class `Task` stores meta-data common to all user tasks and needed
+
+2. The class `Task` stores meta-data common to all user tasks and needed
    for auditability.
+
    ```java
    @Entity
    public class Task {
@@ -66,7 +69,8 @@ finalized decisions and data once a task is completed.
        ...
    }
    ```
-1. Additionally, the class `Task` stores form data in the attribute `data`.
+3. Additionally, the class `Task` stores form data in the attribute `data`.
+
    ```java
     public interface TaskData { }
 
@@ -80,18 +84,22 @@ finalized decisions and data once a task is completed.
         }
     }
    ```
+
    The type of form data depends on the user task. For moving
    casts out of business code, a convenience method `getData` is provided.
-1. Since form data is never referred by other parts of the
+
+4. Since form data is never referred by other parts of the
    aggregate (due to its nature "unconfirmed data"), all form data
    classes extend `TaskData` (e.g. `AssessRiskFormData` ) are
    POJOs and serialized as JSON to a single CLOB column, instead of doing
    excessive JPA mapping.
+
    ```java
-    @Type(JsonType.class)
-    @Column(name = "DATA", columnDefinition = "CLOB")
-    private TaskData data;
+   @Type(JsonType.class)
+   @Column(name = "DATA", columnDefinition = "CLOB")
+   private TaskData data;
    ```
+
    ```java
    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "taskType")
    @JsonSubTypes({
@@ -99,6 +107,7 @@ finalized decisions and data once a task is completed.
    })
    public interface TaskData { }
    ```
+
    The Hibernate custom type
    [JsonType](https://github.com/vladmihalcea/hypersistence-utils)
    is used to not deal with JSON serialization in business code.

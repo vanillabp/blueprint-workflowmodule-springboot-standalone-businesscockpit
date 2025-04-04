@@ -1,7 +1,8 @@
 import { FormField, FormFieldExtendedProps } from "grommet";
 import { TranslationFunction } from "../../../../../../../../../../VanillaBP/vanillabp-business-cockpit/ui/bc-shared";
 
-interface ViolationsAwareFormFieldProps extends Omit<FormFieldExtendedProps, 'name'> {
+interface ViolationsAwareFormFieldProps
+  extends Omit<FormFieldExtendedProps, "name"> {
   violations: any;
   resetViolation: (name: string) => void;
   t: TranslationFunction;
@@ -18,17 +19,25 @@ const ViolationsAwareFormField = ({
   children = undefined,
   onChange = undefined,
   ...props
-}: ViolationsAwareFormFieldProps) => (<FormField
-      name={name}
-      onChange={ value => {
-          resetViolation(name);
-          if (onChange) {
-            onChange(value);
-          }
-        }
+}: ViolationsAwareFormFieldProps) => (
+  <FormField
+    name={name}
+    onChange={(value) => {
+      resetViolation(name);
+      if (onChange) {
+        onChange(value);
       }
-      label={ t(label) }
-      error={ violations[name] !== undefined ? t(`${label}_${violations[name]}`) : undefined }
-      {...props}>{children}</FormField>);
+    }}
+    label={t(label)}
+    error={
+      violations[name] !== undefined
+        ? t(`${label}_${violations[name]}`)
+        : undefined
+    }
+    {...props}
+  >
+    {children}
+  </FormField>
+);
 
 export { ViolationsAwareFormField };

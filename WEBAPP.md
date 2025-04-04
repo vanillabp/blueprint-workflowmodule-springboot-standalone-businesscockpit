@@ -24,18 +24,17 @@ There are four mandatory parts expected by the VanillaBP Business Cockpit
 which needs to be exposed as entry points by the bundled federation module
 using these identifiers:
 
-
 1. `WorkflowPage`: A UI component responsible for
    rendering any workflow's page of the use case
    (see chapter [Workflow page](#workflow-page)).
-1. `WorkflowList`: A function returning the columns to be shown
+2. `WorkflowList`: A function returning the columns to be shown
    for a particular workflow in the list of workflows
    and a UI component responsible for rendering those custom cells in the
    list of workflows (see chapter [List of workflows](#list-of-workflows)).
-1. `UserTaskForm`: A UI component responsible for
+3. `UserTaskForm`: A UI component responsible for
    rendering any user task form of the use case
    (see chapter [User task form](#user-task-form)).
-1. `UserTaskList`: A function returning the columns to be shown
+4. `UserTaskList`: A function returning the columns to be shown
    for a particular user task in the list of user tasks
    and a UI component responsible for rendering those custom cells in the
    list of user tasks (see chapter [List of user tasks](#list-of-user-tasks)).
@@ -69,6 +68,7 @@ the workflow requested. Typically, this is done based on the BPMN process ID,
 the unique identifier of a process defined in a BPMN file:
 
 [src/main/webapp/src/WorkflowPage.tsx](./src/main/webapp/src/WorkflowPage.tsx):
+
 ```typescript
 import { WorkflowPage } from '@vanillabp/bc-shared';
 
@@ -110,7 +110,7 @@ the workflow currently rendered).
 
 ## List of workflows
 
-When showing a use case's workflow in the 
+When showing a use case's workflow in the
 VanillaBP Business Cockpit list of workflows, then
 custom columns, specific to the use case, can be
 shown. This provides the ability to sort and search
@@ -263,9 +263,9 @@ On starting the (micro-)service the Business Cockpit adapter
 will register all workflow modules to
 the Business Cockpit. This causes the VanillaBP Business Cockpit
 to initialize the proxy. The public endpoint is exposed at the path
-`/wm/` concatenated 
+`/wm/` concatenated
 with the workflow module's ID (e.g. `/wm/loan-approval`) and is forwarded
-to the workflow module's URI. This public 
+to the workflow module's URI. This public
 proxy endpoint can be used by the workflow module's UI components to
 reach the use case's (micro-)service without causing
 cross-site-scripting issues.
