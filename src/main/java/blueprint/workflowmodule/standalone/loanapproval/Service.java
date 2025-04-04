@@ -11,6 +11,7 @@ import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
 import blueprint.workflowmodule.standalone.loanapproval.model.Task;
+import io.vanillabp.cockpit.commons.security.usercontext.UserContext;
 import io.vanillabp.spi.cockpit.BusinessCockpitService;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetails;
@@ -63,6 +64,12 @@ public class Service {
      */
     @Autowired
     private ProcessService<Aggregate> service;
+
+    /**
+     * Used to retrieve the user logged in.
+     */
+    @Autowired
+    private UserContext userContext;
 
     /**
      * A reference to the {@link BusinessCockpitService} providing
@@ -151,14 +158,13 @@ public class Service {
 
     }
 
-
     /**
      * This method is called by VanillaBP once the user task, identified by the method's name, is created
      *
      * @param loanApproval The workflow's aggregate.
      * @param taskId       Unique identifier for the user task.
      * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#wire-up-a-task">VanillaBP docs &quot;Wire up a task&quot;</a>
-     * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;User tasks and asynchronous tasks&quot;</a>
+     * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;UserRepresentation tasks and asynchronous tasks&quot;</a>
      */
     @WorkflowTask
     public void assessRisk(
@@ -177,16 +183,21 @@ public class Service {
             task.setData(formData);
             loanApproval.getTasks().put(taskId, task);
 
-            log.info("Assessing risk for loan approval '{}' (user task ID = '{}')", loanApproval.getLoanRequestId(),
+            log.info("Assessing risk for loan approval '{}' (user task ID = '{}')",
+                    loanApproval.getLoanRequestId(),
                     taskId);
 
         }
         // task is canceled e.g. due to an interrupting boundary event
         else if (taskEvent == TaskEvent.Event.CANCELED) {
 
-            loanApproval
-                    .getTask(taskId)
-                    .setCompletedAt(OffsetDateTime.now());
+            final var task = loanApproval.getTask(taskId);
+
+            task.setCompletedAt(OffsetDateTime.now());
+
+            // Although task it completed we won't set property 'completedBy'.
+            // This is because completion is triggered by the workflow (e.g. due to
+            // a boundary event) and not by a person.
 
         }
 
@@ -208,7 +219,6 @@ public class Service {
         // Not part of this demo
 
     }
-
 
     /**
      * Completes a risk assessment task based on the given decision.
@@ -236,6 +246,7 @@ public class Service {
 
         // Mark task as completed by setting the current timestamp
         aggregateAndTask.task.setCompletedAt(OffsetDateTime.now());
+        aggregateAndTask.task.setCompletedBy(userContext.getUserLoggedIn());
 
         // Save confirmed data in aggregate
         aggregateAndTask.loanApproval.setRiskAcceptable(riskIsAcceptable);
@@ -287,6 +298,13 @@ public class Service {
 
     }
 
+    /**
+     * Used to update form data saved for a user task. It is updated on intermediate saves
+     * as well as after completing the task to reflect the form values on completion.
+     *
+     * @param aggregateAndTask Aggregate and task to be updated
+     * @param riskAcceptable Value to be updated
+     */
     private void updateAssessRiskForm(
             final AggregateAndTask aggregateAndTask,
             final Boolean riskAcceptable) {
@@ -321,6 +339,11 @@ public class Service {
          */
         private int amount;
 
+        /**
+         * The person completed the form or null if not completed
+         */
+        private String completedBy;
+
     }
 
     /**
@@ -349,6 +372,7 @@ public class Service {
         AssessRiskForm assessRiskForm = new AssessRiskForm();
         assessRiskForm.setAmount(aggregateAndTask.loanApproval.getAmount());
         assessRiskForm.setRiskAcceptable(formData.getRiskAcceptable());
+        assessRiskForm.setCompletedBy(aggregateAndTask.task.getCompletedBy());
 
         return assessRiskForm;
 

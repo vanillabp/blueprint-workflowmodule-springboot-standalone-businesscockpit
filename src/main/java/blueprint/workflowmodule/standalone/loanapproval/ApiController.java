@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
+import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,6 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/loan-approval")
+@Secured({
+        "RISK_ASSESSMENT", "ADMIN"
+})
 public class ApiController {
 
     /**
@@ -45,6 +50,9 @@ public class ApiController {
 
     @Autowired
     private LoanApprovalProperties properties;
+
+    @Autowired
+    private BlueprintUserService usersService;
 
     /**
      * Initiate processing of a new loan approval.
@@ -167,6 +175,7 @@ public class ApiController {
         Map<String, Object> response = new HashMap<>();
         response.put("amount", assessRiskForm.getAmount());
         response.put("riskAcceptable", assessRiskForm.getRiskAcceptable());
+        response.put("completedBy", assessRiskForm.getCompletedBy());
 
         log.info("Fetched task: {} with data: {}", taskId, response);
         return ResponseEntity.ok(response);

@@ -1,3 +1,3 @@
-const TaskDefinition = 'assessRisk';
+const TaskDefinition = "assessRisk";
 
 export { TaskDefinition };

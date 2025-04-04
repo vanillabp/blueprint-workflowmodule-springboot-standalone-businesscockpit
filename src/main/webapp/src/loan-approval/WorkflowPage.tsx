@@ -1,12 +1,19 @@
-import { useEffect, useState } from 'react';
-import { buildTimestamp, buildVersion } from '../WorkflowPage';
-import { BcUserTask, CopyClipboard, theme, WorkflowPage } from '@vanillabp/bc-shared';
-import { Box, Grommet, Heading, Text, Tip } from 'grommet';
-import { Share } from 'grommet-icons';
+import { useEffect, useState } from "react";
+import { buildTimestamp, buildVersion } from "../WorkflowPage";
+import {
+  BcUserTask,
+  CopyClipboard,
+  theme,
+  WorkflowPage,
+} from "@vanillabp/bc-shared";
+import { Box, Grommet, Heading, Text, Tip } from "grommet";
+import { Share } from "grommet-icons";
 
 const LoanApprovalWorkflowPage: WorkflowPage = ({ workflow }) => {
-  const [ loaded, setLoaded ] = useState(false);
-  const [ userTasks, setUserTasks ] = useState<Array<BcUserTask> | undefined>(undefined);
+  const [loaded, setLoaded] = useState(false);
+  const [userTasks, setUserTasks] = useState<Array<BcUserTask> | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const loadUserTasks = async () => {
@@ -17,53 +24,43 @@ const LoanApprovalWorkflowPage: WorkflowPage = ({ workflow }) => {
       setLoaded(true);
       loadUserTasks();
     }
-  }, [ setUserTasks, workflow, loaded, setLoaded ]);
+  }, [setUserTasks, workflow, loaded, setLoaded]);
 
   return (
-        <Grommet
-            theme={theme}
-            full>
-          <Box
-            gap='small'
-            margin="medium">
-            <Heading
-                level="2">
-              <CopyClipboard
-                  content='workflow.title.de'
-                  size="xsmall">
-                <Tip
-                    content={ `${ buildVersion } from ${ buildTimestamp.toLocaleString() }` }
-                    dropProps={ { stretch: false } }>
-                  {workflow.title.de}
-                </Tip>
-              </CopyClipboard>
-            </Heading>
-            {
-              userTasks === undefined
-                  ? <Text>Loading user tasks...</Text>
-                  : userTasks.length === 0
-                  ? <Text>No active user tasks found for this workflow!</Text>
-                  : <Box
-                        margin="medium"
-                        direction='column'>
-                      {
-                        userTasks.map(userTask => (
-                          <Box
-                              gap="small"
-                              direction="row">
-                            <Share
-                                color="dark-2"
-                                size="15rem"
-                                style={ { position: 'relative', top: '-0.1rem' } }
-                                onClick={ () => userTask.open() }
-                              />
-                            <Box>{ userTask.id }</Box>
-                          </Box>))
-                      }
-                    </Box>
-            }
+    <Grommet theme={theme} full>
+      <Box gap="small" margin="medium">
+        <Heading level="2">
+          <CopyClipboard content="workflow.title.de" size="xsmall">
+            <Tip
+              content={`${buildVersion} from ${buildTimestamp.toLocaleString()}`}
+              dropProps={{ stretch: false }}
+            >
+              {workflow.title.de}
+            </Tip>
+          </CopyClipboard>
+        </Heading>
+        {userTasks === undefined ? (
+          <Text>Loading user tasks...</Text>
+        ) : userTasks.length === 0 ? (
+          <Text>No active user tasks found for this workflow!</Text>
+        ) : (
+          <Box margin="medium" direction="column">
+            {userTasks.map((userTask) => (
+              <Box gap="small" direction="row">
+                <Share
+                  color="dark-2"
+                  size="15rem"
+                  style={{ position: "relative", top: "-0.1rem" }}
+                  onClick={() => userTask.open()}
+                />
+                <Box>{userTask.id}</Box>
+              </Box>
+            ))}
           </Box>
-        </Grommet>);
-}
+        )}
+      </Box>
+    </Grommet>
+  );
+};
 
 export default LoanApprovalWorkflowPage;
