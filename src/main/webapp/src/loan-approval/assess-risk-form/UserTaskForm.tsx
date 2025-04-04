@@ -2,8 +2,9 @@ import { UserTaskForm as UserTaskFormComponent } from "@vanillabp/bc-shared";
 import { useEffect, useState } from "react";
 
 const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
-    const [amount,setAmount] = useState(null);
+    const [amount, setAmount] = useState(null);
     const [riskAcceptable, setRiskAcceptable] = useState(null);
+    const [completedBy, setCompletedBy] = useState(null);
     const baseUrl = `${userTask.workflowModuleUri}/api/loan-approval`;
     const loanRequestId = userTask.businessId;
 
@@ -28,6 +29,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
                 // Set state with existing values
                 if (data.amount !== undefined) setAmount(data.amount);
                 if (data.riskAcceptable !== undefined) setRiskAcceptable(data.riskAcceptable);
+                if (data.completedBy !== undefined) setCompletedBy(data.completedBy);
             } catch (error) {
                 console.error("Error fetching loan approval data:", error);
             }
@@ -125,7 +127,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
             </div>
             {
                 userTask.endedAt != null
-                    ? <p>This Task has already been completed at {userTask.endedAt.toTimeString()}</p>
+                    ? <p>This Task has already been completed by {completedBy} at {userTask.endedAt.toTimeString()}</p>
                     : undefined
             }
             <div style={{ display: "flex", gap: "10px" }}>

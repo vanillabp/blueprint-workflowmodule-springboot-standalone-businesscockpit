@@ -155,10 +155,17 @@ retrieval.
 
 Instructions at a glance:
 
+*Hint:* This version of the standalone-businesscockpit includes a user and security feature. 
+When looking at the `ApiController` class, you can see that the entire class is `@Secured` for certain roles
+(e.g.: *RISK_ASSESSMENT*).
+One can define a user and their roles in a spring configuration file which one can assign when running the jar
+(see instructions below)
+
 1. Download runnable JAR from Maven-Central or the latest [snapshot](https://github.com/orgs/vanillabp/packages?q=dev&tab=packages&q=dev-shell-simulator).
-1. Run the JAR
+1. Create your own spring configuration file (see desired structure: [users.yaml](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/tree/feature/users/src/main/resources/users.yaml))
+1. Run the JAR with a specific spring profile
    ```shell
-   java -jar dev-shell-simulator-*-runnable.jar
+   java -Dspring.profiles.active=users -jar dev-shell-simulator-*-runnable.jar 
    ```
 1. In this demo project open directory `src/main/webapp` in terminal.
 1. Install NPM packages required:

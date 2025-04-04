@@ -11,6 +11,8 @@ import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
 import blueprint.workflowmodule.standalone.loanapproval.model.Task;
+import io.vanillabp.cockpit.commons.exceptions.BcUnauthorizedException;
+import io.vanillabp.cockpit.commons.security.usercontext.UserContext;
 import io.vanillabp.spi.cockpit.BusinessCockpitService;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetails;
@@ -29,6 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * This service manages the lifecycle of a loan approval workflow.
@@ -63,6 +66,9 @@ public class Service {
      */
     @Autowired
     private ProcessService<Aggregate> service;
+
+    @Autowired
+    private UserContext userContext;
 
     /**
      * A reference to the {@link BusinessCockpitService} providing
@@ -158,7 +164,7 @@ public class Service {
      * @param loanApproval The workflow's aggregate.
      * @param taskId       Unique identifier for the user task.
      * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#wire-up-a-task">VanillaBP docs &quot;Wire up a task&quot;</a>
-     * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;User tasks and asynchronous tasks&quot;</a>
+     * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;UserRepresentation tasks and asynchronous tasks&quot;</a>
      */
     @WorkflowTask
     public void assessRisk(
@@ -184,9 +190,14 @@ public class Service {
         // task is canceled e.g. due to an interrupting boundary event
         else if (taskEvent == TaskEvent.Event.CANCELED) {
 
-            loanApproval
-                    .getTask(taskId)
-                    .setCompletedAt(OffsetDateTime.now());
+            final var task = loanApproval.getTask(taskId);
+
+            task.setCompletedAt(OffsetDateTime.now());
+            try {
+                task.setCompletedBy(userContext.getUserLoggedIn());
+            } catch (BcUnauthorizedException bc) {
+                log.error("BcUnauthorizedException", bc);
+            }
 
         }
 

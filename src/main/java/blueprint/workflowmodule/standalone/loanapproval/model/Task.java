@@ -52,6 +52,10 @@ public class Task {
     @Column
     private OffsetDateTime completedAt;
 
+    /** Name of the user who completed the task. */
+    @Column
+    private String completedBy;
+
     /**
      * Retrieves the task's stored data.
      * <p>
