@@ -2,6 +2,7 @@ package blueprint.workflowmodule.standalone.loanapproval.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.data.annotation.TypeAlias;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TypeAlias("AssessRiskFormData")
 public class AssessRiskFormData implements TaskData {
 
     /** Indicates whether the assessed risk is acceptable. */
