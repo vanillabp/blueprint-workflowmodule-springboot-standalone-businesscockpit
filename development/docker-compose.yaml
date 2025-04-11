@@ -1,0 +1,22 @@
+name: loan-approval
+services:
+  mongo:
+    image: mongo:4.4
+    container_name: loan-approval-mongo
+    restart: "no"
+    ports:
+      - 27017:27017
+    entrypoint:
+      - /usr/bin/mongod
+      - --replSet
+      - rs-loan-approval
+      - --bind_ip_all
+  mongo-setup:
+    image: loan-approval-mongo-setup
+    build: ./mongo/
+    container_name: loan-approval-mongo-setup
+    restart: "no"
+    depends_on:
+      - mongo
+    volumes:
+      - ./mongo:/config
