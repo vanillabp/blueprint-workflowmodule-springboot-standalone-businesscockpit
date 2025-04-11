@@ -1,6 +1,6 @@
 ![VanillaBP](readme/vanillabp-headline.png)
 
-# Blueprint "Standalone leveraging Business Cockpit"
+# Blueprint "Standalone leveraging Business Cockpit" - using MongoDB
 
 A **blueprint** of a standalone Spring Boot application leveraging the
 **[VanillaBP Business Cockpit](https://github.com/vanillabp/business-cockpit/)**
@@ -14,8 +14,11 @@ This blueprint is an extension of the
 ["Standalone" blueprint](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone)
 and therefore descriptions do not cover details already explained there.
 
-Available variants:
-1. [Using MongoDB instead of JPA](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/tree/variant/mongodb)
+Additionally, this blueprint is a variant of the
+["Standalone leveraging Business Cockpit" blueprint](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit)
+introducing web-security. Checkout
+[Github-comparison](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/compare/main...variant/mongodb)
+for differences.
 
 In order to develop a better understanding of how to use VanillaBP,
 a concrete technical process “loan approval” is used instead of an abstract
