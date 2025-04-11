@@ -1,19 +1,9 @@
 spring:
   application:
     name: loan-approval
-  datasource:
-    url: jdbc:h2:mem:blueprintdb
-    jpa:
-      database-platform: org.hibernate.dialect.H2Dialect
-      hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          format_sql: true
-      show-sql: false
-  h2:
-    console:
-      enabled: true
+  data:
+    mongodb:
+      uri: mongodb://loan-approval:loan-approval@localhost:27017/loan-approval
 workerId: blueprint
 vanillabp:
   cockpit:
