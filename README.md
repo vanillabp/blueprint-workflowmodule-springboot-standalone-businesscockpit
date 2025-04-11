@@ -14,6 +14,9 @@ This blueprint is an extension of the
 ["Standalone" blueprint](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone)
 and therefore descriptions do not cover details already explained there.
 
+Available variants:
+1. [Using MongoDB instead of JPA](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/tree/variant/mongodb)
+
 In order to develop a better understanding of how to use VanillaBP,
 a concrete technical process “loan approval” is used instead of an abstract
 demo process. This
