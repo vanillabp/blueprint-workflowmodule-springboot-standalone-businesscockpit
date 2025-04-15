@@ -1,0 +1,16 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/lib",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "types": [],
+    "paths": {
+      "@workflow-api-client": ["./src/api-client/dpfi-workflow/index.ts"],
+      "@workflow-service": ["./src/workflow/services/index.ts"]
+    }
+  },
+  "exclude": ["**/*.spec.ts"]
+}

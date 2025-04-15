@@ -1,0 +1,19 @@
+{
+  "name": "library",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "17.3.3",
+    "@angular/core": "17.3.3",
+    "@vanillabp/bc-shared": "0.0.7-SNAPSHOT",
+    "@ngx-translate/core": "15.0.0",
+    "@ngx-translate/http-loader": "8.0.0",
+    "primeicons": "7.0.0",
+    "primeng": "17.12.0",
+    "primeflex": "3.3.1",
+    "rxjs": "7.8.0"
+  },
+  "dependencies": {
+    "tslib": "2.6.2"
+  },
+  "sideEffects": false
+}

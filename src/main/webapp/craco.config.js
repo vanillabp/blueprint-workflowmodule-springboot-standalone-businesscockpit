@@ -25,13 +25,19 @@ module.exports = {
         logLevel: "debug",
       },
       '/official-api': {
-        target: 'http://localhost:9080',
+        target: 'http://localhost:8079',
         secure: false,
         changeOrigin: true,
         logLevel: "debug"
       },
       '/gui/api': {
-        target: 'http://0.0.0.0:9080',
+        target: 'http://0.0.0.0:8079',
+        secure: false,
+        changeOrigin: true,
+        logLevel: "debug",
+      },
+      '/dev-shell': {
+        target: 'http://0.0.0.0:8079',
         secure: false,
         changeOrigin: true,
         logLevel: "debug",

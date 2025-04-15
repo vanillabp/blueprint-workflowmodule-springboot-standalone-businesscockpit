@@ -30,7 +30,7 @@ public class BlueprintUserService {
      * @param restClientBuilder The builder used to create a RestClient with configured base URL.
      */
     public BlueprintUserService(RestClient.Builder restClientBuilder) {
-        this.restClient = restClientBuilder.baseUrl("http://localhost:9080/user").build();
+        this.restClient = restClientBuilder.baseUrl("http://localhost:8079/dev-shell/user").build();
     }
 
     /**

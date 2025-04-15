@@ -1,0 +1,8 @@
+@switch (this.userTask.taskDefinition) {
+  @case ("assessRisk") {
+    <lib-loan-approval-user-task-assess-risk [userTask]="this.userTask" />
+  }
+  @default {
+    <div>Usertask: {{ this.userTask.taskDefinition }} not implemented</div>
+  }
+}

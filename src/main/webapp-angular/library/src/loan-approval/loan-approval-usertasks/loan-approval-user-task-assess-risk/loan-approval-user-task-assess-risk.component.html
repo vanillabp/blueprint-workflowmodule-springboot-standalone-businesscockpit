@@ -1,0 +1,62 @@
+<p-card 
+  styleClass="mb-4" 
+  [header]="'Loan Risk Assessment'"
+  [subheader]="'Case ID: ' + userTask.businessId">
+  <div class="grid">
+    <div class="col-12 mb-3">
+      <div class="p-field">
+        <label class="font-bold block mb-2">Amount:</label>
+        <span>{{amount !== null ? amount : 'Loading...'}}</span>
+      </div>
+    </div>
+
+    <div class="col-12 mb-3">
+      <div class="p-field">
+        <label class="font-bold block mb-2">Risk Assessment:</label>
+        <div class="flex gap-4">
+          <div class="p-field-radiobutton">
+            <p-radioButton 
+              name="riskAssessment" 
+              [value]="true" 
+              [(ngModel)]="riskAcceptable" 
+              [disabled]="userTask.endedAt != null"
+              inputId="riskAccept">
+            </p-radioButton>
+            <label for="riskAccept" class="ml-2">Accept</label>
+          </div>
+          <div class="p-field-radiobutton">
+            <p-radioButton 
+              name="riskAssessment" 
+              [value]="false" 
+              [(ngModel)]="riskAcceptable" 
+              [disabled]="userTask.endedAt != null"
+              inputId="riskDeny">
+            </p-radioButton>
+            <label for="riskDeny" class="ml-2">Deny</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="userTask.endedAt != null" class="col-12 mb-3">
+      <p>This Task has already been completed by {{completedBy}} at {{userTask.endedAt | date:'medium'}}</p>
+    </div>
+
+    <div class="col-12 flex gap-2">
+      <p-button 
+        [label]="'Complete Task'" 
+        [disabled]="riskAcceptable === null || userTask.endedAt != null" 
+        (onClick)="handleCompleteTask()" 
+        [loading]="loading"
+        styleClass="p-button-success">
+      </p-button>
+      <p-button 
+        [label]="'Save Task'" 
+        [disabled]="userTask.endedAt != null" 
+        (onClick)="handleSaveTask()" 
+        [loading]="loading"
+        styleClass="p-button-secondary">
+      </p-button>
+    </div>
+  </div>
+</p-card>

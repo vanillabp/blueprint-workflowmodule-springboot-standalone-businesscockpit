@@ -24,7 +24,7 @@ workerId: blueprint
 vanillabp:
     cockpit:
         rest:
-            base-url: http://localhost:9080
+            base-url: http://localhost:8079
             authentication:
                 basic: true
                 username: abc
