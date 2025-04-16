@@ -1,1 +1,20 @@
-Hello world! From workflow-specific-page.component.html :)
+<div class="container">
+  <h2>{{ workflow.title['de'] }}</h2>
+
+  <div *ngIf="userTasks === undefined">
+    Loading user tasks...
+  </div>
+  
+  <div *ngIf="userTasks != undefined && userTasks.length == 0">
+    No active user tasks found for this workflow!
+  </div>
+  
+  <div class="user-tasks" *ngIf="userTasks && userTasks.length > 0">
+    <div class="user-task" *ngFor="let userTask of userTasks">
+      <div class="task-row">
+        <span class="share-icon" (click)="userTask.open()">Open</span>
+        <span>{{ userTask.id }}</span>
+      </div>
+    </div>
+  </div>
+</div>

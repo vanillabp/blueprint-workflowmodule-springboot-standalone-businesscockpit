@@ -1,5 +1,5 @@
-import { Component, Input } from "@angular/core";
-import { BcWorkflow } from "@vanillabp/bc-shared";
+import { Component, Input, OnInit } from "@angular/core";
+import { BcUserTask, BcWorkflow } from "@vanillabp/bc-shared";
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -10,6 +10,25 @@ import { CommonModule } from "@angular/common";
   imports: [CommonModule],
   providers: [],
 })
-export class LoanApprovalWorkflowRootPageComponent {
+export class LoanApprovalWorkflowRootPageComponent implements OnInit {
   @Input() workflow!: BcWorkflow;
+  
+  loaded = false;
+  userTasks: BcUserTask[] | undefined;
+
+  ngOnInit(): void {
+    this.loadUserTasks();
+  }
+
+  private async loadUserTasks(): Promise<void> {
+    if (!this.loaded) {
+      this.loaded = true;
+      try {
+        const tasks = await this.workflow.getUserTasks(true, false);
+        this.userTasks = tasks;
+      } catch (error) {
+        this.userTasks = [];
+      }
+    }
+  }
 }

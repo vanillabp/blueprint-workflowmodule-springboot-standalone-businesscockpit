@@ -1,0 +1,32 @@
+.container {
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.user-tasks {
+  margin: 20px 0;
+}
+
+.user-task {
+  margin: 10px 0;
+}
+
+.task-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-icon {
+  cursor: pointer;
+  color: #444;
+  font-size: 14px;
+}
+
+.share-icon:hover {
+  color: #000;
+}
