@@ -1,0 +1,81 @@
+.user-task-form {
+  margin: 1rem;
+  font-family: sans-serif;
+  color: #333;
+  max-width: 500px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  span {
+    display: inline-block;
+    margin-top: 0.25rem;
+  }
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:disabled {
+    background-color: #f9f9f9;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+}
+
+.error-message {
+  color: #c0392b; // dunkles, kräftiges Rot
+  background-color: #f9d6d5;
+  padding: 0.75rem;
+  border: 1px solid #e0b4b4;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

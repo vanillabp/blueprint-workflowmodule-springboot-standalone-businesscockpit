@@ -1,4 +1,5 @@
 import { UserTaskForm as UserTaskFormComponent } from "@vanillabp/bc-shared";
+import { Box, Text, Button } from "grommet";
 import { useEffect, useState } from "react";
 
 const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
@@ -7,6 +8,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
     const [completedBy, setCompletedBy] = useState(null);
     const baseUrl = `${userTask.workflowModuleUri}/api/loan-approval`;
     const loanRequestId = userTask.businessId;
+    const [isForbidden, setIsForbidden] = useState(false);
 
     const handleRiskOptionChange = (event) => {
         setRiskAcceptable(event.target.value === 'accept');
@@ -19,7 +21,11 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
 
             try {
                 const response = await fetch(`${baseUrl}/${loanRequestId}/forms/${userTask.id}/assess-risk`);
-                if (!response.ok) {
+                if (response.status === 403){
+                    setIsForbidden(true);
+                    console.log(response.statusText);
+                    return
+                } else if (!response.ok) {
                     console.error("Failed to fetch loan approval data");
                     return;
                 }
@@ -36,7 +42,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
         };
 
         fetchExistingData();
-    }, []);
+    },[baseUrl, loanRequestId, userTask.id]);
 
     const handleCompleteTask = async () => {
         const loanRequestId = userTask.businessId;
@@ -68,6 +74,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
             if (!response.ok) {
                 console.error("Failed to complete task:", response.status);
             } else {
+                window.location.reload();
                 console.log("Task completed successfully");
             }
         } catch (error) {
@@ -94,51 +101,93 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
         });
     };
 
+    if (isForbidden) {
+        return (
+            <Box pad="medium">
+                <Text color="status-critical" weight="bold">
+                    You are not authorized to view this task.
+                </Text>
+            </Box>
+        );
+    }
+
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px", padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-            <div>
-                <label style={{ fontWeight: "bold" }}>Amount: </label>
-                <span>{amount !== null ? amount : "Loading..."}</span>
-            </div>
-            <div>
-                <label style={{ fontWeight: "bold" }}>Risk Assessment:</label>
-                <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
-                    <label>
+        <Box
+            gap="medium"
+            pad="medium"
+            border={{ color: 'border', size: 'xsmall' }}
+            round="small"
+        >
+            <Box direction="row" gap="small" align="center">
+                <Text weight="bold">Amount:</Text>
+                <Text>{amount !== null ? amount : "Loading..."}</Text>
+            </Box>
+
+            <Box>
+                <Text weight="bold">Risk Assessment:</Text>
+                <Box direction="row" gap="medium" margin={{ top: "small" }}>
+                    <Box direction="row" align="center" gap="xsmall">
                         <input
-                            disabled={userTask.endedAt != null}
                             type="radio"
                             name="riskAssessment"
                             value="accept"
+                            disabled={userTask.endedAt != null}
                             checked={riskAcceptable === true}
                             onChange={handleRiskOptionChange}
-                        /> Accept
-                    </label>
-                    <label>
+                        />
+                        <Text>Accept</Text>
+                    </Box>
+                    <Box direction="row" align="center" gap="xsmall">
                         <input
-                            disabled={userTask.endedAt != null}
                             type="radio"
                             name="riskAssessment"
                             value="deny"
+                            disabled={userTask.endedAt != null}
                             checked={riskAcceptable === false}
                             onChange={handleRiskOptionChange}
-                        /> Deny
-                    </label>
-                </div>
-            </div>
-            {
-                userTask.endedAt != null
-                    ? <p>This Task has already been completed by {completedBy} at {userTask.endedAt.toTimeString()}</p>
-                    : undefined
-            }
-            <div style={{ display: "flex", gap: "10px" }}>
-                <button
+                        />
+                        <Text>Deny</Text>
+                    </Box>
+                </Box>
+            </Box>
+
+            {userTask.endedAt != null && (
+                <Text>
+                    This Task has already been completed by {completedBy} at {userTask.endedAt.toTimeString()}
+                </Text>
+            )}
+
+            <Box direction="row" gap="small">
+                <Button
+                    label="Complete Task"
                     onClick={handleCompleteTask}
-                    disabled={riskAcceptable === null || userTask.endedAt != null} style={{ padding: "10px", cursor: "pointer" }}>Complete Task</button>
-                <button
+                    disabled={riskAcceptable === null || userTask.endedAt != null}
+                    color="light-1"
+                    hoverIndicator="light-3"
+                    style={{
+                        borderRadius: "4px",
+                        padding: "8px 16px",
+                        border: "1px solid",
+                        color: "#333",
+                    }}
+                />
+                <Button
+                    label="Save Task"
                     onClick={handleSaveTask}
-                    disabled={userTask.endedAt != null} style={{ padding: "10px", cursor: "pointer" }}>Save Task</button>
-            </div>
-        </div>
+                    disabled={userTask.endedAt != null}
+                    color="light-1"
+                    hoverIndicator="light-3"
+                    style={{
+                        borderRadius: "4px",
+                        padding: "8px 16px",
+                        border: "1px solid",
+                        color: "#333",
+                    }}
+                />
+            </Box>
+
+        </Box>
+
     );
 };
 

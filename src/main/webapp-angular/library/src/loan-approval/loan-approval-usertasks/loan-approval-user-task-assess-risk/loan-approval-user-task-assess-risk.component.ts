@@ -22,7 +22,7 @@ import {TranslateModule} from '@ngx-translate/core';
     DatePipe
   ],
   templateUrl: './loan-approval-user-task-assess-risk.component.html',
-  styleUrl: './loan-approval-user-task-assess-risk.component.css'
+  styleUrl: './loan-approval-user-task-assess-risk.component.scss'
 })
 export class LoanApprovalUserTaskAssessRiskComponent implements OnInit {
   @Input() userTask!: BcUserTask;
@@ -31,6 +31,7 @@ export class LoanApprovalUserTaskAssessRiskComponent implements OnInit {
   riskAcceptable: boolean | null = null;
   completedBy: string | null = null;
   loading = false;
+  forbidden: boolean = false;
   
   constructor(private http: HttpClient) {}
   
@@ -54,6 +55,9 @@ export class LoanApprovalUserTaskAssessRiskComponent implements OnInit {
         },
         error: (error) => {
           console.error("Error fetching loan approval data:", error);
+          if (error.status === 403) {
+            this.forbidden = true;
+          }
         }
       });
   }
