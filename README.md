@@ -134,8 +134,7 @@ as a base for your use case, then
 
 Instructions at a glance:
 
-1. Clone the [business cockpit repository](https://github.com/vanillabp/business-cockpit).
-2. Follow the
+1. Follow the
    [detailed instructions](https://github.com/vanillabp/business-cockpit/tree/main/container#as-is)
    which are:
    1. Run a local MongoDB database.
@@ -147,7 +146,7 @@ Instructions at a glance:
       java -Dserver.port=9080 -Dspring.profiles.active=local -jar bc.jar
       ```
    5. Open [local Business Cockpit](http://localhost:9080) in Browser and login with user `test` (pwd: `test`).
-3. The blueprint needs to be started with additional parameter pointing the REST
+2. The blueprint needs to be started with additional parameter pointing the REST
    endpoint to the Business Cockpit instead of the DevShell Simulator:
 
    ```shell
