@@ -8,8 +8,7 @@
     "inlineSources": true,
     "types": [],
     "paths": {
-      "@workflow-api-client": ["./src/api-client/dpfi-workflow/index.ts"],
-      "@workflow-service": ["./src/workflow/services/index.ts"]
+      "@workflow-service": ["./src/public-api.ts"]
     }
   },
   "exclude": ["**/*.spec.ts"]

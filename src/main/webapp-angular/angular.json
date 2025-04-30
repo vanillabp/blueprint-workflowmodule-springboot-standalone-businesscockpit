@@ -152,13 +152,8 @@
               "./dev-shell/src/assets",
               {
                 "glob": "**/*",
-                "input": "../resources/static/dpfi/assets/translations",
-                "output": "/wm/dpfi/assets/translations"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/ng2-pdfjs-viewer/pdfjs",
-                "output": "/wm/dpfi/assets/pdfjs"
+                "input": "../resources/static/loan-approval/assets/translations",
+                "output": "/wm/loan-approval/assets/translations"
               }
             ],
             "styles": [
@@ -225,6 +220,119 @@
             "assets": ["./dev-shell/src/favicon.ico", "./dev-shell/src/assets"],
             "styles": ["./dev-shell/src/styles.scss"],
             "scripts": []
+          }
+        }
+      }
+    },
+    "nf-wrapper": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "nf-wrapper",
+      "sourceRoot": "nf-wrapper/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/native-federation:build",
+          "options": {
+            "polyfills": []
+          },
+          "configurations": {
+            "production": {
+              "target": "nf-wrapper:esbuild:production"
+            },
+            "development": {
+              "target": "nf-wrapper:esbuild:development",
+              "dev": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-architects/native-federation:build",
+          "options": {
+            "target": "nf-wrapper:serve-original:development",
+            "rebuildDelay": 0,
+            "dev": true
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "nf-wrapper:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "nf-wrapper/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "nf-wrapper/src/favicon.ico",
+              "nf-wrapper/src/assets"
+            ],
+            "styles": [
+              "nf-wrapper/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "esbuild": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": {
+              "base": "../../../target/classes/static/ng-native-federation",
+              "browser": ""
+            },
+            "index": "nf-wrapper/src/index.html",
+            "browser": "nf-wrapper/src/main.ts",
+            "polyfills": [
+              "zone.js",
+              "es-module-shims"
+            ],
+            "tsConfig": "nf-wrapper/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "nf-wrapper/src/favicon.ico",
+              "nf-wrapper/src/assets"
+            ],
+            "styles": [
+              "nf-wrapper/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-original": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "nf-wrapper:esbuild:production"
+            },
+            "development": {
+              "buildTarget": "nf-wrapper:esbuild:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4200
           }
         }
       }

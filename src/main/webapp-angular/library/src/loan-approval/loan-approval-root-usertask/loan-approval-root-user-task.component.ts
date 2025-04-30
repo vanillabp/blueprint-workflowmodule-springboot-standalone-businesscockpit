@@ -1,10 +1,10 @@
 import { Component, Input } from "@angular/core";
-import { BcUserTask, BcWorkflow } from "@vanillabp/bc-shared";
+import { BcUserTask} from "@vanillabp/bc-shared";
 import { LoanApprovalUserTaskAssessRiskComponent } from "../loan-approval-usertasks/loan-approval-user-task-assess-risk/loan-approval-user-task-assess-risk.component";
 import { registerLocaleData } from "@angular/common";
 import localeDe from "@angular/common/locales/de";
 
-registerLocaleData(localeDe);
+// registerLocaleData(localeDe);
 
 @Component({
   selector: "loan-approval-root-user-task",

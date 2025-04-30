@@ -10,14 +10,6 @@
     "noImplicitReturns": true,
     "paths": {
       "@library": ["./dist/library"],
-      "@workflow-api-client": [
-        "./library/src/api-client/dpfi-workflow/index.ts"
-      ],
-      "@master-data-api-client": [
-        "./library/src/api-client/master-data/index.ts"
-      ],
-      "@workflow-service": ["./library/src/workflow/services/index.ts"],
-      "@workflow-common/ui-components": ["./../../../ng-workflow-common/"]
     },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,

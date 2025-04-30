@@ -128,7 +128,7 @@
                 </executions>
                 <configuration>
                     <installDirectory>${java.io.tmpdir}/frontend-maven-plugin</installDirectory>
-                    <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+                    <workingDirectory>${project.basedir}/src/main/webapp-angular</workingDirectory>
                     <nodeVersion>v20.11.1</nodeVersion>
                     <npmVersion>10.2.4</npmVersion>
                 </configuration>
@@ -249,7 +249,7 @@
 					<artifactId>spring-kafka</artifactId>
 				</dependency>
 				<dependency>
-					<groupId>at.phactum.zeebe</groupId>
+					<groupId>com.phactum.zeebe</groupId>
 					<artifactId>zeebe-kafka-exporter-serde</artifactId>
 					<version>8.6.0</version>
 				</dependency>

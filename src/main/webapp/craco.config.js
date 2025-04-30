@@ -16,7 +16,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       '/wm/loan-approval': {
-        target: 'http://0.0.0.0:8080',
+        target: 'http://0.0.0.0:9080',
         "pathRewrite": {
           "^/wm/loan-approval": ""
         },

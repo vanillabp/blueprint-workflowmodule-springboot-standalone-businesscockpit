@@ -1,0 +1,16 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "types": [],
+        "paths": {
+            "@library": ["../library/src/public-api.ts"]
+        }
+    },
+    "files": [
+        "src/index.ts"
+    ],
+    "include": ["src/**/*.d.ts"],
+    "exclude": ["**/*.spec.ts"]
+}

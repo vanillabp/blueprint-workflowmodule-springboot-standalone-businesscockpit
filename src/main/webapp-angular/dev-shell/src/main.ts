@@ -4,7 +4,7 @@ import { AppComponent } from "./app/app.component";
 
 import { appConfig } from "@vanillabp/bc-dev-shell-angular";
 
-import { WorkflowUserTaskComponent } from "../../library/src/workflow-user-task.component";
+import { UserTaskComponent } from "../../library/src/user-task.component";
 import { LoanApprovalRootUserTaskComponent } from "../../library/src/loan-approval/loan-approval-root-usertask/loan-approval-root-user-task.component";
 import { LoanApprovalWorkflowRootPageComponent} from "../../library/src/loan-approval/loan-approval-root-workflow-page/loan-approval-workflow-root-page.component";
 import { HttpClient, provideHttpClient } from "@angular/common/http";
@@ -17,7 +17,7 @@ bootstrapApplication(
   AppComponent,
   appConfig(
     "/official-api/v1",
-      WorkflowUserTaskComponent,
+      UserTaskComponent,
       LoanApprovalWorkflowRootPageComponent,
     {
       //add components here that should be accessible in dev-shell
@@ -42,7 +42,7 @@ bootstrapApplication(
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
     http,
-    "/wm/dpfi/assets/translations/",
+    "/wm/loan-approval/assets/translations/",
     ".json?v=" + Date.now(),
   );
 }
