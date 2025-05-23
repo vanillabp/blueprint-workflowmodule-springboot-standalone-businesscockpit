@@ -3,16 +3,16 @@ logging:
     io.camunda.zeebe.client.impl.ZeebeCallCredentials: ERROR
 camunda:
   client:
-    mode: selfManaged
+    mode: selfmanaged
     auth:
       issuer: http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token
       client-id: zeebe
       client-secret: zecret
     zeebe:
       enabled: true
-      grpc-address: http://localhost:26500
       defaults:
         enabled: false
+      grpc-address: http://localhost:26500
     operate:
       enabled: false
     tasklist:

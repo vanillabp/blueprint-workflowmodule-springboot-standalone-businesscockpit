@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
+import io.vanillabp.cockpit.commons.security.usercontext.UserDetails;
+
 /**
  * This services provides user information. Typically, it is used to map user ids to rich
  * user data objects shown in the UI. Those user ids are stored in 
@@ -49,7 +51,7 @@ public class BlueprintUserService {
      * @return A UserDetailsImpl instance containing formatted user information,
      *         or null if the user is not found.
      */
-    public UserDetailsImpl getUser(
+    public UserDetails getUser(
             final String userId) {
 
         if (!StringUtils.hasText(userId)) {
@@ -90,7 +92,7 @@ public class BlueprintUserService {
      *
      * @return A list of UserDetailsImpl objects containing formatted user information.
      */
-    public List<UserDetailsImpl> getAllUsers() {
+    public List<UserDetails> getAllUsers() {
 
         final var users = this.restClient
                 .get()
@@ -117,7 +119,7 @@ public class BlueprintUserService {
      * @param user The UserRepresentation object to convert.
      * @return A UserDetailsImpl object with properly formatted display fields.
      */
-    private UserDetailsImpl toUser(
+    private UserDetails toUser(
             UserRepresentation user) {
         if (user == null) {
             return null;

@@ -1,10 +1,12 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
+import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
+import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -16,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
-import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -164,22 +162,47 @@ public class ApiController {
             @PathVariable final String loanRequestId,
             @PathVariable final String taskId) {
 
-        final Service.AssessRiskForm assessRiskForm = service.getAssessRisk(
+        final var assessRiskForm = service.getAssessRisk(
                 loanRequestId,
                 taskId);
-
         if (assessRiskForm == null) {
             return ResponseEntity.notFound().build();
         }
 
         // Convert UserTaskForm to Map
-        Map<String, Object> response = new HashMap<>();
+        final var response = new HashMap<String, Object>();
         response.put("amount", assessRiskForm.getAmount());
         response.put("riskAcceptable", assessRiskForm.getRiskAcceptable());
         response.put("completedBy", assessRiskForm.getCompletedBy());
 
         log.info("Fetched task: {} with data: {}", taskId, response);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Returns case information.
+     *
+     * @param loanRequestId Unique Identifier for each LoanRequest (workflow).
+     * @return Map containing case information.
+     */
+    @GetMapping("/{loanRequestId}")
+    public ResponseEntity<Map<String, Object>> getCaseInformation(
+            @PathVariable final String loanRequestId) {
+
+        final var caseInformation = service.getCaseInformation(
+                loanRequestId);
+        if (caseInformation == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        final var response = new HashMap<String, Object>();
+        response.put("amount", caseInformation.getAmount());
+        response.put("riskAcceptable", caseInformation.getRiskAcceptable());
+        response.put("completedBy", caseInformation.getCompletedBy());
+
+        log.info("Fetched case: {} with data: {}", loanRequestId, response);
+        return ResponseEntity.ok(response);
+
     }
 
 }

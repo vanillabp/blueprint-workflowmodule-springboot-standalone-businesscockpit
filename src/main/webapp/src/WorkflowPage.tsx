@@ -1,4 +1,3 @@
-import { Text } from "grommet";
 import { WorkflowPage } from "@vanillabp/bc-shared";
 import { lazy } from "react";
 import { BpmnProcessId as LoanApproval_BpmnProcessId } from "./loan-approval";
@@ -14,7 +13,7 @@ const WorkflowPageComponent: WorkflowPage = ({ workflow }) =>
   workflow.bpmnProcessId === LoanApproval_BpmnProcessId ? (
     <LoanApprovalWorkflowPage workflow={workflow} />
   ) : (
-    <Text>{`unknown BPMN process ID '${workflow.bpmnProcessId}'`}</Text>
+    <h2>{`unknown BPMN process ID '${workflow.bpmnProcessId}'`}</h2>
   );
 
 export { buildVersion, buildTimestamp, WorkflowPageComponent as WorkflowPage };
