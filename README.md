@@ -34,17 +34,15 @@ point for more complex use cases:
    mvn archetype:generate \
    -DarchetypeGroupId=io.vanillabp.blueprint \
    -DarchetypeArtifactId=workflowmodule-springboot-standalone-businesscockpit-archetype \
+   -DarchetypeVersion=1.0.1
    -DgroupId={your.groupId} \
    -DartifactId={your.artifactId} \
    -Dversion={your.version}
    ```
-
-   *Hint:* If you want a specific archetype version add `-DarchetypeVersion={e.g 0.0.1}`
-   <br>&nbsp;
-
 2. **Build the application:**
 
    ```shell
+   mvn spotless:apply
    mvn clean package -Pcamunda7
    ```
 3. **Start the VanillaBP Business Cockpit:**   
@@ -106,9 +104,16 @@ integrating into a Business Cockpit:
    <br>This pattern is
    [explained in detail here](./WEBAPP.md).
 
+The components included in this blueprint are structured based on content-related criteria.
+This is intentional to promote modularity and maintainability.
+As an example, a fictional process based `loan-approval` is implemented. On developing your own
+use-cases each independent use case needs it's own [aggregate](https://github.com/vanillabp/spi-for-java#process-specific-workflow-aggregate),
+repository, API controller and service placed in its own Java package.
+By keeping use cases separate, it becomes easier to extend the application, manage dependencies, and keep clear boundaries between different features.
+
 This blueprint is about a single [workflow module](https://github.com/vanillabp/spring-boot-support#workflow-modules).
 If you are interested in implementing multiple workflow modules, you should take a look at other blueprints that cover
-those scenarios.
+these scenarios.
 
 Other concepts VanillaBP is based on can be found in [VanillaBP SPI documentation](https://github.com/vanillabp/spi-for-java#concept).
 
@@ -171,12 +176,12 @@ retrieval.
 Instructions at a glance:
 
 1. Download runnable JAR from
-   [Maven-Central](https://central.sonatype.com/artifact/io.vanillabp.businesscockpit/dev-shell-simulator)
+   [Github releases](https://github.com/vanillabp/business-cockpit/releases)
    or the latest [snapshot](https://github.com/orgs/vanillabp/packages?q=dev&tab=packages&q=dev-shell-simulator).
 2. Run the JAR passing the [predefined user configuration](./dev-shell-users.yaml) file:
 
    ```shell
-   java -jar dev-shell-simulator-*-runnable.jar --spring.config.additional-location=./dev-shell-dev-shell-users.yaml
+   java -Dspring.config.additional-location=./dev-shell-users.yaml -jar dev-shell-simulator-*-runnable.jar
    ```
 3. In this demo project open directory `src/main/webapp` in terminal.
 4. Install NPM packages required:

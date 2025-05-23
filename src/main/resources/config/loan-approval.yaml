@@ -6,8 +6,8 @@ vanillabp:
         ui-uri-path: /remoteEntry.js
         ui-uri-type: WEBPACK_MF_REACT
         i18n-languages:
-          - de
           - en
+          - de
         bpmn-description-language: en
 loan-approval:
   max-amount: 10000

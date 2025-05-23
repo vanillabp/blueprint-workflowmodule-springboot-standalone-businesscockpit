@@ -11,7 +11,9 @@ import blueprint.workflowmodule.standalone.loanapproval.model.Aggregate;
 import blueprint.workflowmodule.standalone.loanapproval.model.AggregateRepository;
 import blueprint.workflowmodule.standalone.loanapproval.model.AssessRiskFormData;
 import blueprint.workflowmodule.standalone.loanapproval.model.Task;
+import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
 import io.vanillabp.cockpit.commons.security.usercontext.UserContext;
+import io.vanillabp.cockpit.commons.security.usercontext.UserDetails;
 import io.vanillabp.spi.cockpit.BusinessCockpitService;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetails;
@@ -70,6 +72,12 @@ public class Service {
      */
     @Autowired
     private UserContext userContext;
+
+    /**
+     * Used to retrieve user information.
+     */
+    @Autowired
+    private BlueprintUserService userService;
 
     /**
      * A reference to the {@link BusinessCockpitService} providing
@@ -323,10 +331,6 @@ public class Service {
      * Represents a form used for assessing risk in this loan approval process.
      * This class extends {@link AssessRiskFormData} and includes additional details
      * like the loan amount.
-     *
-     * <p>
-     * It is primarily used to store and transfer data related to the risk assessment task.
-     * </p>
      */
     @Getter
     @Setter
@@ -351,7 +355,7 @@ public class Service {
      *
      * <p>
      * This method searches for the associated workflow aggregate and task,
-     * and if found, extracts the necessary details to create an {@link AssessRiskForm}.
+     * and if found, extracts the necessary details to fill {@link AssessRiskForm}.
      * </p>
      *
      * @param loanRequestId The unique identifier of the loan request.
@@ -375,6 +379,69 @@ public class Service {
         assessRiskForm.setCompletedBy(aggregateAndTask.task.getCompletedBy());
 
         return assessRiskForm;
+
+    }
+
+    /**
+     * Represents a loan approval case information of this loan approval process.
+     */
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LoanApprovalCaseInformation {
+
+        /**
+         * The loan amount associated with this risk assessment.
+         */
+        private int amount;
+
+        /**
+         * The person completed the form or null if not completed
+         */
+        private String completedBy;
+
+        /**
+         * Case result
+         */
+        private Boolean riskAcceptable;
+
+    }
+
+    /**
+     * Retrieves the details of a loan approval request.
+     *
+     * <p>
+     * This method searches for the associated workflow aggregate,
+     * and if found, extracts the necessary details to fill {@link LoanApprovalCaseInformation}.
+     * </p>
+     *
+     * @param loanRequestId The unique identifier of the loan request.
+     * @return An {@link LoanApprovalCaseInformation} containing case-related data, or {@code null} if not found.
+     */
+    public LoanApprovalCaseInformation getCaseInformation(
+            final String loanRequestId) {
+
+        final var loanApprovalFound = loanApprovals.findById(loanRequestId);
+        if (loanApprovalFound.isEmpty()) {
+            return null;
+        }
+
+        final var loanApproval = loanApprovalFound.get();
+
+        // map user-id stored to display name
+        final var completedBy = loanApproval
+                .getTasks()
+                .values()
+                .stream()
+                .findFirst()
+                .map(Task::getCompletedBy)
+                .map(userId -> userService.getUser(userId))
+                .map(UserDetails::getDisplay)
+                .orElse(null);
+
+        return new LoanApprovalCaseInformation(
+                loanApproval.getAmount(), completedBy, loanApproval.getRiskAcceptable());
 
     }
 
@@ -420,6 +487,7 @@ public class Service {
         // see https://github.com/vanillabp/business-cockpit/tree/main/spi-for-java
         workflowDetails.setDetails(
                 Map.of("loanRequestId", aggregate.getLoanRequestId()));
+        workflowDetails.setAccessibleToGroups(List.of("RISK_ASSESSMENT", "ADMIN"));
 
         return workflowDetails;
 

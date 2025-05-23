@@ -1,5 +1,6 @@
 import { UserTaskForm as UserTaskFormComponent } from "@vanillabp/bc-shared";
 import { useEffect, useState } from "react";
+import { buildTimestamp, buildVersion } from "../../WorkflowPage";
 
 const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
   const [permitted, setPermitted] = useState<boolean | undefined>(undefined);
@@ -23,7 +24,7 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
           `${baseUrl}/${loanRequestId}/forms/${userTask.id}/assess-risk`
         );
         if (!response.ok) {
-          if (response.status == 403 || response.status == 401) {
+          if (response.status === 403 || response.status === 401) {
             setPermitted(false);
           }
           console.error("Failed to fetch loan approval data");
@@ -111,22 +112,42 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
     });
   };
 
-  return permitted == false ? (
+  return permitted === false ? (
     <div>Not permitted to see user task</div>
   ) : (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
+        margin: "15px",
         gap: "15px",
         padding: "15px",
         border: "1px solid #ddd",
         borderRadius: "8px",
       }}
     >
+      <h1>Assess Risk</h1>
       <div>
         <label style={{ fontWeight: "bold" }}>Amount: </label>
         <span>{amount !== null ? amount : "Loading..."}</span>
+      </div>
+      <div style={{ fontSize: "12px" }}>
+        User task details provided in&nbsp;
+        <span
+          style={{
+            fontFamily: "monospace",
+            border: "1px solid #ddd",
+            borderRadius: "3px",
+          }}
+        >
+          Service#assessRiskDetails(PrefilledUserTaskDetails, Aggregate)
+        </span>
+        &nbsp;are handed over by the business cockpit application (e.g.
+        "loanRequestId"). Since those details are meant to be shown in the list
+        of user tasks one should not pass all data available to the business
+        cockpit. Instead data needed in this view but not in the list of user
+        tasks has to be loaded from the workflow module as shown by this
+        component.
       </div>
       <div>
         <label style={{ fontWeight: "bold" }}>Risk Assessment:</label>
@@ -176,6 +197,9 @@ const AssessRiskForm: UserTaskFormComponent = ({ userTask }) => {
         >
           Save Task
         </button>
+      </div>
+      <div style={{ fontSize: "12px" }}>
+        Version: {`${buildVersion} from ${buildTimestamp.toLocaleString()}`}
       </div>
     </div>
   );

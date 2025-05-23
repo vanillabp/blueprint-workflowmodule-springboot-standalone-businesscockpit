@@ -1,4 +1,3 @@
-import { Text } from "grommet";
 import { lazy } from "react";
 import { BpmnProcessId as LoanApproval } from "./loan-approval";
 import { UserTaskForm } from "@vanillabp/bc-shared";
@@ -39,7 +38,7 @@ const UserTaskFormComponent: UserTaskForm = ({ userTask }) =>
   userTask.bpmnProcessId === LoanApproval ? (
     <AnyLoanApprovalTaskForm userTask={userTask} />
   ) : (
-    <Text>{`unknown BPMN process ID '${userTask.bpmnProcessId}'`}</Text>
+    <h2>{`unknown BPMN process ID '${userTask.bpmnProcessId}'`}</h2>
   );
 
 export { buildVersion, buildTimestamp, UserTaskFormComponent as UserTaskForm };
