@@ -37,7 +37,7 @@ point for more complex use cases:
    mvn archetype:generate \
    -DarchetypeGroupId=io.vanillabp.blueprint \
    -DarchetypeArtifactId=workflowmodule-springboot-standalone-businesscockpit-archetype \
-   -DarchetypeVersion=1.0.1
+   -DarchetypeVersion=1.0.1-mongodb
    -DgroupId={your.groupId} \
    -DartifactId={your.artifactId} \
    -Dversion={your.version}
