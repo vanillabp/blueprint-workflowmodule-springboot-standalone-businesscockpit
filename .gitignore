@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 src/main/webapp/node_modules
+src/main/webapp/package-lock.json
 
 ### STS ###
 .apt_generated

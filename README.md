@@ -16,6 +16,7 @@ and therefore descriptions do not cover details already explained there.
 
 Available variants:
 1. [Using MongoDB instead of JPA](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/tree/variant/mongodb)
+2. [Using Angular instead of React](https://github.com/vanillabp/blueprint-workflowmodule-springboot-standalone-businesscockpit/tree/variant/angular)
 
 In order to develop a better understanding of how to use VanillaBP,
 a concrete technical process “loan approval” is used instead of an abstract

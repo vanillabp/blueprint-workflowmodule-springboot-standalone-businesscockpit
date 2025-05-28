@@ -1,12 +1,10 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
-import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
-import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -18,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
+import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>

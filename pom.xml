@@ -265,7 +265,7 @@
             </eclipse>
             <removeUnusedImports></removeUnusedImports>
             <importOrder>
-              <order>java,javax,org,com,at.phactum</order>
+              <order>java,javax,org,com</order>
             </importOrder>
           </java>
         </configuration>
@@ -323,7 +323,7 @@
           <artifactId>spring-kafka</artifactId>
         </dependency>
         <dependency>
-          <groupId>at.phactum.zeebe</groupId>
+          <groupId>com.phactum.zeebe</groupId>
           <artifactId>zeebe-kafka-exporter-serde</artifactId>
           <version>8.6.0</version>
         </dependency>
