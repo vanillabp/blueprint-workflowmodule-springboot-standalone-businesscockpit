@@ -1,0 +1,58 @@
+<div *ngIf="forbidden">
+    Not permitted to see user task
+</div>
+
+<div *ngIf="!forbidden" class="workflow-page">
+
+  <h1>{{ workflow.title['en'] }}</h1>
+
+    <div class="form-field">
+        <label class="label">Amount: </label>
+        <span>{{ amount !== null ? amount : 'Loading...' }}</span>
+    </div>
+
+@if (riskAcceptable == null) {
+    <div>
+        Risk not yet assessed.
+    </div>
+} @else {
+    <div class="form-field">
+        <label class="label">Completed by: </label>
+        <span>{{ completedBy }}</span>
+    </div>
+
+    <div class="form-field">
+        <label class="label">Risk acceptable: </label>
+        <span>{{ riskAcceptable ? 'Yes' : 'No' }}</span>
+    </div>
+}
+
+    <div class="comment">
+        Case details provided in&nbsp;
+        <span class="monospace">
+        Service#workflowDetails(PrefilledWorkflowDetails, Aggregate)
+        </span>
+        &nbsp;are handed over by the business cockpit application (e.g.
+        "loanRequestId"). Since those details are meant to be shown in the list
+        of workflows one should pass all data available to the business cockpit.
+        Instead data needed in this view but not in the list of workflows has to
+        be loaded from the workflow module as shown by this component.
+    </div>
+
+  <div *ngIf="userTasks === undefined">
+    Loading user tasks...
+  </div>
+  
+  <div *ngIf="userTasks != undefined && userTasks.length == 0">
+    No active user tasks found for this workflow!
+  </div>
+  
+  <div class="user-tasks" *ngIf="userTasks && userTasks.length > 0">
+    <div class="user-task" *ngFor="let userTask of userTasks">
+      <div class="task-row">
+        <span class="share-icon" (click)="userTask.open()">Open</span>
+        <span>{{ userTask.id }}</span>
+      </div>
+    </div>
+  </div>
+</div>

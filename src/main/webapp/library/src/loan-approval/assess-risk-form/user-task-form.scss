@@ -1,0 +1,73 @@
+.user-task-form {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.form-field {
+
+  label {
+    font-weight: bold;
+  }
+
+  div {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+}
+
+.comment {
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.monospace {
+  font-family: monospace;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+  background-color: #efefef;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #dfdfdf;
+    border-color: #999;
+  }
+
+  &:disabled {
+    background-color: #f9f9f9;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+}
