@@ -195,7 +195,7 @@ Instructions at a glance:
    ```shell
    npm start
    ```
-6. In the DevShell, available at [http://localhost:3000](http://localhost:3000),
+6. In the DevShell, available at [http://localhost:4200](http://localhost:4200),
    one can load workflow pages and user tasks by entering the respective ID of the
    business processing engine used. Additionally, the UI can be tested with different
    users by selecting the user from the drop-down list provided.

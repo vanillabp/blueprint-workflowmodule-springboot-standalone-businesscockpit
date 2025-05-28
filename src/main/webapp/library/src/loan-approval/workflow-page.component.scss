@@ -1,0 +1,59 @@
+.workflow-page {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.form-field {
+
+  label {
+    font-weight: bold;
+  }
+
+  div {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+}
+
+.comment {
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.monospace {
+  font-family: monospace;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.user-tasks {
+  margin: 20px 0;
+}
+
+.user-task {
+  margin: 10px 0;
+}
+
+.task-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-icon {
+  cursor: pointer;
+  color: #444;
+  font-size: 14px;
+}
+
+.share-icon:hover {
+  color: #000;
+}

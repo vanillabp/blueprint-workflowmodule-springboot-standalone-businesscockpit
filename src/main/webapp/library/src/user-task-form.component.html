@@ -1,0 +1,7 @@
+@if (userTask.bpmnProcessId === "loan_approval") {
+  <loan-approval-process-user-task-form [userTask]="userTask"></loan-approval-process-user-task-form>
+}  @else {
+  <div>
+    BPMN process not known: {{ userTask.bpmnProcessId }} (BPMN task definition: {{ userTask.taskDefinition }})
+  </div>
+}
