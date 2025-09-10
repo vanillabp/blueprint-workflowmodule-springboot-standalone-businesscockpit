@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      context: camunda8
+      file: classpath:io/vanillabp/camunda8/liquibase/main.yaml
+  - include:
+      context: camunda8
+      file: classpath:io/vanillabp/cockpit/adapter/camunda8/liquibase/main.yaml
