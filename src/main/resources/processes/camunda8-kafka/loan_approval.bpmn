@@ -24,8 +24,7 @@
     </bpmn:sequenceFlow>
     <bpmn:userTask id="UserTask_AssessRisk" name="Assess Risk">
       <bpmn:extensionElements>
-        <zeebe:formDefinition externalReference="assessRisk" />
-        <zeebe:userTask />
+        <zeebe:formDefinition formKey="assessRisk" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1r06jh3</bpmn:incoming>
       <bpmn:outgoing>Flow_1b73n0w</bpmn:outgoing>

@@ -186,7 +186,7 @@ Instructions at a glance:
 2. Run the JAR passing the [predefined user configuration](./dev-shell-users.yaml) file:
 
    ```shell
-   java -Dspring.config.additional-location=./dev-shell-users.yaml -jar dev-shell-simulator-*-runnable.jar
+   java -Dspring.config.additional-location=./dev-shell-users.yaml -DworkerId=local -jar dev-shell-simulator-*-runnable.jar
    ```
 3. In this demo project open directory `src/main/webapp` in terminal.
 4. Install NPM packages required:
