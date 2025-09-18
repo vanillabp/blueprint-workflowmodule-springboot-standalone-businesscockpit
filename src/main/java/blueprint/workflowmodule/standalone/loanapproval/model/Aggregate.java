@@ -67,20 +67,18 @@ public class Aggregate {
 
     /**
      * Used in BPMN expression to not access data of aggregate directly.
-     * By using this pattern changes of properties of the aggregate
-     * doe not affect workflows already started before the change.
+     * By using this pattern, changes of properties of the aggregate
+     * do not affect workflows already started before the change.
      * Additionally, in BPMN the intention of this expression has to
-     * be named explicitly e.g. '${loanRequestAccepted}' what is a
+     * be named explicitly e.g. '${loanRequestAccepted}' which is
      * better documentation of the purpose.
      *
      * @return Whether the loan request was accepted
      */
+    @SuppressWarnings("unused")
     public Boolean isLoanRequestAccepted() {
 
-        if (riskAcceptable == null) {
-            return null;
-        }
-        return true;
+        return riskAcceptable;
 
     }
 

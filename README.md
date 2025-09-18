@@ -41,6 +41,10 @@ point for more complex use cases:
    -DartifactId={your.artifactId} \
    -Dversion={your.version}
    ```
+
+   *Hint:* If you want a specific archetype version add `-DarchetypeVersion={e.g 0.0.1}`
+   <br>&nbsp;
+
 2. **Build the application:**
 
    ```shell
