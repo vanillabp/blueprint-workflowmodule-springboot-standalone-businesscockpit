@@ -7,9 +7,6 @@ camunda:
       password: admin
       first-name: Admin
       last-name: Istrator
-    generic-properties.properties:
-      initializeTelemetry: false
-      telemetry-reporter-activate: false
     job-execution:
       core-pool-size: 1
       max-pool-size: 1

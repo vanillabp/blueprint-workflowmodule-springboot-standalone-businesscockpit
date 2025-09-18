@@ -13,14 +13,17 @@ camunda:
       client-secret: zecret
       connect-timeout: PT10S
       read-timeout: PT30S
-    request-timeout: PT20S
-    request-timeout-offset: PT10S
+  zeebe:
+    kafka-exporter:
+      topic-name: zeebe
 vanillabp:
+  cockpit:
+    kafka:
+      group-id-suffix: loan-approval
   workflow-modules:
     loan-approval:
       adapters:
         camunda8:
-          resources-location: classpath*:/processes/camunda8
-          use-tenants: false
+          resources-location: classpath*:/processes/camunda8-kafka
           stream-enabled: true
           stream-timeout: PT5M
