@@ -1,11 +1,12 @@
 package blueprint.workflowmodule.standalone;
 
-import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
-import io.vanillabp.springboot.ModuleAndWorkerAwareSpringApplication;
-import io.vanillabp.springboot.modules.WorkflowModuleProperties;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+
+import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
+import io.vanillabp.springboot.ModuleAndWorkerAwareSpringApplication;
+import io.vanillabp.springboot.modules.WorkflowModuleProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(LoanApprovalProperties.class)

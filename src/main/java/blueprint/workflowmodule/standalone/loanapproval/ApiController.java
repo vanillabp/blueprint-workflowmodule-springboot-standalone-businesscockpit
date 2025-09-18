@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
 import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
+import io.vanillabp.spi.cockpit.usertask.UserTask;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -101,7 +102,7 @@ public class ApiController {
             @PathVariable final String taskId,
             @RequestBody final Map<String, Object> requestBody) {
 
-        boolean riskAcceptable = false;
+        Boolean riskAcceptable = null;
         if (requestBody.containsKey("riskIsAcceptable") && requestBody.get("riskIsAcceptable") != null) {
             riskAcceptable = (Boolean) requestBody.get("riskIsAcceptable");
         }
@@ -150,6 +151,22 @@ public class ApiController {
         log.info("Saved task: {} ", taskId);
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Returns a VanillaBP business cockpit user task of risk assessment.
+     *
+     * @param loanRequestId Unique Identifier for each LoanRequest (workflow).
+     * @param taskId        Unique Identifier for the user task.
+     * @return The user task
+     */
+    @GetMapping("/{loanRequestId}/forms/{taskId}/assess-risk/data")
+    public ResponseEntity<UserTask> getAssessRiskData(
+            @PathVariable final String loanRequestId,
+            @PathVariable final String taskId) {
+
+        return ResponseEntity.ok(service.getAssessRiskData(loanRequestId, taskId));
+
     }
 
     /**

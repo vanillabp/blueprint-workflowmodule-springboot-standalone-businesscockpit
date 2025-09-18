@@ -1,8 +1,8 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +16,7 @@ import io.vanillabp.cockpit.commons.security.usercontext.UserContext;
 import io.vanillabp.cockpit.commons.security.usercontext.UserDetails;
 import io.vanillabp.spi.cockpit.BusinessCockpitService;
 import io.vanillabp.spi.cockpit.usertask.PrefilledUserTaskDetails;
+import io.vanillabp.spi.cockpit.usertask.UserTask;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetails;
 import io.vanillabp.spi.cockpit.usertask.UserTaskDetailsProvider;
 import io.vanillabp.spi.cockpit.workflow.PrefilledWorkflowDetails;
@@ -175,6 +176,7 @@ public class Service {
      * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#user-tasks-and-asynchronous-tasks>VanillaBP docs &quot;UserRepresentation tasks and asynchronous tasks&quot;</a>
      */
     @WorkflowTask
+    @SuppressWarnings("unused")
     public void assessRisk(
             final Aggregate loanApproval,
             @TaskId final String taskId,
@@ -203,7 +205,7 @@ public class Service {
 
             task.setCompletedAt(OffsetDateTime.now());
 
-            // Although task it completed we won't set property 'completedBy'.
+            // Because the task it canceled, we won't set the property 'completedBy'.
             // This is because completion is triggered by the workflow (e.g. due to
             // a boundary event) and not by a person.
 
@@ -219,12 +221,16 @@ public class Service {
      * @see <a href="https://github.com/vanillabp/spi-for-java/blob/main/README.md#wire-up-a-task">VanillaBP docs &quot;Wire up a task&quot;</a>
      */
     @WorkflowTask
+    @SuppressWarnings("unused")
     public void transferMoney(
             final Aggregate loanApproval) {
 
         log.info("Transferring money for loan request '{}'", loanApproval.getLoanRequestId());
 
         // Not part of this demo
+
+        // trigger update of the workflow shown in the business cockpit
+        businessCockpitService.aggregateChanged(loanApproval);
 
     }
 
@@ -238,7 +244,7 @@ public class Service {
     public boolean completeAssessRiskForm(
             final String loanRequestId,
             final String taskId,
-            final boolean riskIsAcceptable) {
+            final Boolean riskIsAcceptable) {
 
         final var aggregateAndTask = determineTask(loanRequestId, taskId);
         if (aggregateAndTask == null) {
@@ -256,11 +262,26 @@ public class Service {
         aggregateAndTask.task.setCompletedAt(OffsetDateTime.now());
         aggregateAndTask.task.setCompletedBy(userContext.getUserLoggedIn());
 
-        // Save confirmed data in aggregate
-        aggregateAndTask.loanApproval.setRiskAcceptable(riskIsAcceptable);
+        // complete user task
 
-        // Complete user task
-        service.completeUserTask(aggregateAndTask.loanApproval, taskId);
+        if (riskIsAcceptable != null) {
+
+            log.info("Got risk assessment '{}' for loan approval '{}'", riskIsAcceptable ? "accepted" : "denied",
+                    loanRequestId);
+
+            // save confirmed data in aggregate
+
+            aggregateAndTask.loanApproval.setRiskAcceptable(riskIsAcceptable);
+
+            service.completeUserTask(aggregateAndTask.loanApproval, taskId);
+
+        } else {
+
+            log.info("Got risk assessment 'NULL' for loan approval '{}'", loanRequestId);
+
+            service.cancelUserTask(aggregateAndTask.loanApproval, taskId, "Failed");
+
+        }
 
         return true;
 
@@ -299,6 +320,9 @@ public class Service {
                 riskIsAcceptable);
 
         loanApprovals.save(aggregateAndTask.loanApproval);
+
+        // trigger update of the user task shown in the business cockpit
+        businessCockpitService.aggregateChanged(aggregateAndTask.loanApproval, taskId);
 
         log.info("Task saved: {}", taskId);
 
@@ -383,6 +407,32 @@ public class Service {
     }
 
     /**
+     * Return a business cockpit user task object for the task requested.
+     * <p>
+     * This shows how to retrieve data of the task as it would be transferred
+     * to the business cockpit. This might be useful e.g. if you need to
+     * inform the user about the task via email containing the task's
+     * title and other details. Using {@link BusinessCockpitService#getUserTask(Object, String)}
+     * runs the method {@link Service#assessRiskDetails(PrefilledUserTaskDetails, Aggregate)}
+     * and also applies other VanillaBP sugar like building titles based on
+     * templates.
+     *
+     * @param loanRequestId The unique identifier of the loan request.
+     * @param taskId        The unique identifier of the task being assessed.
+     * @return An {@link UserTask} as it would be transferred to the business cockpit.
+     */
+    public UserTask getAssessRiskData(
+            final String loanRequestId,
+            final String taskId) {
+
+        return loanApprovals
+                .findById(loanRequestId)
+                .flatMap(aggregate -> businessCockpitService.getUserTask(aggregate, taskId))
+                .orElse(null);
+
+    }
+
+    /**
      * Represents a loan approval case information of this loan approval process.
      */
     @Getter
@@ -454,15 +504,22 @@ public class Service {
      * @return returns the details provided through {@code PrefilledUserTaskDetails}
      */
     @UserTaskDetailsProvider(taskDefinition = "assessRisk")
+    @SuppressWarnings("unused")
     public UserTaskDetails assessRiskDetails(
             final PrefilledUserTaskDetails userTaskDetails,
             final Aggregate aggregate) {
 
         log.info("assessRiskDetails for '{}' started", aggregate.getLoanRequestId());
 
+        final var details = new HashMap<String, Object>();
+        details.put("loanRequestId", aggregate.getLoanRequestId());
+        details.put("assessment", ((AssessRiskFormData) aggregate
+                .getTasks()
+                .get(userTaskDetails.getId()).getData())
+                .getRiskAcceptable());
+
         // see https://github.com/vanillabp/business-cockpit/tree/main/spi-for-java
-        userTaskDetails.setDetails(
-                Map.of("loanRequestId", aggregate.getLoanRequestId()));
+        userTaskDetails.setDetails(details);
         userTaskDetails.setCandidateGroups(List.of("RISK_ASSESSMENT"));
 
         return userTaskDetails;
@@ -478,15 +535,19 @@ public class Service {
      * @return returns the details provided through {@code PrefilledWorkflowDetails}
      */
     @WorkflowDetailsProvider
+    @SuppressWarnings("unused")
     public WorkflowDetails workflowDetails(
             final PrefilledWorkflowDetails workflowDetails,
             final Aggregate aggregate) {
 
         log.info("WorkflowDetails '{}' started", aggregate.getLoanRequestId());
 
+        final var details = new HashMap<String, Object>();
+        details.put("loanRequestId", aggregate.getLoanRequestId());
+        details.put("assessment", aggregate.getRiskAcceptable());
+
         // see https://github.com/vanillabp/business-cockpit/tree/main/spi-for-java
-        workflowDetails.setDetails(
-                Map.of("loanRequestId", aggregate.getLoanRequestId()));
+        workflowDetails.setDetails(details);
         workflowDetails.setAccessibleToGroups(List.of("RISK_ASSESSMENT", "ADMIN"));
 
         return workflowDetails;
