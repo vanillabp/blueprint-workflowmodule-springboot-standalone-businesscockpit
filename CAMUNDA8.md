@@ -54,7 +54,7 @@ to retrieve update event from Zeebe instead of the custom Kafka event exporter.
       mvn clean package -Pcamunda8-kafka
       ```
 2. Run the application using the `camunda8` Spring profile:
-   1. Camunda 8.8 or newer:
+   1. Camunda 8.8 or newer without Kafka:
 
       ```shell
       java -jar target/loan-approval.jar --spring.profiles.active=camunda8
@@ -62,7 +62,7 @@ to retrieve update event from Zeebe instead of the custom Kafka event exporter.
 
       Camunda 8 Operate: [http://localhost:8088](http://localhost:8088)
 
-   2. Camunda 8 with Kafka:
+   2. Camunda 8 with Kafka (even 8.8 when running old processes):
 
       ```shell
       java -jar target/loan-approval.jar --spring.profiles.active=camunda8-kafka

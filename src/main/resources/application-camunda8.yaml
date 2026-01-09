@@ -6,11 +6,11 @@ camunda:
     enabled: true
     rest-address: http://localhost:8088
     grpc-address: http://localhost:26500
-    mode: selfmanaged
+    mode: self-managed
     auth:
       token-url: http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token
-      client-id: zeebe
-      client-secret: zecret
+      client-id: orchestration
+      client-secret: secret
       connect-timeout: PT10S
       read-timeout: PT30S
     request-timeout: PT20S
@@ -21,6 +21,5 @@ vanillabp:
       adapters:
         camunda8:
           resources-location: classpath*:/processes/camunda8
-          use-tenants: false
           stream-enabled: true
           stream-timeout: PT5M
