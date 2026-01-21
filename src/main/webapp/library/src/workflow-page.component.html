@@ -1,7 +1,0 @@
-@if (workflow.bpmnProcessId === "loan_approval") {
-    <loan-approval-process-workflow-page [workflow]="workflow"> </loan-approval-process-workflow-page>
-} @else {
-  <div>
-    BPMN process not known: {{ workflow.bpmnProcessId }}
-  </div>
-}

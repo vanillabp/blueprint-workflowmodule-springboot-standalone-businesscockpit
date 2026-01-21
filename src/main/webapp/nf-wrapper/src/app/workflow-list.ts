@@ -1,5 +1,5 @@
-import { ColumnsOfWorkflowFunction } from "@vanillabp/bc-shared";
-import { workflowColumns } from "../../../library/src/loan-approval/cells";
+import { ColumnsOfWorkflowFunction } from "@vanillabp/bc-types";
+import { workflowColumns } from "../../../library/src/cells";
 import { getEnvVar } from "./utils";
 
 const buildVersion = getEnvVar('BUILD_VERSION', '0.0.0');

@@ -5,6 +5,7 @@ module.exports = withNativeFederation({
   name: 'nf-wrapper',
 
   exposes: {
+    'header': './nf-wrapper/src/app/header.ts',
     'task-list': './nf-wrapper/src/app/user-task-list.ts',
     'task-form': './nf-wrapper/src/app/user-task-form.ts',
     'workflow-list': './nf-wrapper/src/app/workflow-list.ts',

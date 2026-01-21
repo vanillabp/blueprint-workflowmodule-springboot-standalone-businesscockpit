@@ -1,25 +1,43 @@
-# Library
+# library
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
+This template should help get you started developing with Vue 3 in Vite.
 
-## Code scaffolding
+## Recommended IDE Setup
 
-Run `ng generate component component-name --project library` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project library`.
+[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-> Note: Don't forget to add `--project library` or else it will be added to the default project in your `angular.json` file.
+## Recommended Browser Setup
 
-## Build
+- Chromium-based browsers (Chrome, Edge, Brave, etc.):
+  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
+  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
+- Firefox:
+  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
+  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
 
-Run `ng build library` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Type Support for `.vue` Imports in TS
 
-## Publishing
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
 
-After building your library with `ng build library`, go to the dist folder `cd dist/library` and run `npm publish`.
+## Customize configuration
 
-## Running unit tests
+See [Vite Configuration Reference](https://vite.dev/config/).
 
-Run `ng test library` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Project Setup
 
-## Further help
+```sh
+npm install
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Compile and Hot-Reload for Development
+
+```sh
+npm start
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+

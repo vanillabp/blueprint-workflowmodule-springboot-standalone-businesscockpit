@@ -1,8 +1,11 @@
-import { bootstrapWebComponent } from "./bootstrap.utils";
-import { WorkflowPageComponent } from "../../../library/src/workflow-page.component";
-
 const componentName = 'loan-approval-workflow-page';
 
-(async () => await bootstrapWebComponent(componentName, WorkflowPageComponent))();
+(async () => {
+  await import(
+      /* webpackIgnore: true */
+      // @ts-ignore
+      '../../../library/dist/workflow-page.ce.js'
+      )
+})()
 
 export {componentName};

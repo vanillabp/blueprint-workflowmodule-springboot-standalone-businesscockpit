@@ -193,6 +193,9 @@ Instructions at a glance:
 4. Install NPM packages required:
 
    ```shell
+   cd library
+   npm install
+   cd ../dev-shell
    npm install
    ```
 5. Start DevShell:

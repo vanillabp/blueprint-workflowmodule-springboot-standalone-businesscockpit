@@ -1,4 +1,4 @@
-import { Column } from "@vanillabp/bc-shared";
+import type { Column } from "@vanillabp/bc-types";
 
 export const userTaskColumns: Record<string, Column> = {
   loanRequestId: {
