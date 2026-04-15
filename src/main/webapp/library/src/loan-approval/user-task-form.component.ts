@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { BcUserTask } from "@vanillabp/bc-shared";
+import { BcUserTask } from "@vanillabp/bc-types";
 import { UserTaskFormComponent as LoanApprovalUserTaskFormAssessRisk } from "./assess-risk-form/user-task-form";
 
 @Component({

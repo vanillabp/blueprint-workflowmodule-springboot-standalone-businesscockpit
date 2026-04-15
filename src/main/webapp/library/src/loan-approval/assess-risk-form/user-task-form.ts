@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BcUserTask } from "@vanillabp/bc-shared";
+import { BcUserTask } from "@vanillabp/bc-types";
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';

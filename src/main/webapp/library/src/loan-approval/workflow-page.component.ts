@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { BcUserTask, BcWorkflow } from "@vanillabp/bc-shared";
+import { BcUserTask, BcWorkflow } from "@vanillabp/bc-types";
 import { CommonModule } from "@angular/common";
 import { HttpClient } from '@angular/common/http';
 

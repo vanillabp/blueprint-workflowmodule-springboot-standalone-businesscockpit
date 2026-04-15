@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, } from "@angular/core";
-import { BcUserTask, BcWorkflow } from "@vanillabp/bc-shared";
+import { BcUserTask, BcWorkflow } from "@vanillabp/bc-types";
 import { WorkflowPageComponent as LoanApprovalProcessWorkflowPage } from "./loan-approval/workflow-page.component";
 
 function webComponentsTransform(value: string | BcWorkflow): any {

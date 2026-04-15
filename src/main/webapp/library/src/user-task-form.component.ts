@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, ViewEncapsulation } from "@angular/core";
-import { BcUserTask } from "@vanillabp/bc-shared";
+import { BcUserTask } from "@vanillabp/bc-types";
 import {
   UserTaskFormComponent as LoanApprovalProcessUserTaskFormComponent
 } from "./loan-approval/user-task-form.component";
