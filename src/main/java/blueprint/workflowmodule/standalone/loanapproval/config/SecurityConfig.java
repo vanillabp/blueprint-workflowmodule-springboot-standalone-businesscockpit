@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -115,8 +115,10 @@ public class SecurityConfig extends UserContextConfiguration {
      */
     private RequestMatcher allowToStartWorkflowsViaRestUnauthenticated() {
 
+        // Spring Security 7 removed AntPathRequestMatcher; PathPatternRequestMatcher is the replacement
+        // and uses the same path syntax for a pattern as plain as this one.
         return new NegatedRequestMatcher(
-                new AntPathRequestMatcher("/api/loan-approval/request-loan-approval"));
+                PathPatternRequestMatcher.withDefaults().matcher("/api/loan-approval/request-loan-approval"));
 
     }
 

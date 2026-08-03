@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.4.2</version>
-    <relativePath></relativePath>
+    <version>4.1.0</version>
+    <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
   <groupId>io.vanillabp.blueprint</groupId>
   <artifactId>workflowmodule-springboot-standalone-businesscockpit</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
 
   <packaging>jar</packaging>
   <name>blueprint standalone businesscockpit workflow module</name>
@@ -48,8 +48,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>17</java.version>
-    <lombok.version>1.18.34</lombok.version>
+    <java.version>21</java.version>
   </properties>
 
   <dependencies>
@@ -58,13 +57,21 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
+      <!--
+        BlueprintUserService injects RestClient.Builder. Spring Boot 4 split the auto-configuration for it
+        out of the web starter into its own module, so it has to be asked for explicitly.
+      -->
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-restclient</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
+      <!-- version comes from the Spring Boot BOM -->
       <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -75,17 +82,26 @@
     <dependency>
       <groupId>io.vanillabp</groupId>
       <artifactId>spi-for-java</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.vanillabp.businesscockpit</groupId>
       <artifactId>spi-for-java</artifactId>
-      <version>0.3.0</version>
+      <version>0.4.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.hypersistence</groupId>
-      <artifactId>hypersistence-utils-hibernate-63</artifactId>
-      <version>3.9.0</version>
+      <!--
+        The artifact is cut per Hibernate generation: -63 targets Hibernate 6.3, and Spring Boot 4.1 brings
+        Hibernate 7.4. Class and package names are unchanged in 3.15
+        (io.hypersistence.utils.hibernate.type.json.JsonType), so only the coordinates move.
+
+        Not -70: that variant is built against Hibernate 7.0, where AbstractClassJavaType.getJavaTypeClass()
+        was still overridable. On 7.4 it is final and the entity manager factory dies with
+        IncompatibleClassChangeError. There is no -74 artifact yet, -73 is the closest and works.
+      -->
+      <artifactId>hypersistence-utils-hibernate-73</artifactId>
+      <version>3.15.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -94,7 +110,11 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-oauth2-jose</artifactId>
-      <version>6.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -127,6 +147,14 @@
       <id>camunda-community-hub-vanillabp-camunda8-adapter</id>
       <url>https://maven.pkg.github.com/camunda-community-hub/vanillabp-camunda8-adapter</url>
     </repository>
+    <repository>
+      <!--
+        Camunda 7 enterprise artifacts, needed by the camunda7 profile since adapter 1.6.0.
+        Credentials come from settings.xml, never from here.
+      -->
+      <id>camunda-enterprise</id>
+      <url>https://artifacts.camunda.com/artifactory/camunda-bpm/</url>
+    </repository>
   </repositories>
   <build>
     <finalName>loan-approval</finalName>
@@ -156,6 +184,7 @@
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
               <version>${lombok.version}</version>
+              <!-- set by the Spring Boot parent -->
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -175,12 +204,12 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.12.1</version>
+        <version>1.15.0</version>
         <configuration>
           <installDirectory>${java.io.tmpdir}/frontend-maven-plugin</installDirectory>
           <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
-          <nodeVersion>v20.11.1</nodeVersion>
-          <npmVersion>10.2.4</npmVersion>
+          <nodeVersion>v22.22.0</nodeVersion>
+          <npmVersion>10.9.4</npmVersion>
         </configuration>
         <executions>
           <execution>
@@ -213,13 +242,13 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.44.0</version>
+        <version>3.9.0</version>
         <configuration>
           <pom>
             <includes>
               <include>**/pom.xml</include>
             </includes>
-            <sortPom></sortPom>
+            <sortPom/>
           </pom>
           <markdown>
             <includes>
@@ -229,7 +258,7 @@
               <exclude>target/**/</exclude>
               <exclude>src/main/webapp/node_modules/**/</exclude>
             </excludes>
-            <flexmark></flexmark>
+            <flexmark/>
           </markdown>
           <yaml>
             <includes>
@@ -245,7 +274,7 @@
                 <WRITE_DOC_START_MARKER>false</WRITE_DOC_START_MARKER>
               </yamlFeatures>
             </jackson>
-            <prettier></prettier>
+            <prettier/>
           </yaml>
           <typescript>
             <includes>
@@ -256,14 +285,14 @@
               <exclude>target/**/</exclude>
               <exclude>src/main/webapp/node_modules/**/</exclude>
             </excludes>
-            <prettier></prettier>
+            <prettier/>
           </typescript>
           <java>
             <eclipse>
               <file>${maven.multiModuleProjectDirectory}/formatting_conventions.xml</file>
               <version>4.26</version>
             </eclipse>
-            <removeUnusedImports></removeUnusedImports>
+            <removeUnusedImports/>
             <importOrder>
               <order>java,javax,org,com,at.phactum</order>
             </importOrder>
@@ -291,12 +320,16 @@
         <dependency>
           <groupId>org.camunda.community.vanillabp</groupId>
           <artifactId>camunda7-spring-boot-adapter</artifactId>
-          <version>1.5.0</version>
+          <!--
+            First Spring Boot 4 release of the adapter, and it pulls Camunda 7 *enterprise* artifacts:
+            the community edition ends at 7.24.0 and never got Boot 4 support. See README.
+          -->
+          <version>1.6.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>io.vanillabp.businesscockpit</groupId>
           <artifactId>camunda7-spring-boot-adapter</artifactId>
-          <version>0.3.0</version>
+          <version>0.4.0-SNAPSHOT</version>
         </dependency>
       </dependencies>
     </profile>
@@ -306,26 +339,26 @@
         <dependency>
           <groupId>org.camunda.community.vanillabp</groupId>
           <artifactId>camunda8-spring-boot-adapter</artifactId>
-          <version>1.9.1</version>
+          <version>1.10.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>io.vanillabp.businesscockpit</groupId>
           <artifactId>camunda8-spring-boot-adapter</artifactId>
-          <version>0.3.0</version>
+          <version>0.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>io.vanillabp.businesscockpit</groupId>
           <artifactId>bpms-protobuf-api</artifactId>
-          <version>0.3.0</version>
+          <version>0.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.springframework.kafka</groupId>
           <artifactId>spring-kafka</artifactId>
         </dependency>
         <dependency>
-          <groupId>at.phactum.zeebe</groupId>
+          <groupId>com.phactum.zeebe</groupId>
           <artifactId>zeebe-kafka-exporter-serde</artifactId>
-          <version>8.6.0</version>
+          <version>8.8.0</version>
         </dependency>
       </dependencies>
     </profile>

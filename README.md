@@ -45,9 +45,16 @@ point for more complex use cases:
    mvn spotless:apply
    mvn clean package -Pcamunda7
    ```
+
+   *Requirements:* **Java 21**, and for the `camunda7` profile access to the Camunda 7 **enterprise**
+   repository - see the note below. The build also fetches the `@vanillabp/*` npm packages of the
+   Business Cockpit; for a snapshot version they have to be available in your npm registry.
+   <br>&nbsp;
+
 3. **Start the VanillaBP Business Cockpit:**   
    Details in chapter [Using the demo](#using-the-demo)
    <br>&nbsp;
+
 4. **Start the application:**
 
    ```shell
@@ -91,6 +98,14 @@ The default Maven profile is `camunda7`, which includes the [Camunda 7 adapter](
 and the [Camunda 7 Business Cockpit adapter](https://github.com/vanillabp/business-cockpit/tree/main/adapters)
 dependency.
 Additionally, a Spring profile `camunda7` needs to be used at runtime providing proper configuration.
+
+**Camunda 7 needs an enterprise subscription as of blueprint version 1.1.0.** Spring Boot 4 support was
+added to Camunda 7 in 7.24.3, and 7.24 releases are enterprise-only: the community edition ended with
+7.24.0 and never received Boot 4 support. Building the `camunda7` profile therefore resolves Camunda
+enterprise artifacts and needs credentials for the enterprise repository in your `settings.xml`. Without a
+subscription, stay on blueprint 1.0.x with adapter 1.5.x, which runs on Spring Boot 3.5 and Camunda 7
+community edition. The `camunda8` profile is unaffected.
+
 For **Camunda 8** the respective profile `camunda8` has to be used.
 Refer to the [specific README](./CAMUNDA8.md) since additional setup is required.
 
