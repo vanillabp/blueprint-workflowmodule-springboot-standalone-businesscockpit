@@ -150,10 +150,13 @@
     <repository>
       <!--
         Camunda 7 enterprise artifacts, needed by the camunda7 profile since adapter 1.6.0.
-        Credentials come from settings.xml, never from here.
+        Credentials come from settings.xml, never from here - server id camunda-enterprise.
+
+        Note the "-ee" in the path: artifactory/camunda-bpm serves the community artifacts and answers 404
+        for camunda-bpm-spring-boot-starter-4, measured with valid enterprise credentials.
       -->
       <id>camunda-enterprise</id>
-      <url>https://artifacts.camunda.com/artifactory/camunda-bpm/</url>
+      <url>https://artifacts.camunda.com/artifactory/camunda-bpm-ee/</url>
     </repository>
   </repositories>
   <build>
