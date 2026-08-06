@@ -1,0 +1,1 @@
+import{_ as c,o as n,c as t,d as r,a as s,b as _}from"./chunks/_plugin-vue_export-helper-C8Fgzdq9.js";const l={};function m(o,a){return n(),t("div",null," Loan Approval Header ")}const p=c(l,[["render",m]]),d=r({__name:"header.ce",setup(o){return(a,f)=>(n(),s(p))}}),e="loan-approval-header";customElements.get(e)||customElements.define(e,_(d));

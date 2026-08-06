@@ -2,12 +2,16 @@ package blueprint.workflowmodule.standalone.loanapproval;
 
 import blueprint.workflowmodule.standalone.loanapproval.config.LoanApprovalProperties;
 import blueprint.workflowmodule.standalone.loanapproval.user.BlueprintUserService;
+import io.vanillabp.spi.process.ProcessDefinition;
+import io.vanillabp.spi.process.WorkflowHistory;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -202,6 +206,32 @@ public class ApiController {
 
         log.info("Fetched case: {} with data: {}", loanRequestId, response);
         return ResponseEntity.ok(response);
+
+    }
+
+    @GetMapping("/{loanRequestId}/process-definition")
+    public ResponseEntity<List<ProcessDefinition>> getProcessDefinitions(
+            @PathVariable final String loanRequestId) {
+
+        return ResponseEntity.ok(service.getProcessDefinition(loanRequestId));
+
+    }
+
+    @GetMapping("/bpmn/{processDefinitionId}")
+    public ResponseEntity<InputStreamResource> getBpmnXml(
+            @PathVariable final String processDefinitionId) {
+
+        final var xml = service.getProcessDiagram(processDefinitionId);
+        return ResponseEntity.ok(new InputStreamResource(xml));
+
+    }
+
+    @GetMapping("/{loanRequestId}/workflow-history")
+    public ResponseEntity<WorkflowHistory> getWorkflowHistory(
+            @PathVariable final String loanRequestId,
+            @RequestParam(required = false) final String historyContext) {
+
+        return ResponseEntity.ok(service.getWorkflowHistory(loanRequestId, historyContext));
 
     }
 

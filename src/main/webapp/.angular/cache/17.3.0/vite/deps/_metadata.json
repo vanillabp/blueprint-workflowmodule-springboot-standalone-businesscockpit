@@ -1,0 +1,94 @@
+{
+  "hash": "7031e139",
+  "configHash": "70065849",
+  "lockfileHash": "1fa314e8",
+  "browserHash": "ee99dd97",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "11ea019e",
+      "needsInterop": false
+    },
+    "@angular/common/http": {
+      "src": "../../../../../node_modules/@angular/common/fesm2022/http.mjs",
+      "file": "@angular_common_http.js",
+      "fileHash": "92febe8a",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "3372fcf9",
+      "needsInterop": false
+    },
+    "@angular/forms": {
+      "src": "../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
+      "file": "@angular_forms.js",
+      "fileHash": "99ed7212",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "34ec2ec1",
+      "needsInterop": false
+    },
+    "@angular/platform-browser/animations": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/animations.mjs",
+      "file": "@angular_platform-browser_animations.js",
+      "fileHash": "71f0d95a",
+      "needsInterop": false
+    },
+    "@vanillabp/bc-dev-shell-angular": {
+      "src": "../../../../../node_modules/@vanillabp/bc-dev-shell-angular/fesm2022/vanillabp-bc-dev-shell-angular.mjs",
+      "file": "@vanillabp_bc-dev-shell-angular.js",
+      "fileHash": "6b5b224b",
+      "needsInterop": false
+    },
+    "primeng/button": {
+      "src": "../../../../../node_modules/primeng/fesm2022/primeng-button.mjs",
+      "file": "primeng_button.js",
+      "fileHash": "bf76ede0",
+      "needsInterop": false
+    },
+    "primeng/card": {
+      "src": "../../../../../node_modules/primeng/fesm2022/primeng-card.mjs",
+      "file": "primeng_card.js",
+      "fileHash": "31c74a16",
+      "needsInterop": false
+    },
+    "primeng/radiobutton": {
+      "src": "../../../../../node_modules/primeng/fesm2022/primeng-radiobutton.mjs",
+      "file": "primeng_radiobutton.js",
+      "fileHash": "53b6fd32",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-R2NCL2Z6": {
+      "file": "chunk-R2NCL2Z6.js"
+    },
+    "chunk-IRCABFDG": {
+      "file": "chunk-IRCABFDG.js"
+    },
+    "chunk-KEYCELQW": {
+      "file": "chunk-KEYCELQW.js"
+    },
+    "chunk-Z7ZKEN7V": {
+      "file": "chunk-Z7ZKEN7V.js"
+    },
+    "chunk-JCCC4OP3": {
+      "file": "chunk-JCCC4OP3.js"
+    },
+    "chunk-F3CW2QSA": {
+      "file": "chunk-F3CW2QSA.js"
+    },
+    "chunk-2QXD6YRY": {
+      "file": "chunk-2QXD6YRY.js"
+    },
+    "chunk-KXTR34PH": {
+      "file": "chunk-KXTR34PH.js"
+    }
+  }
+}
