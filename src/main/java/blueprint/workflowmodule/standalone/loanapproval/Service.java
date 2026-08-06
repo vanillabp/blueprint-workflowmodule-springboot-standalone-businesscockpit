@@ -1,5 +1,6 @@
 package blueprint.workflowmodule.standalone.loanapproval;
 
+import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,9 @@ import io.vanillabp.spi.cockpit.usertask.UserTaskDetailsProvider;
 import io.vanillabp.spi.cockpit.workflow.PrefilledWorkflowDetails;
 import io.vanillabp.spi.cockpit.workflow.WorkflowDetails;
 import io.vanillabp.spi.cockpit.workflow.WorkflowDetailsProvider;
+import io.vanillabp.spi.process.ProcessDefinition;
 import io.vanillabp.spi.process.ProcessService;
+import io.vanillabp.spi.process.WorkflowHistory;
 import io.vanillabp.spi.service.BpmnProcess;
 import io.vanillabp.spi.service.TaskEvent;
 import io.vanillabp.spi.service.TaskId;
@@ -551,6 +554,37 @@ public class Service {
         workflowDetails.setAccessibleToGroups(List.of("RISK_ASSESSMENT", "ADMIN"));
 
         return workflowDetails;
+
+    }
+
+    public List<ProcessDefinition> getProcessDefinition(
+            final String loanRequestId) {
+
+        final var loanApproval = loanApprovals
+                .findById(loanRequestId)
+                .get();
+
+        return service
+                .getProcessDefinitions(loanApproval, null);
+
+    }
+
+    public InputStream getProcessDiagram(
+            final String processDefinitionId) {
+
+        return service.getBpmnXml(processDefinitionId);
+
+    }
+
+    public WorkflowHistory getWorkflowHistory(
+            final String loanRequestId,
+            final String historyContext) {
+
+        final var loanApproval = loanApprovals
+                .findById(loanRequestId)
+                .get();
+
+        return service.getWorkflowHistory(loanApproval, historyContext);
 
     }
 
